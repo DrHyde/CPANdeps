@@ -1,0 +1,12 @@
+david@keyweb:~$ crontab -l
+# m h  dom mon dow   command
+MAILTO=david@cantrell.org.uk
+0 9 * * * /web/cpandeps-modperl/gettestresultsdb.sh
+
+david@keyweb:~$ sudo crontab -l
+Password:
+# m h  dom mon dow   command
+MAILTO=david@cantrell.org.uk
+0 6 * * * /web/cpandeps-modperl/cleanyml
+0 6 * * * /web/cpandeps-modperl/restart
+

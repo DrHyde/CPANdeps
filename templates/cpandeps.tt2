@@ -1,0 +1,53 @@
+<html><head><title>CPAN dependencies and test results checker[% IF module %]: [% module %][% END %]</title></head>
+<body>
+  <p><a href=static/sourcecode>Source code</a> |
+     <a href=mailto:david@cantrell.org.uk?Subject=cpandeps+bug+report>Report bugs</a>
+  </p>
+  <p>Given a module name, this service will show you its dependencies
+    along with a summary of their test results from the CPAN testers, and
+    will attempt to calculate the probability that you (and more
+    importantly your users) will be able to install it without any hassle.
+    The idea is that if you have
+    a choice of several modules to use, this will show you which is the
+    most reliable.
+  </p>
+  <p>Still confused?
+    <a href=http://cpandeps.cantrell.org.uk/?module=Devel%3A%3ACheckOS>A
+    picture</a>
+    <a href=http://cpandeps.cantrell.org.uk/?module=XML%3A%3AFeed>is
+    worth a thousand words</a>.
+  </p>
+  <p>It relies on modules having META.yml files so it can work
+    out their dependencies, and is case-sensitive.
+  </p>
+  <form method=get action=.>
+    <table>
+      <tr>
+        <th align=right>Module</th>
+        <td><input type=text name=module value="[% module | html %]"></td>
+      </tr>
+      <tr><th colspan=2 align=left><input type=submit></th></tr>
+    </table>
+  </form>
+  [% IF module %]
+    [% successpc = 100 %]
+    <table>
+      [% FOREACH module = modules %]
+        [% INCLUDE 'moduleresult.tt2' module = module %]
+        [% IF module.pass + module.unknown + module.fail + module.na %]
+          [% successpc = successpc * (module.pass + module.unknown) /
+             (module.pass + module.unknown + module.fail + module.na) %]
+        [% END %]
+      [% END %]
+      <tr>
+        <th align=right>Chance of success</th>
+        <td><img src=static/green.png height=16 width=[% successpc * 2 %]><img src=static/red.png height=16 width=[% 200 - successpc * 2 %]></td>
+        <td>[% successpc.int %]%</td>
+      </tr>
+    </table>
+    The chance of success is calculated by multiplying the probabilities
+    of the module and all its dependencies passing their tests, or
+    getting 'unknown' test results.  None of these results take into
+    account the version of perl or the OS platform you are using.
+  [% END %]
+</body></html>

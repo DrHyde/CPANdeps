@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd /web/cpandeps-modperl
+find db -name \*yml -mtime +6 -exec rm -v {} \;
+

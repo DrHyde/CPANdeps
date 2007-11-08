@@ -1,0 +1,34 @@
+<tr>
+  <td valign=top><nobr>
+    [% FOREACH x = [1 .. module.indent] %]&nbsp;[% END %]
+    <a href=[% module.cpantestersurl %]>[% module.name %]</a>
+    <!-- in [% module.distname %] [% module.version %] ([% module.CPANfile %]) -->
+    [% IF module.warning %]
+      <br>
+      [% FOREACH x = [1 .. module.indent] %]&nbsp;[% END %]
+      <small>[% module.warning %]</small>
+    [% END %]
+  </nobr></td>
+  <td valign=top>
+    [% IF module.textresult %]
+      <img src=static/grey.png height=16 width=200>
+    [% ELSE %]
+      [% total = module.pass + module.fail + module.na   + module.unknown %]
+      [% IF total == 0 %]
+        <img src=static/grey.png height=16 width=200>
+      [% ELSE %]
+        <img src=static/green.png height=16 width=[% module.pass * 200 / total %]><img src=static/yellow.png height=16 width=[% module.unknown * 200 / total %]><img src=static/red.png height=16 width=[% module.fail * 200 / total %]><img src=static/blue.png height=16 width=[% module.na * 200 / total %]>
+      [% END %]
+    [% END %]
+  </td>
+  <td valign=top><small><nobr>
+    [% IF module.textresult %] [% module.textresult %]
+    [% ELSIF !total %]No results
+     [% ELSE %]
+      <font color=green>[% module.pass %] PASS[% IF module.pass != 1 %]es[% END %]</font>,
+      <font color=gold>[% module.unknown %] UNKNOWN[% IF module.unknown != 1 %]s[% END %]</font>,
+      <font color=red>[% module.fail %] FAIL[% IF module.fail != 1 %]s[% END %]</font>,
+      <font color=blue>[% module.na %] NA[% IF module.na != 1 %]s[% END %]</font>
+    [% END %]
+  </nobr></small></td>
+</tr>
