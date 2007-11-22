@@ -36,7 +36,7 @@ $Template::Stash::SCALAR_OPS->{int} = sub {
 
 $Data::Dumper::Sortkeys = 1;
 my $tt2 = Template->new(
-    INCLUDE_PATH => "$home/templates";
+    INCLUDE_PATH => "$home/templates",
 );
 
 my $VERSION = '0.1mp';
