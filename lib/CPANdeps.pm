@@ -1,19 +1,26 @@
 package CPANdeps;
 
 use strict;
+
+# do this before turning on warnings to avoid hatefulness
+open(DEVNULL, '>>/dev/null') || die("Can't open /dev/null\n");
+
 use warnings;
 
-use Apache2::Request;
-use Apache2::RequestIO;
-use Apache2::Const qw(OK);
-
+use CGI;
 use DBI;
-use CPAN;
+use Parse::CPAN::Packages;
 use YAML ();
 
 use Data::Dumper;
 use LWP::UserAgent;
 use Template;
+
+my $p;
+{
+    open(local *STDERR, '>&DEVNULL') || die("Can't squish STDERR\n");
+    $p = Parse::CPAN::Packages->new('db/02packages.details.txt.gz');
+}
 
 $Template::Stash::SCALAR_OPS->{int} = sub {
     my $scalar = shift;
@@ -22,7 +29,7 @@ $Template::Stash::SCALAR_OPS->{int} = sub {
 
 $Data::Dumper::Sortkeys = 1;
 my $tt2 = Template->new(
-    INCLUDE_PATH => '/web/cpandeps-modperl/templates',
+    INCLUDE_PATH => '/web/cpandeps-dev.cantrell.org.uk/templates',
 );
 
 my $VERSION = '0.1mp';
@@ -34,14 +41,14 @@ sub render {
 }
 
 sub go {
-    my $q = Apache2::Request->new(shift);
-    $q->content_type('text/html');
+    my $q = CGI->new();
+    print "Content-type: text/html\n\n";
     my $ua = LWP::UserAgent->new(
         agent => "cpandeps/$VERSION",
         from => 'cpandeps@cantrell.org.uk'
     );
     my $ttvars = {};
-    my $dbh = DBI->connect('dbi:SQLite:dbname=/web/cpandeps-modperl/db/cpantestresults', '', '');
+    my $dbh = DBI->connect('dbi:SQLite:dbname=/web/cpandeps-dev.cantrell.org.uk/db/cpantestresults', '', '');
     my $sth = $dbh->prepare("
           SELECT state, COUNT(state) FROM cpanstats
            WHERE dist=?
@@ -60,7 +67,6 @@ sub go {
     }
 
     render($q, $ttvars);
-    return OK;
 }
 
 sub checkmodule {
@@ -68,16 +74,18 @@ sub checkmodule {
     my $warning = '';
     $indent += 4;
 
-    my $dist = CPAN::Shell->expand("Module", $module);
+    my $m = $p->package($module);
+    return () unless($m);
+    my $dist = $m->distribution();
 
-    my $author = $dist->{RO}->{CPAN_USERID};
-    my $distname = $dist->{RO}->{CPAN_FILE};
+    my $author = $dist->cpanid();
+    my $distname = $dist->prefix();
 
     return () if(!defined($distname) || $distschecked->{$distname} || $module eq 'perl');
     $distschecked->{$distname} = 1;
 
-    my $CPANfile = $dist->{RO}->{CPAN_FILE};
-    (my $version = $dist->{RO}->{CPAN_FILE}) =~ s/.*-([^-]+)\.(tar\.gz|zip)/$1/;
+    my $CPANfile = $distname;
+    (my $version = $distname) =~ s/.*-([^-]+)\.(tar\.gz|zip)/$1/;
 
     return {
         name   => $module,
@@ -135,7 +143,7 @@ sub gettestresults {
 
 sub getreqs {
     my($author, $distname, $ua) = @_;
-    my $cachefile = "/web/cpandeps-modperl/db/$distname.yml";
+    my $cachefile = "/web/cpandeps-dev.cantrell.org.uk/db/$distname.yml";
     my $yaml;
     local $/ = undef;
 

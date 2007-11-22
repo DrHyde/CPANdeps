@@ -1,6 +1,0 @@
-#!/bin/sh
-
-/usr/bin/perl -MCPAN -e 'CPAN::Index->reload()'
-/etc/init.d/apache2 stop
-sleep 15
-/etc/init.d/apache2 start

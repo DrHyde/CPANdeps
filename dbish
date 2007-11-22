@@ -1,0 +1,3 @@
+#!/bin/sh
+
+dbish dbi:SQLite:dbname=db/cpantestresults

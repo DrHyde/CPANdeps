@@ -1,6 +1,7 @@
 #!/bin/sh
 
-cd /web/cpandeps-modperl/db
+cd /web/cpandeps-dev.cantrell.org.uk/db
+wget http://cpan.org/modules/02packages.details.txt.gz
 
 wget -q http://perl.grango.org/cpanstats.db.gz
 gzip -d cpanstats.db.gz && (
