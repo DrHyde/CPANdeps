@@ -10,4 +10,4 @@ gzip -d cpanstats.db.gz && (
   mv cpanstats.db cpantestresults
 )
 
-rm db/cpanstats.db.gz >/dev/null 2>/dev/null
+rm cpanstats.db.gz >/dev/null 2>/dev/null
