@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd /web/cpandeps-dev.cantrell.org.uk/db
+cd /web/cpandeps`cat dev_build`.cantrell.org.uk/db
 wget http://cpan.org/modules/02packages.details.txt.gz
 
 wget -q http://perl.grango.org/cpanstats.db.gz

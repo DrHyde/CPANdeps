@@ -16,6 +16,13 @@ use Data::Dumper;
 use LWP::UserAgent;
 use Template;
 
+open(DEVBUILD, 'dev_build');
+$/ = undef;
+my $devbuild = <DEVBUILD>;
+close(DEVBUILD);
+
+my $home = "/web/cpandeps$devbuild.cantrell.org.uk";
+
 my $p;
 {
     open(local *STDERR, '>&DEVNULL') || die("Can't squish STDERR\n");
@@ -29,7 +36,7 @@ $Template::Stash::SCALAR_OPS->{int} = sub {
 
 $Data::Dumper::Sortkeys = 1;
 my $tt2 = Template->new(
-    INCLUDE_PATH => '/web/cpandeps-dev.cantrell.org.uk/templates',
+    INCLUDE_PATH => "$home/templates";
 );
 
 my $VERSION = '0.1mp';
@@ -48,7 +55,7 @@ sub go {
         from => 'cpandeps@cantrell.org.uk'
     );
     my $ttvars = {};
-    my $dbh = DBI->connect('dbi:SQLite:dbname=/web/cpandeps-dev.cantrell.org.uk/db/cpantestresults', '', '');
+    my $dbh = DBI->connect("dbi:SQLite:dbname=$home/db/cpantestresults", '', '');
     my $sth = $dbh->prepare("
           SELECT state, COUNT(state) FROM cpanstats
            WHERE dist=?
@@ -143,7 +150,7 @@ sub gettestresults {
 
 sub getreqs {
     my($author, $distname, $ua) = @_;
-    my $cachefile = "/web/cpandeps-dev.cantrell.org.uk/db/$distname.yml";
+    my $cachefile = "$home/db/$distname.yml";
     my $yaml;
     local $/ = undef;
 
