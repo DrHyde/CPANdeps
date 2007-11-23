@@ -1,5 +1,8 @@
-<html><head><title>CPAN dependencies and test results checker[% IF module %]: [% module %][% END %]</title></head>
+<html><head><title>CPAN dependencies and test results checker[% IF module %]: [% module %][% END %]</title>
+ <link rel="stylesheet" type="text/css" href="/static/style.css" />
+</head>
 <body>
+  <script type="text/javascript"  src="http://adserver.szabgab.com/ads/direct_link_selflink.js?cnt=3"></script>
   <p><a href=http://drhyde.cvs.sourceforge.net/drhyde/perlcpandeps/>Source code</a> |
      <a href=mailto:david@cantrell.org.uk?Subject=cpandeps+bug+report>Report bugs</a>
   </p>
