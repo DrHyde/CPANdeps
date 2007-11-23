@@ -1,6 +1,8 @@
 #!/bin/sh
 
-cd /web/cpandeps`cat dev_build`.cantrell.org.uk/db
+DIR=`echo $0|sed 's/\/getfiles.sh//'`
+
+cd $DIR/db
 wget -q -O 02packages http://cpan.org/modules/02packages.details.txt.gz &&
 mv 02packages 02packages.details.txt.gz
 
