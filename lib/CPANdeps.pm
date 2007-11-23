@@ -12,12 +12,14 @@ use CGI;
 use DBI;
 use Parse::CPAN::Packages;
 use YAML ();
+use Module::CoreList;
 
 use Data::Dumper;
 use LWP::UserAgent;
 use Template;
 
-use constant DEFAULTPERL => 'any version';
+use constant ANYVERSION => 'any version';
+use constant DEFAULTCORE => '5.005';
 
 my $home = cwd();
 my $debug = ($home =~ /-dev/) ? 1 : 0;
@@ -39,7 +41,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-my $VERSION = '0.1mp';
+my $VERSION = '0.2cgi';
 
 sub render {
     my($q, $ttvars) = @_;
@@ -47,7 +49,7 @@ sub render {
     $sth->execute();
 
     # ugh, sorting versions is Hard
-    $ttvars->{perls} = [ DEFAULTPERL, 
+    $ttvars->{perls} = [ ANYVERSION, 
         sort {
             my($A, $B) = map {
                 my @v = split('\.', $_);
@@ -56,8 +58,7 @@ sub render {
             } ($a, $b);
             $A <=> $B;
         }
-        map { $_->[0] }
-        @{$sth->fetchall_arrayref()}
+        (qw(5.6 5.8 5.10), map { $_->[0] } @{$sth->fetchall_arrayref()})
     ];
 
     $ttvars->{debug} = "<h2>Debug info</h2><pre>".Dumper($ttvars)."</pre>"
@@ -77,11 +78,11 @@ sub go {
     die("Naughty naughty - bad perl version ".$q->param('perl')."\n")
         if(
             $q->param('perl') &&
-            $q->param('perl') ne DEFAULTPERL &&
+            $q->param('perl') ne ANYVERSION &&
             $q->param('perl') !~ /^[\d\.]+$/
         );
     my $ttvars = {
-        perl => $q->param('perl') || DEFAULTPERL
+        perl => $q->param('perl') || ANYVERSION
     };
     $ttvars->{query} = "
           SELECT state, COUNT(state) FROM cpanstats
@@ -89,7 +90,7 @@ sub go {
              AND version=?
              AND state IN ('fail', 'pass', 'na', 'unknown')
     ".
-       ($ttvars->{perl} eq DEFAULTPERL ? '' : "AND perl='".$ttvars->{perl}."'")
+       ($ttvars->{perl} eq ANYVERSION ? '' : "AND perl LIKE '".$ttvars->{perl}."%'")
     ."
         GROUP BY state
     ";
@@ -101,14 +102,25 @@ sub go {
     # $ttvars->{platforms} = [map { @{$_} } @{$dbh->selectall_arrayref("SELECT DISTINCT platform FROM cpanstats")}];
     my $distschecked = {};
     if($module) {
-        $ttvars->{modules} = [ checkmodule($module, -4, $distschecked, $sth, $ua) ];
+        $ttvars->{modules} = [checkmodule(
+            module => $module,
+            indent => -4,
+            distschecked => $distschecked,
+            perl => $ttvars->{perl},
+            sth => $sth,
+            ua => $ua
+        )];
     }
 
     render($q, $ttvars);
 }
 
 sub checkmodule {
-    my($module, $indent, $distschecked, $sth, $ua) = @_;
+    my %params = @_;
+    my($module, $moduleversion, $perl, $indent, $distschecked, $sth, $ua) =
+        @params{qw(
+            module moduleversion perl indent distschecked sth ua
+        )};
     my $warning = '';
     $indent += 4;
 
@@ -140,17 +152,23 @@ sub checkmodule {
 
     $distname =~ s!(^.*/|(\.tar\.gz|\.zip)$)!!g;
 
-    my @requires = getreqs($author, $distname, $ua);
-    if($requires[0] && $requires[0] eq '!') {
-        @requires = ();
-        $warning = "Couldn't get dependencies";
-    }
-
+    my $origdistname = $distname;
     $distname =~ s/\.pm|-[^-]*$//g;
-
-    my $testresults = ($distname eq 'perl') ?
+    my $testresults = (
+        $distname eq 'perl' ||
+        in_core(module => $module, perl => $perl)
+    ) ?
         'Core module' :
         gettestresults($sth, $distname, $version);
+
+    my %requires = ();
+    if($testresults ne 'Core module') {
+        %requires = getreqs($author, $origdistname, $ua);
+        if(defined($requires{'!'}) && $requires{'!'} eq '!') {
+            %requires = ();
+            $warning = "Couldn't get dependencies";
+        }
+    }
 
     return {
         name     => $module,
@@ -164,8 +182,29 @@ sub checkmodule {
             %{$testresults} :
             (textresult   => $testresults)
     }, map {
-        checkmodule($_, $indent, $distschecked, $sth, $ua);
-    } @requires
+        checkmodule(
+            module => $_,
+            moduleversion => $requires{$_},
+            indent => $indent,
+            distschecked => $distschecked,
+            perl => $perl,
+            sth => $sth,
+            ua => $ua
+        )
+    } keys %requires
+}
+
+sub in_core {
+    my %params = @_;
+    my($module, $perl) = @params{qw(module perl)};
+
+    my @v = split('\.', ($perl eq ANYVERSION) ? DEFAULTCORE : $perl);
+    $v[2] = 0 unless(defined($v[2]));
+    my $v = sprintf("%d.%03d%03d", @v);
+
+    my $incore = $Module::CoreList::version{0+$v}{$module};
+    # warn("M:$module I:$incore P:$perl V:$v\n");
+    return $incore;
 }
 
 sub gettestresults {
@@ -196,7 +235,7 @@ sub getreqs {
             GET => "http://search.cpan.org/src/$author/$distname/META.yml"
         ));
         if(!$res->is_success()) {
-            return ('!');
+            return ('!', '!');
         } else {
             $yaml = $res->content();
         }
@@ -205,11 +244,11 @@ sub getreqs {
         close(YAML);
     }
     eval { $yaml = YAML::Load($yaml); };
-    return ('!') if($@ || !defined($yaml));
+    return ('!', '!') if($@ || !defined($yaml));
 
     $yaml->{requires} ||= {};
     $yaml->{build_requires} ||= {};
-    return keys %{{ %{$yaml->{requires}}, %{$yaml->{build_requires}} }};
+    return %{$yaml->{requires}}, %{$yaml->{build_requires}};
 }
 
 1;

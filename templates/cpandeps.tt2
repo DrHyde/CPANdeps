@@ -6,22 +6,31 @@
     <script type="text/javascript"  src="http://adserver.szabgab.com/ads/direct_link_selflink.js?cnt=2"></script>
   </div>
   <p><a href=http://drhyde.cvs.sourceforge.net/drhyde/perlcpandeps/>Source code</a> |
-     <a href=mailto:david@cantrell.org.uk?Subject=cpandeps+bug+report>Report bugs</a>
+     <a href=mailto:david@cantrell.org.uk?Subject=cpandeps+bug+report>Report bugs</a> |
+     <a href=static/credits.html>Credits</a>
   </p>
   <p>Given a module name, this service will show you its dependencies
-    along with a summary of their test results from the CPAN testers, and
-    will attempt to calculate the probability that you (and more
-    importantly your users) will be able to install it without any hassle.
+    along with a summary of their test results from the CPAN testers.
     The idea is that if you have
     a choice of several modules to use, this will show you which is the
     most reliable.
   </p>
-  <p>Still confused?
-    <a href=/?module=Devel%3A%3ACheckOS>A picture</a>
-    <a href=/?module=XML%3A%3AFeed>is worth a thousand words</a>.
-  </p>
-  <p>It relies on modules having META.yml files so it can work
+  <p><small>It relies on modules having META.yml files so it can work
     out their dependencies, and is case-sensitive.
+    The perl version number is used to filter test results and also to
+    determine what's a core module and what's not - some core modules
+    also exist seperately on the CPAN, but we don't bother looking at
+    their dependencies.  If you choose a version like X.Y as opposed to
+    X.Y.Z, then you'll get test results for all X.Y.* versions, and we
+    assume X.Y.<strong>0</strong> for figuring out what's in core.  If you
+    choose 'any version', then you get all test results and we divine
+    core modules from perl <strong>5.005</strong>.  Modules can depend
+    on particular versions of other modules.  We ignore that.  Patches welcome.
+  </small></p>
+  <p>Confused?
+    <a href=/?module=XML%3A%3AFeed>A picture</a>
+    <a href=/?module=XML%3A%3AFeed&perl=5.8>is worth</a>
+    <a href=/?module=XML%3A%3AFeed&perl=5.8.8>a thousand words</a>.
   </p>
   <form method=get action=.>
     <table>
