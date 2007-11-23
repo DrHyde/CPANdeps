@@ -60,7 +60,7 @@ sub render {
         @{$sth->fetchall_arrayref()}
     ];
 
-    $ttvars->{debug} = "<h2>Debug info</h2><xmp>".Dumper($ttvars)."</xmp>"
+    $ttvars->{debug} = "<h2>Debug info</h2><pre>".Dumper($ttvars)."</pre>"
         if($debug);
 
     $tt2->process('cpandeps.tt2', $ttvars, sub { $q->print(@_); }) ||
