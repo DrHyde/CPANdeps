@@ -17,7 +17,11 @@ use Data::Dumper;
 use LWP::UserAgent;
 use Template;
 
+use constant DEFAULTPERL => 'any version';
+
 my $home = cwd();
+my $debug = ($home =~ /-dev/) ? 1 : 0;
+my $dbh = DBI->connect("dbi:SQLite:dbname=$home/db/cpantestresults", '', '');
 
 my $p;
 {
@@ -39,6 +43,26 @@ my $VERSION = '0.1mp';
 
 sub render {
     my($q, $ttvars) = @_;
+    my $sth = $dbh->prepare("SELECT DISTINCT perl FROM cpanstats");
+    $sth->execute();
+
+    # ugh, sorting versions is Hard
+    $ttvars->{perls} = [ DEFAULTPERL, 
+        sort {
+            my($A, $B) = map {
+                my @v = split('\.', $_);
+                $v[2] = defined($v[2]) ? $v[2] : 0;
+                $v[2] + 1000 * $v[1] + 1000000 * $v[0];
+            } ($a, $b);
+            $A <=> $B;
+        }
+        map { $_->[0] }
+        @{$sth->fetchall_arrayref()}
+    ];
+
+    $ttvars->{debug} = "<h2>Debug info</h2><xmp>".Dumper($ttvars)."</xmp>"
+        if($debug);
+
     $tt2->process('cpandeps.tt2', $ttvars, sub { $q->print(@_); }) ||
         die($tt2->error());
 }
@@ -50,15 +74,26 @@ sub go {
         agent => "cpandeps/$VERSION",
         from => 'cpandeps@cantrell.org.uk'
     );
-    my $ttvars = {};
-    my $dbh = DBI->connect("dbi:SQLite:dbname=$home/db/cpantestresults", '', '');
-    my $sth = $dbh->prepare("
+    die("Naughty naughty - bad perl version ".$q->param('perl')."\n")
+        if(
+            $q->param('perl') &&
+            $q->param('perl') ne DEFAULTPERL &&
+            $q->param('perl') !~ /^[\d\.]+$/
+        );
+    my $ttvars = {
+        perl => $q->param('perl') || DEFAULTPERL
+    };
+    $ttvars->{query} = "
           SELECT state, COUNT(state) FROM cpanstats
            WHERE dist=?
              AND version=?
              AND state IN ('fail', 'pass', 'na', 'unknown')
+    ".
+       ($ttvars->{perl} eq DEFAULTPERL ? '' : "AND perl='".$ttvars->{perl}."'")
+    ."
         GROUP BY state
-    ");
+    ";
+    my $sth = $dbh->prepare($ttvars->{query});
 
     my $module = $ttvars->{module} = $q->param('module');
 

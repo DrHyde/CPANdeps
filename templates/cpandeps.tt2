@@ -26,6 +26,12 @@
       <tr>
         <th align=right>Module</th>
         <td><input type=text name=module value="[% module | html %]"></td>
+        <th align=right>Perl</th>
+        <td><select name=perl>
+          [% FOREACH thisperl = perls %]
+            <option value="[% thisperl %]" [% IF thisperl == perl %] SELECTED [% END %]>[% thisperl %]
+          [% END %]
+        </td>
       </tr>
       <tr><th colspan=2 align=left><input type=submit></th></tr>
     </table>
@@ -51,4 +57,5 @@
     getting 'unknown' test results.  None of these results take into
     account the version of perl or the OS platform you are using.
   [% END %]
+[% debug %]
 </body></html>
