@@ -7,6 +7,7 @@ open(DEVNULL, '>>/dev/null') || die("Can't open /dev/null\n");
 
 use warnings;
 
+use Cwd;
 use CGI;
 use DBI;
 use Parse::CPAN::Packages;
@@ -16,12 +17,7 @@ use Data::Dumper;
 use LWP::UserAgent;
 use Template;
 
-open(DEVBUILD, 'dev_build');
-$/ = undef;
-my $devbuild = <DEVBUILD>;
-close(DEVBUILD);
-
-my $home = "/web/cpandeps$devbuild.cantrell.org.uk";
+my $home = cwd();
 
 my $p;
 {
