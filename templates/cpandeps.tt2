@@ -2,7 +2,9 @@
  <link rel="stylesheet" type="text/css" href="/static/style.css" />
 </head>
 <body>
-  <script type="text/javascript"  src="http://adserver.szabgab.com/ads/direct_link_selflink.js?cnt=3"></script>
+  <div id="perlad3">
+    <script type="text/javascript"  src="http://adserver.szabgab.com/ads/direct_link_selflink.js?cnt=2"></script>
+  </div>
   <p><a href=http://drhyde.cvs.sourceforge.net/drhyde/perlcpandeps/>Source code</a> |
      <a href=mailto:david@cantrell.org.uk?Subject=cpandeps+bug+report>Report bugs</a>
   </p>
