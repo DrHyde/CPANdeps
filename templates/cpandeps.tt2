@@ -60,7 +60,15 @@
       <tr>
         <th align=right>Chance of success</th>
         <td><img src=static/green.png height=16 width=[% successpc * 2 %]><img src=static/red.png height=16 width=[% 200 - successpc * 2 %]></td>
-        <td>[% successpc.int %]%</td>
+        <td>
+          [% IF successpc < 1 %]
+            [% successpc.sprintf("%.3f") %]% (to 3dp)
+           [% ELSIF successpc < 10 %]
+            [% successpc.sprintf("%.1f") %]% (to 1dp)
+           [% ELSE %]
+            [% successpc.int %]%
+          [% END %]
+        </td>
       </tr>
     </table>
     <p>The chance of success is calculated by multiplying the probabilities

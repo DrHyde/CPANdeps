@@ -35,6 +35,10 @@ $Template::Stash::SCALAR_OPS->{int} = sub {
     my $scalar = shift;
     return int(0 + $scalar);
 };
+$Template::Stash::SCALAR_OPS->{sprintf} = sub {
+    my $scalar = shift;
+    return sprintf(shift, $scalar);
+};
 
 $Data::Dumper::Sortkeys = 1;
 my $tt2 = Template->new(
