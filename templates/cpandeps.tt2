@@ -74,8 +74,8 @@
     <p>The chance of success is calculated by multiplying the probabilities
       of the module and all its dependencies passing their tests, or
       getting 'unknown' test results.  None of these results take into
-      account the version of perl or the OS platform you are using.</p>
-    <p>If you think this rocks incredibly hard, then I accept payment in 
+      account the OS platform you are using.</p>
+    <p>If you think this rocks incredibly hard, then I like
       <a href=http://www.cantrell.org.uk/david/wishlist/>shiny beads</a>.</p>
   [% END %]
 
