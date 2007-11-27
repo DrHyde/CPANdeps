@@ -19,6 +19,7 @@ use LWP::UserAgent;
 use Template;
 
 use constant ANYVERSION => 'any version';
+use constant ANYOS      => 'any OS';
 use constant DEFAULTCORE => '5.005';
 use constant MAXINT => ~0;
 
@@ -50,21 +51,7 @@ my $VERSION = '0.2cgi';
 
 sub render {
     my($q, $ttvars) = @_;
-    my $sth = $dbh->prepare("SELECT DISTINCT perl FROM cpanstats");
-    $sth->execute();
 
-    # ugh, sorting versions is Hard.  Can't use version.pm here
-    $ttvars->{perls} = [ ANYVERSION, 
-        sort {
-            my($A, $B) = map {
-                my @v = split('\.', $_);
-                $v[2] = defined($v[2]) ? $v[2] : 0;
-                $v[2] + 1000 * $v[1] + 1000000 * $v[0];
-            } ($a, $b);
-            $A <=> $B;
-        }
-        (qw(5.6 5.8 5.10), map { $_->[0] } @{$sth->fetchall_arrayref()})
-    ];
 
     $ttvars->{debug} = "<h2>Debug info</h2><pre>".Dumper($ttvars)."</pre>"
         if($debug);
@@ -80,22 +67,40 @@ sub go {
         agent => "cpandeps/$VERSION",
         from => 'cpandeps@cantrell.org.uk'
     );
-    die("Naughty naughty - bad perl version ".$q->param('perl')."\n")
-        if(
-            $q->param('perl') &&
-            $q->param('perl') ne ANYVERSION &&
-            $q->param('perl') !~ /^[\d\.]+$/
-        );
     my $ttvars = {
-        perl => $q->param('perl') || ANYVERSION
+        perl => ($q->param('perl') || ANYVERSION),
+        os   => ($q->param('os') || ANYOS),
+        # ugh, sorting versions is Hard.  Can't use version.pm here
+        perls => [ ANYVERSION, 
+            sort {
+                my($A, $B) = map {
+                    my @v = split('\.', $_);
+                    $v[2] = defined($v[2]) ? $v[2] : 0;
+                    $v[2] + 1000 * $v[1] + 1000000 * $v[0];
+                } ($a, $b);
+                $A <=> $B;
+            }
+            (qw(5.6 5.8 5.10), @{ do "$home/db/perls" })
+        ],
+        oses => [ANYOS, sort { $a cmp $b } @{ do "$home/db/oses" }]
     };
+
+    my $permitted_chars = join('', @{$ttvars->{perls}});
+    die("Naughty naughty - bad perl version ".$ttvars->{perl}."\n")
+        if($ttvars->{perl} =~ /[^$permitted_chars]/);
+        
+    my $permitted_chars = join('', @{$ttvars->{oses}});
+    die("Naughty naughty - bad OS ".$ttvars->{os}."\n")
+        if($ttvars->{os} =~ /[^$permitted_chars]/);
+
     $ttvars->{query} = "
           SELECT state, COUNT(state) FROM cpanstats
            WHERE dist=?
              AND version=?
              AND state IN ('fail', 'pass', 'na', 'unknown')
     ".
-       ($ttvars->{perl} eq ANYVERSION ? '' : "AND perl LIKE '".$ttvars->{perl}."%'")
+       ($ttvars->{perl} eq ANYVERSION ? '' : "AND perl LIKE '".$ttvars->{perl}."%'").
+       ($ttvars->{os} eq ANYOS ? '' : "AND os = '".$ttvars->{os}."'")
     ."
         GROUP BY state
     ";
@@ -103,8 +108,6 @@ sub go {
 
     my $module = $ttvars->{module} = $q->param('module');
 
-    # $ttvars->{perls} =[map { @{$_} } @{$dbh->selectall_arrayref("SELECT DISTINCT perl FROM cpanstats")}];
-    # $ttvars->{platforms} = [map { @{$_} } @{$dbh->selectall_arrayref("SELECT DISTINCT platform FROM cpanstats")}];
     my $distschecked = {};
     if($module) {
         $ttvars->{modules} = [checkmodule(
@@ -139,7 +142,11 @@ sub checkmodule {
 
     return () if(
         !defined($distname) ||
-        $distschecked->{$distname} >= $moduleversion ||
+        $distschecked->{$distname} ||
+        # (
+        #     exists($distschecked->{$distname}) &&
+        #     $distschecked->{$distname} >= $moduleversion
+        # ) ||
         $module eq 'perl'
     );
 
@@ -165,9 +172,10 @@ sub checkmodule {
 
     my $origdistname = $distname;
     $distname =~ s/\.pm|-[^-]*$//g;
+    my $incore = in_core(module => $module, perl => $perl);
     my $testresults = (
         $distname eq 'perl' ||
-        in_core(module => $module, perl => $perl) >= $moduleversion
+        (defined($incore) && $incore >= $moduleversion)
     ) ?
         'Core module' :
         gettestresults($sth, $distname, $version);

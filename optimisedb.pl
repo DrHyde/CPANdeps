@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use DBI;
+use Data::Dumper;
 
 my $dbh = DBI->connect("dbi:SQLite:dbname=cpanstats.db");
 
@@ -25,33 +26,43 @@ foreach my $ver (qw(
     $dbh->do("update cpanstats set perl='$ver' where perl like '$ver%'");
 }
 
-exit();
-
-__END__
-
+print "Merging OSes ...\n";
 $dbh->do("alter table cpanstats add column os");
-$dbh->do("alter table cpanstats add column arch");
+$dbh->do("alter table cpanstats add column arch"); # not yet used
 
-$dbh->do("UPDATE cpanstats SET os='Linux' WHERE platform LIKE '%linux%' AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='FreeBSD' WHERE platform LIKE '%freebsd%' AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='OpenBSD' WHERE platform LIKE '%openbsd%' AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='NetBSD' WHERE platform LIKE '%netbsd%'   AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='BSD OS' WHERE platform LIKE '%bsdos%'    AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='Mac OS X' WHERE platform LIKE '%darwin%'    AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='Mac OS Classic' WHERE platform LIKE       '%MacOS%' AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='Mac OS Classic' WHERE platform LIKE       '%MacPPC%' AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='Win32 (Cygwin)' WHERE platform LIKE       '%cygwin%' AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='Win32' WHERE platform LIKE '%win32%' AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='AIX' WHERE platform LIKE '%aix%' AND os  IS NULL");
-$dbh->do("UPDATE cpanstats SET os='OSF' WHERE platform LIKE '%osf%' AND os  IS NULL");
-$dbh->do("UPDATE cpanstats SET os='SCO' WHERE platform LIKE '%sco%' AND os  IS NULL");
-$dbh->do("UPDATE cpanstats SET os='HPUX' WHERE platform LIKE '%pa-risc%' AND os  IS NULL");
-$dbh->do("UPDATE cpanstats SET os='Irix' WHERE platform LIKE '%irix%' AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='SunOS/Solaris' WHERE platform LIKE '%solaris%' AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='' WHERE platform LIKE '%s390%' AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='' WHERE platform LIKE 'ia64.archrev%' AND os IS NULL");
-$dbh->do("UPDATE cpanstats SET os='' WHERE platform IN('on',                    'i686-AT386-gnu', 'i486-gnu-thread-multi') AND os IS NULL");
+my %os_by_platform = (
+    linux     => 'Linux',               freebsd   => 'FreeBSD',
+    openbsd   => 'OpenBSD',             netbsd    => 'NetBSD',
+    bsdos     => 'BSD OS',              darwin    => 'Mac OS X',
+    MacOS     => 'Mac OS classic',      MacPPC    => 'Mac OS classic',
+    aix       => 'AIX',                 osf       => 'OSF',
+    sco       => 'SCO',                 'pa-risc' => 'HP-UX',
+    irix      => 'Irix',                solaris   => 'SunOS/Solaris',
+    s390      => 'OS390/zOS'
+);
+foreach my $platform (keys %os_by_platform) {
+    print "  $platform -> $os_by_platform{$platform}\n";
+    $dbh->do("
+        UPDATE cpanstats
+           SET os='$os_by_platform{$platform}'
+         WHERE platform LIKE '%$platform%' AND os IS NULL"
+    );
+}
 
-$dbh->do("CREATE INDEX osarchidx ON cpanstats (os, arch)");
+print "  anything else -> Unknown OS\n";
+$dbh->do("CREATE INDEX osidx ON cpanstats (os)");
+$dbh->do("UPDATE cpanstats SET os='Unknown OS' WHERE os IS NULL");
 
-$dbh->do("VACUUM");
+print "Caching list of perls\n";
+open(PERLS, ">perls") || die("Can't cache list of perl versions\n");
+print PERLS Dumper([map { $_->[0] } @{$dbh->selectall_arrayref("SELECT DISTINCT perl FROM cpanstats")}]);
+close(PERLS);
+
+print "Caching list of OSes\n";
+open(OSES, ">oses") || die("Can't cache list of OSes\n");
+print OSES Dumper([map { $_->[0] } @{$dbh->selectall_arrayref("SELECT DISTINCT os FROM cpanstats")}]);
+close(OSES);
+
+$dbh->do("alter table cpanstats add column osfamily"); # not yet used
+$dbh->do("alter table cpanstats add column perlmajorver"); # not yet used
+# $dbh->do("VACUUM");
