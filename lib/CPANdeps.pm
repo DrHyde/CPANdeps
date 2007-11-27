@@ -20,6 +20,7 @@ use Template;
 
 use constant ANYVERSION => 'any version';
 use constant DEFAULTCORE => '5.005';
+use constant MAXINT => ~0;
 
 my $home = cwd();
 my $debug = ($home =~ /-dev/) ? 1 : 0;
@@ -52,7 +53,7 @@ sub render {
     my $sth = $dbh->prepare("SELECT DISTINCT perl FROM cpanstats");
     $sth->execute();
 
-    # ugh, sorting versions is Hard
+    # ugh, sorting versions is Hard.  Can't use version.pm here
     $ttvars->{perls} = [ ANYVERSION, 
         sort {
             my($A, $B) = map {
@@ -108,6 +109,7 @@ sub go {
     if($module) {
         $ttvars->{modules} = [checkmodule(
             module => $module,
+            moduleversion => MAXINT,
             indent => -4,
             distschecked => $distschecked,
             perl => $ttvars->{perl},
@@ -135,11 +137,16 @@ sub checkmodule {
     my $author = $dist->cpanid();
     my $distname = $dist->prefix();
 
-    return () if(!defined($distname) || $distschecked->{$distname} || $module eq 'perl');
-    $distschecked->{$distname} = 1;
+    return () if(
+        !defined($distname) ||
+        $distschecked->{$distname} >= $moduleversion ||
+        $module eq 'perl'
+    );
 
     my $CPANfile = $distname;
     (my $version = $distname) =~ s/.*-([^-]+)\.(tar\.gz|zip)/$1/;
+
+    $distschecked->{$distname} = $version;
 
     return {
         name   => $module,
@@ -160,7 +167,7 @@ sub checkmodule {
     $distname =~ s/\.pm|-[^-]*$//g;
     my $testresults = (
         $distname eq 'perl' ||
-        in_core(module => $module, perl => $perl)
+        in_core(module => $module, perl => $perl) >= $moduleversion
     ) ?
         'Core module' :
         gettestresults($sth, $distname, $version);
