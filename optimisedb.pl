@@ -38,6 +38,7 @@ my %os_by_platform = (
     aix       => 'AIX',                 osf       => 'OSF',
     sco       => 'SCO',                 'pa-risc' => 'HP-UX',
     irix      => 'Irix',                solaris   => 'SunOS/Solaris',
+    cygwin    => 'Windows (Cygwin)',    win32     => 'Windows (Win32)',
     s390      => 'OS390/zOS'
 );
 foreach my $platform (keys %os_by_platform) {
