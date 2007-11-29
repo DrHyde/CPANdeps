@@ -1,3 +1,5 @@
+# $Id: CPANdeps.pm,v 1.13 2007/11/29 16:23:49 drhyde Exp $
+
 package CPANdeps;
 
 use strict;
@@ -39,7 +41,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-my $VERSION = '0.2cgi';
+my $VERSION = '$Id: CPANdeps.pm,v 1.13 2007/11/29 16:23:49 drhyde Exp $';
 
 sub render {
     my($q, $ttvars) = @_;
