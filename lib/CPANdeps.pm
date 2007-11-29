@@ -1,10 +1,6 @@
 package CPANdeps;
 
 use strict;
-
-# do this before turning on warnings to avoid hatefulness
-open(DEVNULL, '>>/dev/null') || die("Can't open /dev/null\n");
-
 use warnings;
 
 use Cwd;
@@ -27,11 +23,7 @@ my $home = cwd();
 my $debug = ($home =~ /-dev/) ? 1 : 0;
 my $dbh = DBI->connect("dbi:SQLite:dbname=$home/db/cpantestresults", '', '');
 
-my $p;
-{
-    open(local *STDERR, '>&DEVNULL') || die("Can't squish STDERR\n");
-    $p = Parse::CPAN::Packages->new('db/02packages.details.txt.gz');
-}
+my $p = Parse::CPAN::Packages->new('db/02packages.details.txt.gz');
 
 $Template::Stash::SCALAR_OPS->{int} = sub {
     my $scalar = shift;
@@ -89,7 +81,7 @@ sub go {
     die("Naughty naughty - bad perl version ".$ttvars->{perl}."\n")
         if($ttvars->{perl} =~ /[^$permitted_chars]/);
         
-    my $permitted_chars = join('', @{$ttvars->{oses}});
+    $permitted_chars = join('', @{$ttvars->{oses}});
     die("Naughty naughty - bad OS ".$ttvars->{os}."\n")
         if($ttvars->{os} =~ /[^$permitted_chars]/);
 
