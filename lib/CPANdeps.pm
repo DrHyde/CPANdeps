@@ -1,19 +1,17 @@
-# $Id: CPANdeps.pm,v 1.13 2007/11/29 16:23:49 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.14 2007/11/29 16:43:43 drhyde Exp $
 
 package CPANdeps;
 
 use strict;
 use warnings;
+use vars qw($VERSION);
 
 use Cwd;
 use CGI;
-use DBI;
 use Parse::CPAN::Packages;
 use YAML ();
-use Module::CoreList;
 
 use Data::Dumper;
-use LWP::UserAgent;
 use Template;
 
 use constant ANYVERSION => 'any version';
@@ -23,7 +21,6 @@ use constant MAXINT => ~0;
 
 my $home = cwd();
 my $debug = ($home =~ /-dev/) ? 1 : 0;
-my $dbh = DBI->connect("dbi:SQLite:dbname=$home/db/cpantestresults", '', '');
 
 my $p = Parse::CPAN::Packages->new('db/02packages.details.txt.gz');
 
@@ -41,7 +38,8 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-my $VERSION = '$Id: CPANdeps.pm,v 1.13 2007/11/29 16:23:49 drhyde Exp $';
+($VERSION = '$Id: CPANdeps.pm,v 1.14 2007/11/29 16:43:43 drhyde Exp $')
+    =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
     my($q, $ttvars) = @_;
@@ -57,10 +55,6 @@ sub render {
 sub go {
     my $q = CGI->new();
     print "Content-type: text/html\n\n";
-    my $ua = LWP::UserAgent->new(
-        agent => "cpandeps/$VERSION",
-        from => 'cpandeps@cantrell.org.uk'
-    );
     my $ttvars = {
         perl => ($q->param('perl') || ANYVERSION),
         os   => ($q->param('os') || ANYOS),
@@ -87,23 +81,35 @@ sub go {
     die("Naughty naughty - bad OS ".$ttvars->{os}."\n")
         if($ttvars->{os} =~ /[^$permitted_chars]/);
 
-    $ttvars->{query} = "
-          SELECT state, COUNT(state) FROM cpanstats
-           WHERE dist=?
-             AND version=?
-             AND state IN ('fail', 'pass', 'na', 'unknown')
-    ".
-       ($ttvars->{perl} eq ANYVERSION ? '' : "AND perl LIKE '".$ttvars->{perl}."%'").
-       ($ttvars->{os} eq ANYOS ? '' : "AND os = '".$ttvars->{os}."'")
-    ."
-        GROUP BY state
-    ";
-    my $sth = $dbh->prepare($ttvars->{query});
-
     my $module = $ttvars->{module} = $q->param('module');
 
     my $distschecked = {};
     if($module) {
+        # load these as late as possible
+        eval 'use DBI; use LWP::UserAgent;';
+        die($@) if($@);
+
+        my $dbh = DBI->connect("dbi:SQLite:dbname=$home/db/cpantestresults");
+        my $ua = LWP::UserAgent->new(
+            agent => "cpandeps/$VERSION",
+            from => 'cpandeps@cantrell.org.uk'
+        );
+
+        $ttvars->{query} = join(' AND ', grep { $_ } (
+            q{
+                SELECT state, COUNT(state) FROM cpanstats
+                 WHERE dist=?
+                   AND version=?
+                   AND state IN ('fail', 'pass', 'na', 'unknown')
+            }, 
+            (($ttvars->{os} eq ANYOS) ? '' : "os = '".$ttvars->{os}."'"),
+            (($ttvars->{perl} eq ANYVERSION)
+                ? '' : "perl LIKE '".$ttvars->{perl}."%'")
+        )).
+        ' GROUP BY state ';
+    
+        my $sth = $dbh->prepare($ttvars->{query});
+
         $ttvars->{modules} = [checkmodule(
             module => $module,
             moduleversion => MAXINT,
@@ -215,6 +221,10 @@ sub in_core {
     $v[2] = 0 unless(defined($v[2]));
     my $v = sprintf("%d.%03d%03d", @v);
 
+    if(!$Module::CoreList::VERSION) {
+        eval 'use Module::CoreList';
+        die($@) if($@);
+    }
     my $incore = $Module::CoreList::version{0+$v}{$module};
     # warn("M:$module I:$incore P:$perl V:$v\n");
     return $incore;
