@@ -2,13 +2,13 @@
   <td valign=top><nobr>
     [% FOREACH x = [1 .. module.indent] %]&nbsp;[% END %]
     <a href=[% module.cpantestersurl %]>[% module.name %]</a>
-    <!-- in [% module.distname %] [% module.version %] ([% module.CPANfile %]) -->
     [% IF module.warning %]
       <br>
       [% FOREACH x = [1 .. module.indent] %]&nbsp;[% END %]
       <small>[% module.warning %]</small>
     [% END %]
   </nobr></td>
+  <td><a href=http://bbbike.radzeit.de/~slaven/cpantestersmatrix.cgi?dist=[% module.distname %];maxver=1><img alt="Details" border=0 height=16 width=16 src=static/matrix.png></a></td>
   <td valign=top>
     [% IF module.textresult %]
       <img src=static/grey.png height=16 width=200>

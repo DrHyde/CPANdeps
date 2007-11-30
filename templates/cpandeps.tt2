@@ -64,7 +64,7 @@
         [% END %]
       [% END %]
       <tr>
-        <th align=right>Chance of success</th>
+        <th colspan=2 align=right>Chance of success</th>
         <td><img src=static/green.png height=16 width=[% successpc * 2 %]><img src=static/red.png height=16 width=[% 200 - successpc * 2 %]></td>
         <td>
           [% IF successpc < 1 %]

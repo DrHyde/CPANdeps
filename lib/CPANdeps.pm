@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.14 2007/11/29 16:43:43 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.15 2007/11/30 15:09:02 drhyde Exp $
 
 package CPANdeps;
 
@@ -38,7 +38,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.14 2007/11/29 16:43:43 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.15 2007/11/30 15:09:02 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -137,8 +137,12 @@ sub checkmodule {
     return () unless($m);
     my $dist = $m->distribution();
 
-    my $author = $dist->cpanid();
-    my $distname = $dist->prefix();
+    my $author       = $dist->cpanid();
+    my $distname     = $dist->prefix();
+    my $distversion  = $dist->version();
+
+    my $CPANfile     = $distname;
+    my $incore       = in_core(module => $module, perl => $perl);
 
     return () if(
         !defined($distname) ||
@@ -150,15 +154,13 @@ sub checkmodule {
         $module eq 'perl'
     );
 
-    my $CPANfile = $distname;
-    (my $version = $distname) =~ s/.*-([^-]+)\.(tar\.gz|zip)/$1/;
 
-    $distschecked->{$distname} = $version;
+    $distschecked->{$distname} = $distversion;
 
     return {
         name   => $module,
         distname => $distname,
-        version  => $version,
+        version  => $distversion,
         indent   => $indent,
         cpantestersurl => "http://search.cpan.org/search?query=$module",
         warning => "Couldn't find module",
@@ -166,19 +168,18 @@ sub checkmodule {
 
     $author   = '' unless(defined($author));
     $distname = '' unless(defined($distname));
-    $version = '' unless(defined($version));
+    $distversion = '' unless(defined($distversion));
 
     $distname =~ s!(^.*/|(\.tar\.gz|\.zip)$)!!g;
 
     my $origdistname = $distname;
     $distname =~ s/\.pm|-[^-]*$//g;
-    my $incore = in_core(module => $module, perl => $perl);
     my $testresults = (
         $distname eq 'perl' ||
         (defined($incore) && $incore >= $moduleversion)
     ) ?
         'Core module' :
-        gettestresults($sth, $distname, $version);
+        gettestresults($sth, $distname, $distversion);
 
     my %requires = ();
     if($testresults ne 'Core module') {
@@ -193,7 +194,7 @@ sub checkmodule {
         name     => $module,
         distname => $distname,
         CPANfile => $CPANfile,
-        version  => $version,
+        version  => $distversion,
         indent   => $indent,
         cpantestersurl => "http://cpantesters.perl.org/show/$distname.html",
         warning => $warning,
@@ -231,8 +232,8 @@ sub in_core {
 }
 
 sub gettestresults {
-    my($sth, $distname, $version) = @_;
-    $sth->execute($distname, ''.$version);
+    my($sth, $distname, $distversion) = @_;
+    $sth->execute($distname, ''.$distversion);
     my $r = $sth->fetchall_arrayref();
     if(ref($r)) { $r = { map { $_->[0] => $_->[1] } @{$r} }; }
      else { return 'Error getting test results'; }
