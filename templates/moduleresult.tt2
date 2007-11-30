@@ -8,7 +8,11 @@
       <small>[% module.warning %]</small>
     [% END %]
   </nobr></td>
-  <td><a href=http://bbbike.radzeit.de/~slaven/cpantestersmatrix.cgi?dist=[% module.distname %];maxver=1><img alt="Details" border=0 height=16 width=16 src=static/matrix.png></a></td>
+  <td valign=top>
+    [% IF !module.textresult %]
+      <a href=http://bbbike.radzeit.de/~slaven/cpantestersmatrix.cgi?dist=[% module.distname %];maxver=1><img alt="Details" border=0 height=16 width=16 src=static/matrix.png></a>
+    [% END %]
+  </td>
   <td valign=top>
     [% IF module.textresult %]
       <img src=static/grey.png height=16 width=200>
