@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.16 2008/01/04 11:57:03 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.17 2008/01/04 13:50:41 drhyde Exp $
 
 package CPANdeps;
 
@@ -38,7 +38,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.16 2008/01/04 11:57:03 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.17 2008/01/04 13:50:41 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -251,8 +251,8 @@ sub getreqs {
     my $yaml;
     local $/ = undef;
 
-    # if we have a valid (less than 7 day old) cache file, read it
-    if(-e $cachefile && (stat($cachefile))[9] + 7 * 86400 > time()) {
+    # if we have a cache file, read it
+    if(-e $cachefile) {
         open(YAML, $cachefile) || die("Can't read $cachefile\n");
         $yaml = <YAML>;
         close(YAML);
