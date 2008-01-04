@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<cpandeps>
+  <module>[% module %]</module>
+  <perl>[% perl %]</perl>
+  <os>[% os %]</os>
+  [% IF module %]
+    [% successpc = 100 %]
+    [% FOREACH module = modules %]
+      [% INCLUDE 'moduleresult-xml.tt2' module = module %]
+      [% IF module.pass + module.unknown + module.fail + module.na %]
+        [% successpc = successpc * (module.pass + module.unknown) /
+           (module.pass + module.unknown + module.fail + module.na) %]
+      [% END %]
+    [% END %]
+    <chanceofsuccess>
+      [% IF successpc < 1 %]
+        [% successpc.sprintf("%.3f") %]% (to 3dp)
+       [% ELSIF successpc < 10 %]
+        [% successpc.sprintf("%.1f") %]% (to 1dp)
+       [% ELSE %]
+        [% successpc.int %]%
+      [% END %]
+    </chanceofsuccess>
+  [% END %]
+
+<debug>[% debug %]</debug>
+</cpandeps>

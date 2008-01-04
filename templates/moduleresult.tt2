@@ -1,10 +1,10 @@
 <tr>
   <td valign=top><nobr>
-    [% FOREACH x = [1 .. module.indent] %]&nbsp;[% END %]
+    [% FOREACH x = [1 .. module.indent] %]&nbsp;&nbsp;&nbsp;&nbsp;[% END %]
     <a href=[% module.cpantestersurl %]>[% module.name %]</a>
     [% IF module.warning %]
       <br>
-      [% FOREACH x = [1 .. module.indent] %]&nbsp;[% END %]
+      [% FOREACH x = [1 .. module.indent] %]&nbsp;&nbsp;&nbsp;&nbsp;[% END %]
       <small>[% module.warning %]</small>
     [% END %]
   </nobr></td>

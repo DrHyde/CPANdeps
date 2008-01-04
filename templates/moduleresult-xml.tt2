@@ -1,0 +1,14 @@
+<dependency>
+  <module>[% module.name %]</module>
+  <depth>[% module.indent %]</depth>
+  <warning>[% module.warning %]</warning>
+  <textresult>[% module.textresult %]</textresult>
+  [% total = module.pass + module.fail + module.na   + module.unknown %]
+  <totalresults>[% total %]</totalresults>
+  [% IF total != 0 %]
+    <passes>[% module.pass %]</passes>
+    <fails>[% module.fail %]</fails>
+    <unknowns>[% module.unknown %]</unknowns>
+    <nas>[% module.na %]</nas>
+  [% END %]
+</dependency>

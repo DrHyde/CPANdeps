@@ -7,7 +7,8 @@
   </div>
   <p><a href=http://drhyde.cvs.sourceforge.net/drhyde/perlcpandeps/>Source code</a> |
      <a href=mailto:david@cantrell.org.uk?Subject=cpandeps+bug+report>Report bugs</a> |
-     <a href=static/credits.html>Credits</a>
+     <a href=static/credits.html>Credits</a> |
+     <a href=static/links.html>Links</a>
   </p>
   <p>Given a module name, this service will show you its dependencies
     along with a summary of their test results from the CPAN testers.
@@ -54,6 +55,7 @@
     </table>
   </form>
   [% IF module %]
+    <p><small><a href="?xml=1;module=[% module | html %];perl=[% perl %];os=[% os | html %]">Get results in XML</a></small>
     [% successpc = 100 %]
     <table>
       [% FOREACH module = modules %]

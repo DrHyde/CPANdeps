@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.15 2007/11/30 15:09:02 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.16 2008/01/04 11:57:03 drhyde Exp $
 
 package CPANdeps;
 
@@ -38,7 +38,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.15 2007/11/30 15:09:02 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.16 2008/01/04 11:57:03 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -48,13 +48,16 @@ sub render {
     $ttvars->{debug} = "<h2>Debug info</h2><pre>".Dumper($ttvars)."</pre>"
         if($debug);
 
-    $tt2->process('cpandeps.tt2', $ttvars, sub { $q->print(@_); }) ||
-        die($tt2->error());
+    $tt2->process(
+        $q->param('xml') ? 'cpandeps-xml.tt2' : 'cpandeps.tt2',
+        $ttvars,
+        sub { $q->print(@_); }
+    ) || die($tt2->error());
 }
 
 sub go {
     my $q = CGI->new();
-    print "Content-type: text/html\n\n";
+    print "Content-type: text/".($q->param('xml') ? 'xml' : 'html')."\n\n";
     my $ttvars = {
         perl => ($q->param('perl') || ANYVERSION),
         os   => ($q->param('os') || ANYOS),
@@ -113,7 +116,7 @@ sub go {
         $ttvars->{modules} = [checkmodule(
             module => $module,
             moduleversion => MAXINT,
-            indent => -4,
+            indent => -1,
             distschecked => $distschecked,
             perl => $ttvars->{perl},
             sth => $sth,
@@ -131,7 +134,7 @@ sub checkmodule {
             module moduleversion perl indent distschecked sth ua
         )};
     my $warning = '';
-    $indent += 4;
+    $indent += 1;
 
     my $m = $p->package($module);
     return () unless($m);
