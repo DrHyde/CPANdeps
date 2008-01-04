@@ -1,5 +1,11 @@
 <?xml version="1.0"?>
-<!-- This is an experimental XML interface. It's structure and location may change.  If you want them to change, please ask.  Please try to avoid kicking the shit out of my server, it's only little and doesn't like being bullied. -->
+<!--
+  This is an experimental XML interface.
+  It's structure and location may change.
+  If you want them to change, please ask.
+  Please try to avoid kicking the shit out of my server,
+  it's only little and doesn't like being bullied.
+-->
 <cpandeps>
   <module>[% module %]</module>
   <perl>[% perl %]</perl>
