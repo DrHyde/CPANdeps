@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.17 2008/01/04 13:50:41 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.18 2008/01/04 14:06:20 drhyde Exp $
 
 package CPANdeps;
 
@@ -38,7 +38,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.17 2008/01/04 13:50:41 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.18 2008/01/04 14:06:20 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -120,7 +120,8 @@ sub go {
             distschecked => $distschecked,
             perl => $ttvars->{perl},
             sth => $sth,
-            ua => $ua
+            ua => $ua,
+            q => $q
         )];
     }
 
@@ -129,9 +130,9 @@ sub go {
 
 sub checkmodule {
     my %params = @_;
-    my($module, $moduleversion, $perl, $indent, $distschecked, $sth, $ua) =
+    my($module, $moduleversion, $perl, $indent, $distschecked, $sth, $ua, $q) =
         @params{qw(
-            module moduleversion perl indent distschecked sth ua
+            module moduleversion perl indent distschecked sth ua q
         )};
     my $warning = '';
     $indent += 1;
@@ -182,7 +183,7 @@ sub checkmodule {
         (defined($incore) && $incore >= $moduleversion)
     ) ?
         'Core module' :
-        gettestresults($sth, $distname, $distversion);
+        gettestresults($sth, $distname, $distversion, $q->param('perl'), $q->param('os'));
 
     my %requires = ();
     if($testresults ne 'Core module') {
@@ -212,7 +213,8 @@ sub checkmodule {
             distschecked => $distschecked,
             perl => $perl,
             sth => $sth,
-            ua => $ua
+            ua => $ua,
+            q => $q
         )
     } keys %requires
 }
@@ -235,14 +237,23 @@ sub in_core {
 }
 
 sub gettestresults {
-    my($sth, $distname, $distversion) = @_;
-    $sth->execute($distname, ''.$distversion);
-    my $r = $sth->fetchall_arrayref();
-    if(ref($r)) { $r = { map { $_->[0] => $_->[1] } @{$r} }; }
-     else { return 'Error getting test results'; }
-
-    $r->{$_} = 0 for(grep { !exists($r->{$_}) } qw(fail pass unknown na));
-    return $r;
+    my($sth, $distname, $distversion, $perl, $os) = @_;
+    # if we have a suitably recent cache file (< 7 days), read it
+    (my $cachefile = "$home/db/$distname-$distversion-$perl-$os.dd") =~ s/ /_/g;
+    if(-e $cachefile && (stat($cachefile))[9] + 7 * 86400 > time()) {
+        return do($cachefile)
+    } else {
+        $sth->execute($distname, ''.$distversion);
+        my $r = $sth->fetchall_arrayref();
+        if(ref($r)) { $r = { map { $_->[0] => $_->[1] } @{$r} }; }
+         else { return 'Error getting test results'; }
+        $r->{$_} = 0 for(grep { !exists($r->{$_}) } qw(fail pass unknown na));
+        eval "use Data::Dumper";
+        open(DUMPER, ">$cachefile") || die("Can't write $cachefile\n");
+        print DUMPER Dumper($r);
+        close(DUMPER);
+        return $r;
+    }
 }
 
 sub getreqs {
