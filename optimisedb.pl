@@ -40,7 +40,7 @@ my %os_by_platform = (
     sco       => 'SCO',                 'pa-risc' => 'HP-UX',
     irix      => 'Irix',                solaris   => 'SunOS/Solaris',
     cygwin    => 'Windows (Cygwin)',    win32     => 'Windows (Win32)',
-    s390      => 'OS390/zOS'
+    s390      => 'OS390/zOS',           VMS_      => 'VMS',
 );
 foreach my $platform (keys %os_by_platform) {
     print "  $platform -> $os_by_platform{$platform}\n";
