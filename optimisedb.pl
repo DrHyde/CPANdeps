@@ -21,6 +21,7 @@ foreach my $ver (qw(
     5.8.0 5.8.1 5.8.2 5.8.8 5.8.9
     5.9.0 5.9.1 5.9.2 5.9.3 5.9.4 5.9.5 5.9.6
     5.10.0 5.10.1 5.10.2 5.10.3 5.10.4
+    5.11.0 5.11.1 5.11.2
 )) {
     print "  $ver\n";
     $dbh->do("update cpanstats set perl='$ver' where perl like '$ver%'");

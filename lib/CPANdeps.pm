@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.19 2008/01/04 14:06:49 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.20 2008/01/05 20:22:47 drhyde Exp $
 
 package CPANdeps;
 
@@ -38,7 +38,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.19 2008/01/04 14:06:49 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.20 2008/01/05 20:22:47 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -239,6 +239,8 @@ sub in_core {
 sub gettestresults {
     my($sth, $distname, $distversion, $perl, $os) = @_;
     # if we have a suitably recent cache file (< 3 days), read it
+    $perl ||= ANYVERSION;
+    $os   ||= ANYOS;
     (my $cachefile = "$home/db/$distname-$distversion-$perl-$os.dd") =~ s/ /_/g;
     if(-e $cachefile && (stat($cachefile))[9] + 3 * 86400 > time()) {
         return do($cachefile)
