@@ -41,6 +41,7 @@ my %os_by_platform = (
     irix      => 'Irix',                solaris   => 'SunOS/Solaris',
     cygwin    => 'Windows (Cygwin)',    win32     => 'Windows (Win32)',
     s390      => 'OS390/zOS',           VMS_      => 'VMS',
+    dragonfly => 'Dragonfly BSD',
 );
 foreach my $platform (keys %os_by_platform) {
     print "  $platform -> $os_by_platform{$platform}\n";
