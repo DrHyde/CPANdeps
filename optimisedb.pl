@@ -42,6 +42,9 @@ my %os_by_platform = (
     cygwin    => 'Windows (Cygwin)',    win32     => 'Windows (Win32)',
     s390      => 'OS390/zOS',           VMS_      => 'VMS',
     dragonfly => 'Dragonfly BSD',
+    'i486-gnu-thread-multi' => 'Linux', # Debian 4.2.1-6 ?
+    'i686-AT386-gnu' => 'GNU Hurd',     # GNU debian 0.3 GNU-Mach 1.3/Hurd-0.3 i686-AT386 GNU
+    ARCHREV_0 => 'HP-UX', # IA64.ARCHREV_0-LP64 / IA64.ARCHREV_0-thread-multi
 );
 foreach my $platform (keys %os_by_platform) {
     print "  $platform -> $os_by_platform{$platform}\n";
