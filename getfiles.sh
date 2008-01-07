@@ -17,3 +17,6 @@ gzip -fd cpanstats.db.gz && (
 )
 
 rm cpanstats.db.gz >/dev/null 2>/dev/null
+
+cd $DIR
+echo select \* from cpanstats where os = \'Unknown OS\'\;|./dbish 2>/dev/null
