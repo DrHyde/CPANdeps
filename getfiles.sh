@@ -23,4 +23,4 @@ echo
 echo
 echo Unknown OSes
 echo
-echo select \* from cpanstats where os = \'Unknown OS\'\;|./dbish
+echo select \* from cpanstats where os = \'Unknown OS\'\;|./dbish 2>/dev/null
