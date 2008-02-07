@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.20 2008/01/05 20:22:47 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.21 2008/02/07 20:08:56 drhyde Exp $
 
 package CPANdeps;
 
@@ -16,13 +16,14 @@ use Template;
 
 use constant ANYVERSION => 'any version';
 use constant ANYOS      => 'any OS';
+use constant LATESTPERL  => '5.10.0';
 use constant DEFAULTCORE => '5.005';
 use constant MAXINT => ~0;
 
 my $home = cwd();
 my $debug = ($home =~ /-dev/) ? 1 : 0;
 
-my $p = Parse::CPAN::Packages->new('db/02packages.details.txt.gz');
+my $p = Parse::CPAN::Packages->new("$home/db/02packages.details.txt.gz");
 
 $Template::Stash::SCALAR_OPS->{int} = sub {
     my $scalar = shift;
@@ -38,7 +39,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.20 2008/01/05 20:22:47 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.21 2008/02/07 20:08:56 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -59,7 +60,11 @@ sub go {
     my $q = CGI->new();
     print "Content-type: text/".($q->param('xml') ? 'xml' : 'html')."\n\n";
     my $ttvars = {
-        perl => ($q->param('perl') || ANYVERSION),
+        perl => (
+	    $q->param('perl') eq 'latest' ? LATESTPERL :
+	    $q->param('perl')             ? $q->param('perl') :
+		                          ANYVERSION
+        ),
         os   => ($q->param('os') || ANYOS),
         # ugh, sorting versions is Hard.  Can't use version.pm here
         perls => [ ANYVERSION, 
