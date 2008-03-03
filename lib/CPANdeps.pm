@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.21 2008/02/07 20:08:56 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.22 2008/03/03 14:09:43 drhyde Exp $
 
 package CPANdeps;
 
@@ -39,7 +39,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.21 2008/02/07 20:08:56 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.22 2008/03/03 14:09:43 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -61,9 +61,9 @@ sub go {
     print "Content-type: text/".($q->param('xml') ? 'xml' : 'html')."\n\n";
     my $ttvars = {
         perl => (
-	    $q->param('perl') eq 'latest' ? LATESTPERL :
-	    $q->param('perl')             ? $q->param('perl') :
-		                          ANYVERSION
+	    ($q->param('perl') eq 'latest') ? LATESTPERL :
+	    $q->param('perl')               ? $q->param('perl') :
+		                              ANYVERSION
         ),
         os   => ($q->param('os') || ANYOS),
         # ugh, sorting versions is Hard.  Can't use version.pm here
@@ -80,7 +80,7 @@ sub go {
         ],
         oses => [ANYOS, sort { $a cmp $b } @{ do "$home/db/oses" }]
     };
-
+    # die(Dumper($ttvars));
     my $permitted_chars = join('', @{$ttvars->{perls}});
     die("Naughty naughty - bad perl version ".$ttvars->{perl}."\n")
         if($ttvars->{perl} =~ /[^$permitted_chars]/);
@@ -246,7 +246,8 @@ sub gettestresults {
     # if we have a suitably recent cache file (< 3 days), read it
     $perl ||= ANYVERSION;
     $os   ||= ANYOS;
-    (my $cachefile = "$home/db/$distname-$distversion-$perl-$os.dd") =~ s/ /_/g;
+    (my $os_without_slashes = $os) =~ s/\///g;
+    (my $cachefile = "$home/db/$distname-$distversion-$perl-$os_without_slashes.dd") =~ s/ /_/g;
     if(-e $cachefile && (stat($cachefile))[9] + 3 * 86400 > time()) {
         return do($cachefile)
     } else {
@@ -256,7 +257,7 @@ sub gettestresults {
          else { return 'Error getting test results'; }
         $r->{$_} = 0 for(grep { !exists($r->{$_}) } qw(fail pass unknown na));
         eval "use Data::Dumper";
-        open(DUMPER, ">$cachefile") || die("Can't write $cachefile\n");
+        open(DUMPER, ">$cachefile") || die("Can't write $cachefile: $!");
         print DUMPER Dumper($r);
         close(DUMPER);
         return $r;

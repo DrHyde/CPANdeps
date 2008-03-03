@@ -77,10 +77,12 @@
     <table>
       [% FOREACH module = modules %]
         [% INCLUDE 'moduleresult.tt2' module = module %]
-        [% IF module.pass + module.unknown + module.fail + module.na %]
-          [% successpc = successpc * (module.pass + module.unknown) /
-             (module.pass + module.unknown + module.fail + module.na) %]
-        [% END %]
+        [% IF !module.textresult %]
+	  [% IF module.pass + module.unknown + module.fail + module.na %]
+            [% successpc = successpc * (module.pass + module.unknown) /
+               (module.pass + module.unknown + module.fail + module.na) %]
+          [% END %]
+	[% END %]
       [% END %]
       <tr>
         <th colspan=2 align=right>Chance of success</th>
