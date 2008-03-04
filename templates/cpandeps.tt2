@@ -25,7 +25,9 @@
     X.Y.Z, then you'll get test results for all X.Y.* versions, and we
     assume X.Y.<strong>0</strong> for figuring out what's in core.  If you
     choose 'any version', then you get all test results and we divine
-    core modules from perl <strong>5.005</strong>.  Modules can depend
+    core modules from perl <strong>5.005</strong>.  Test results are
+    cached for performance and may be up to three days out of date.
+    Modules can depend
     on particular versions of other modules.  We ignore that.  Patches welcome.
   </small></p>
   <p>Confused?

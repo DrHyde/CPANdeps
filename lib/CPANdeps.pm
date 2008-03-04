@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.22 2008/03/03 14:09:43 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.23 2008/03/04 15:50:31 drhyde Exp $
 
 package CPANdeps;
 
@@ -39,7 +39,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.22 2008/03/03 14:09:43 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.23 2008/03/04 15:50:31 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -248,7 +248,7 @@ sub gettestresults {
     $os   ||= ANYOS;
     (my $os_without_slashes = $os) =~ s/\///g;
     (my $cachefile = "$home/db/$distname-$distversion-$perl-$os_without_slashes.dd") =~ s/ /_/g;
-    if(-e $cachefile && (stat($cachefile))[9] + 3 * 86400 > time()) {
+    if(-e $cachefile && (stat($cachefile))[9] + 2 * 86400 > time()) {
         return do($cachefile)
     } else {
         $sth->execute($distname, ''.$distversion);
