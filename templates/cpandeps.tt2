@@ -74,7 +74,11 @@
       but wouldn't say no to a little something to help defray costs either.
       <br clear=both>
 
-    <p><small><a href="?xml=1;module=[% module | html %];perl=[% perl %];os=[% os | html %]">Get results in XML</a></small>
+    <p>
+      <small>
+        (<a href="?xml=1;module=[% module | html %];perl=[% perl %];os=[% os | html %]">Get results in XML</a>)
+        (<a href=http://cpants.perl.org/dist/used_by/[% modules.0.distname %]>is depended on by ...</a>)
+      </small>
     [% successpc = 100 %]
     <table>
       [% FOREACH module = modules %]
