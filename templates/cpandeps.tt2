@@ -77,7 +77,6 @@
     <p>
       <small>
         (<a href="?xml=1;module=[% module | html %];perl=[% perl %];os=[% os | html %]">Get results in XML</a>)
-        (<a href=http://cpants.perl.org/dist/used_by/[% modules.0.distname %]>is depended on by ...</a>)
       </small>
     [% successpc = 100 %]
     <table>
@@ -91,7 +90,7 @@
 	[% END %]
       [% END %]
       <tr>
-        <th colspan=2 align=right>Chance of success</th>
+        <th colspan=3 align=right>Chance of success</th>
         <td><img src=static/green.png height=16 width=[% successpc * 2 %]><img src=static/red.png height=16 width=[% 200 - successpc * 2 %]></td>
         <td>
           [% IF successpc < 1 %]

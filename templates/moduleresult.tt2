@@ -1,7 +1,7 @@
 <tr>
   <td valign=top><nobr>
     [% FOREACH x = [1 .. module.indent] %]&nbsp;&nbsp;&nbsp;&nbsp;[% END %]
-    <a href=[% module.cpantestersurl %]>[% module.name %]</a>
+    <a title="[% module.name %]'s dependency tree" href=?module=[% module.name %];perl=[% perl %];os=[% os | uri %]>[% module.name %]</a>
     [% IF module.warning %]
       <br>
       [% FOREACH x = [1 .. module.indent] %]&nbsp;&nbsp;&nbsp;&nbsp;[% END %]
@@ -9,19 +9,23 @@
     [% END %]
   </nobr></td>
   <td valign=top>
+    <a title="All test results" href=[% module.cpantestersurl %]>R</a>
+    <a title="is depended on by ..." href=http://cpants.perl.org/dist/used_by/[% module.distname %]>D</a>
+  </td>
+  <td valign=top>
     [% IF !module.textresult %]
-      <a href=http://bbbike.radzeit.de/~slaven/cpantestersmatrix.cgi?dist=[% module.distname %]><img alt="Details" border=0 height=16 width=16 src=static/matrix.png></a>
+      <a title="Results by OS and perl version" href=http://bbbike.radzeit.de/~slaven/cpantestersmatrix.cgi?dist=[% module.distname %]><img alt="Results by OS and perl version" border=0 height=16 width=16 src=static/matrix.png></a>
     [% END %]
   </td>
   <td valign=top>
     [% IF module.textresult %]
-      <img src=static/grey.png height=16 width=200>
+      <img alt="[% module.textresult | html %]" src=static/grey.png height=16 width=200>
     [% ELSE %]
       [% total = module.pass + module.fail + module.na   + module.unknown %]
       [% IF total == 0 %]
-        <img src=static/grey.png height=16 width=200>
+        <img alt="No results" src=static/grey.png height=16 width=200>
       [% ELSE %]
-        <img src=static/green.png height=16 width=[% module.pass * 200 / total %]><img src=static/yellow.png height=16 width=[% module.unknown * 200 / total %]><img src=static/red.png height=16 width=[% module.fail * 200 / total %]><img src=static/blue.png height=16 width=[% module.na * 200 / total %]>
+        <img alt="[% module.pass %] PASS" src=static/green.png height=16 width=[% module.pass * 200 / total %]><img alt="[% module.unknown%] UNKNOWN" src=static/yellow.png height=16 width=[% module.unknown * 200 / total %]><img alt="[% module.fail %] FAIL" src=static/red.png height=16 width=[% module.fail * 200 / total %]><img alt="[% module.na %] NA" src=static/blue.png height=16 width=[% module.na * 200 / total %]>
       [% END %]
     [% END %]
   </td>
