@@ -8,10 +8,10 @@
       <small>[% module.warning %]</small>
     [% END %]
   </nobr></td>
-  <td valign=top>
+  <td valign=top><nobr>
     <a title="All test results" href=[% module.cpantestersurl %]>R</a>
     <a title="is depended on by ..." href=http://cpants.perl.org/dist/used_by/[% module.distname %]>D</a>
-  </td>
+  </nobr></td>
   <td valign=top>
     [% IF !module.textresult %]
       <a title="Results by OS and perl version" href=http://bbbike.radzeit.de/~slaven/cpantestersmatrix.cgi?dist=[% module.distname %]><img alt="Results by OS and perl version" border=0 height=16 width=16 src=static/matrix.png></a>
