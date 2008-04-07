@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.23 2008/03/04 15:50:31 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.24 2008/04/07 16:24:01 drhyde Exp $
 
 package CPANdeps;
 
@@ -39,7 +39,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.23 2008/03/04 15:50:31 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.24 2008/04/07 16:24:01 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -156,10 +156,6 @@ sub checkmodule {
     return () if(
         !defined($distname) ||
         $distschecked->{$distname} ||
-        # (
-        #     exists($distschecked->{$distname}) &&
-        #     $distschecked->{$distname} >= $moduleversion
-        # ) ||
         $module eq 'perl'
     );
 
@@ -201,6 +197,7 @@ sub checkmodule {
 
     return {
         name     => $module,
+	author   => $author,
         distname => $distname,
         CPANfile => $CPANfile,
         version  => $distversion,
@@ -267,6 +264,7 @@ sub gettestresults {
 sub getreqs {
     my($author, $distname, $ua) = @_;
     my $cachefile = "$home/db/$distname.yml";
+    my $METAymlURL = "http://search.cpan.org/src/$author/$distname/META.yml";
     my $yaml;
     local $/ = undef;
 
@@ -277,9 +275,7 @@ sub getreqs {
         close(YAML);
     } else {
         # read from interwebnet
-        my $res = $ua->request(HTTP::Request->new(
-            GET => "http://search.cpan.org/src/$author/$distname/META.yml"
-        ));
+        my $res = $ua->request(HTTP::Request->new(GET => $METAymlURL));
         if(!$res->is_success()) {
             return ('!', '!');
         } else {

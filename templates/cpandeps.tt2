@@ -80,12 +80,12 @@
       </small>
     [% successpc = 100 %]
     <table>
-      [% FOREACH module = modules %]
-        [% INCLUDE 'moduleresult.tt2' module = module %]
-        [% IF !module.textresult %]
-	  [% IF module.pass + module.unknown + module.fail + module.na %]
-            [% successpc = successpc * (module.pass + module.unknown) /
-               (module.pass + module.unknown + module.fail + module.na) %]
+      [% FOREACH thismodule = modules %]
+        [% INCLUDE 'moduleresult.tt2' module = thismodule reqmodule = module %]
+        [% IF !thismodule.textresult %]
+	  [% IF thismodule.pass + thismodule.unknown + thismodule.fail + thismodule.na %]
+            [% successpc = successpc * (thismodule.pass + thismodule.unknown) /
+               (thismodule.pass + thismodule.unknown + thismodule.fail + thismodule.na) %]
           [% END %]
 	[% END %]
       [% END %]
