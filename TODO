@@ -1,1 +1,8 @@
+Pure-perl-only option, getting data from MANIFEST files
+ module (actually a distribution) is pure perl if:
+  it contains no .c, .h or .xs files;
+  and it doesn't depend on Inline::C
+ or:
+  it contains a /pureperl/i file
+
 Short-circuit for META.yml requires->perl->[lower version number] in pre-reqs
