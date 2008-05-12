@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.24 2008/04/07 16:24:01 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.25 2008/05/12 17:25:27 drhyde Exp $
 
 package CPANdeps;
 
@@ -39,7 +39,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.24 2008/04/07 16:24:01 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.25 2008/05/12 17:25:27 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -65,9 +65,10 @@ sub go {
 	    $q->param('perl')               ? $q->param('perl') :
 		                              ANYVERSION
         ),
-        os   => ($q->param('os') || ANYOS),
+        pureperl => ($q->param('pureperl') || 0),
+        os       => ($q->param('os') || ANYOS),
         # ugh, sorting versions is Hard.  Can't use version.pm here
-        perls => [ ANYVERSION, 
+        perls    => [ ANYVERSION, 
             sort {
                 my($A, $B) = map {
                     my @v = split('\.', $_);
@@ -126,7 +127,8 @@ sub go {
             perl => $ttvars->{perl},
             sth => $sth,
             ua => $ua,
-            q => $q
+            q => $q,
+	    pureperl => $ttvars->{pureperl}
         )];
     }
 
@@ -135,9 +137,9 @@ sub go {
 
 sub checkmodule {
     my %params = @_;
-    my($module, $moduleversion, $perl, $indent, $distschecked, $sth, $ua, $q) =
+    my($module, $moduleversion, $perl, $indent, $distschecked, $sth, $ua, $q, $pureperl) =
         @params{qw(
-            module moduleversion perl indent distschecked sth ua q
+            module moduleversion perl indent distschecked sth ua q pureperl
         )};
     my $warning = '';
     $indent += 1;
@@ -187,8 +189,10 @@ sub checkmodule {
         gettestresults($sth, $distname, $distversion, $q->param('perl'), $q->param('os'));
 
     my %requires = ();
+    my $ispureperl = '?';
     if($testresults ne 'Core module') {
         %requires = getreqs($author, $origdistname, $ua);
+        $ispureperl = getpurity($author, $origdistname, $ua) if($pureperl);
         if(defined($requires{'!'}) && $requires{'!'} eq '!') {
             %requires = ();
             $warning = "Couldn't get dependencies";
@@ -202,6 +206,7 @@ sub checkmodule {
         CPANfile => $CPANfile,
         version  => $distversion,
         indent   => $indent,
+        ispureperl => $ispureperl,
         cpantestersurl => "http://cpantesters.perl.org/show/$distname.html",
         warning => $warning,
         ref($testresults) ?
@@ -216,7 +221,8 @@ sub checkmodule {
             perl => $perl,
             sth => $sth,
             ua => $ua,
-            q => $q
+            q => $q,
+	    pureperl => $pureperl
         )
     } keys %requires
 }
@@ -258,6 +264,44 @@ sub gettestresults {
         print DUMPER Dumper($r);
         close(DUMPER);
         return $r;
+    }
+}
+
+sub getpurity {
+    my($author, $distname, $ua) = @_;
+    my $cachefile = "$home/db/$distname.MANIFEST";
+    my $MANIFESTurl = "http://search.cpan.org/src/$author/$distname/MANIFEST";
+    local $/ = undef;
+
+    # if we have a cache file, read it
+    if(-e $cachefile) {
+        open(MANIFEST, $cachefile) || die("Can't read $cachefile\n");
+        my $manifest = <MANIFEST>;
+        close(MANIFEST);
+	return $manifest;
+    } else {
+        # read from interwebnet
+        my $res = $ua->request(HTTP::Request->new(GET => $MANIFESTurl));
+        if(!$res->is_success()) {
+	    open(MANIFEST, ">$cachefile") || die("Can't write $cachefile\n");
+	    print MANIFEST '?';
+	    close(MANIFEST);
+	    return '?';
+        } else {
+            my @manifest = split(/[\r\n]+/, $res->content());
+	    my $ispureperl =
+	        (
+		    (
+                        (grep { /\.xs$/i || /\.[ch]$/i } @manifest) &&
+                        !(grep { /PurePerl/i } @manifest)
+		    ) ||
+	            (grep { /^Inline/ } keys %{{getreqs(@_)}})
+		) ? 'N' : 'Y';
+            open(MANIFEST, ">$cachefile") || die("Can't write $cachefile\n");
+            print MANIFEST $ispureperl;
+            close(MANIFEST);
+	    return $ispureperl;
+        }
     }
 }
 

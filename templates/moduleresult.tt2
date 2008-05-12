@@ -4,7 +4,7 @@
       [% IF module.name == reqmodule %]
         <a title="[% module.name %]'s META.yml file" href=http://search.cpan.org/src/[% module.author %]/[% module.distname %]-[% module.version %]/META.yml>[% module.name %]</a>
       [% ELSE %]
-        <a title="[% module.name %]'s dependency tree" href=?module=[% module.name %];perl=[% perl %];os=[% os | uri %]>[% module.name %]</a>
+        <a title="[% module.name %]'s dependency tree" href=?module=[% module.name %];perl=[% perl %];os=[% os | uri %];pureperl=[% pureperl %]>[% module.name %]</a>
       [% END %]
     [% IF module.warning %]
       <br>
@@ -23,7 +23,12 @@
     [% END %]
   </td>
   <td valign=top>
-    [% IF module.textresult %]
+    [% IF pureperl && module.ispureperl == 'N' %]
+      <font color=red>Not a pure perl module</font>
+      [% IF !module.textresult;
+         total = module.pass + module.fail + module.na   + module.unknown;
+	 END %]
+    [% ELSIF module.textresult %]
       <img alt="[% module.textresult | html %]" src=static/grey.png height=16 width=200>
     [% ELSE %]
       [% total = module.pass + module.fail + module.na   + module.unknown %]

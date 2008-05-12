@@ -51,7 +51,10 @@
           [% FOREACH thisos = oses %]
             <option value="[% thisos %]" [% IF thisos == os %] SELECTED [% END %]>[% thisos %]
           [% END %]
-         </select></td>
+        </select></td>
+      </tr>
+      <tr>
+        <td colspan=6><input type=checkbox name=pureperl [% IF pureperl %] CHECKED [% END %]><a href=/?module=DBD::SQLite;perl=5.10.0;os=any%20OS;pureperl=on>purity warnings?</a></td>
       </tr>
       <tr><th colspan=2 align=left><input type=submit></th></tr>
     </table>
@@ -76,7 +79,7 @@
 
     <p>
       <small>
-        (<a href="?xml=1;module=[% module | html %];perl=[% perl %];os=[% os | html %]">Get results in XML</a>)
+        (<a href="?xml=1;module=[% module | html %];perl=[% perl %];os=[% os | html %];pureperl=[% pureperl %]">Get results in XML</a>)
       </small>
     [% successpc = 100 %]
     <table>
