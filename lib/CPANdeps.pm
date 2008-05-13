@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.25 2008/05/12 17:25:27 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.26 2008/05/13 11:53:41 drhyde Exp $
 
 package CPANdeps;
 
@@ -39,7 +39,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.25 2008/05/12 17:25:27 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.26 2008/05/13 11:53:41 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -292,7 +292,13 @@ sub getpurity {
 	    my $ispureperl =
 	        (
 		    (
-                        (grep { /\.xs$/i || /\.[ch]$/i } @manifest) &&
+                        (grep {
+			    /\.(              # .swg and .i suggested by
+			        swg        |  # Jonathan Leto
+				xs         |
+				[chi]
+		            )$/ix
+			} @manifest) &&
                         !(grep { /PurePerl/i } @manifest)
 		    ) ||
 	            (grep { /^Inline/ } keys %{{getreqs(@_)}})
