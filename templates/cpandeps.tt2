@@ -10,14 +10,15 @@
      <a href=static/credits.html>Credits</a> |
      <a href=static/links.html>Links</a>
   </p>
-  <p>Given a module name, this service will show you its dependencies
+  <p>Given a <strong>module name</strong>, this service will show you
+    its dependencies
     along with a summary of their test results from the CPAN testers.
     The idea is that if you have
     a choice of several modules to use, this will show you which is the
     most reliable.
   </p>
   <p><small>It relies on modules having META.yml files so it can work
-    out their dependencies, and is case-sensitive.
+    out their dependencies, and is <strong>case-sensitive</strong>.
     The perl version number is used to filter test results and also to
     <a href=/?module=XML%3A%3AFeed&perl=5.8.8>determine what's a core
     module</a> and what's not - some core modules
