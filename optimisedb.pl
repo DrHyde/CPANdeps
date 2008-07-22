@@ -32,26 +32,27 @@ $dbh->do("alter table cpanstats add column os");
 $dbh->do("alter table cpanstats add column arch"); # not yet used
 
 my %os_by_platform = (
-    linux     => 'Linux',               freebsd   => 'FreeBSD',
-    openbsd   => 'OpenBSD',             netbsd    => 'NetBSD',
-    bsdos     => 'BSD OS',              darwin    => 'Mac OS X',
-    MacOS     => 'Mac OS classic',      MacPPC    => 'Mac OS classic',
-    aix       => 'AIX',                 osf       => 'OSF',
-    sco       => 'SCO',                 'pa-risc' => 'HP-UX',
-    irix      => 'Irix',                solaris   => 'SunOS/Solaris',
-    cygwin    => 'Windows (Cygwin)',    win32     => 'Windows (Win32)',
-    s390      => 'OS390/zOS',           VMS_      => 'VMS',
-    dragonfly => 'Dragonfly BSD',       os2       => 'OS/2',
-    'i486-gnu-thread-multi' => 'Linux', # Debian 4.2.1-6 ?
-    'i686-AT386-gnu' => 'GNU Hurd',     # GNU debian 0.3 GNU-Mach 1.3/Hurd-0.3 i686-AT386 GNU
-    ARCHREV_0 => 'HP-UX', # IA64.ARCHREV_0-LP64 / IA64.ARCHREV_0-thread-multi
+    '%linux%'     => 'Linux',               '%freebsd%'   => 'FreeBSD',
+    '%openbsd%'   => 'OpenBSD',             '%netbsd%'    => 'NetBSD',
+    '%bsdos%'     => 'BSD OS',              '%darwin%'    => 'Mac OS X',
+    '%MacOS%'     => 'Mac OS classic',      '%MacPPC%'    => 'Mac OS classic',
+    '%aix%'       => 'AIX',                 '%osf%'       => 'OSF',
+    '%sco%'       => 'SCO',                 '%pa-risc%'   => 'HP-UX',
+    '%irix%'      => 'Irix',                '%solaris%'   => 'SunOS/Solaris',
+    '%cygwin%'    => 'Windows (Cygwin)',    '%win32%'     => 'Windows (Win32)',
+    '%s390%'      => 'OS390/zOS',           '%VMS_%'      => 'VMS',
+    '%dragonfly%' => 'Dragonfly BSD',       '%os2%'       => 'OS/2',
+    '%i486-gnu-thread-multi%' => 'Linux', # Debian 4.2.1-6 ?
+    '%i686-AT386-gnu%' => 'GNU Hurd',     # GNU debian 0.3 GNU-Mach 1.3/Hurd-0.3 i686-AT386 GNU
+    'i486-gnu'     => 'GNU Hurd',
+    '%ARCHREV_0%'  => 'HP-UX', # IA64.ARCHREV_0-LP64 / IA64.ARCHREV_0-thread-multi
 );
 foreach my $platform (keys %os_by_platform) {
     print "  $platform -> $os_by_platform{$platform}\n";
     $dbh->do("
         UPDATE cpanstats
            SET os='$os_by_platform{$platform}'
-         WHERE platform LIKE '%$platform%' AND os IS NULL"
+         WHERE platform LIKE '$platform' AND os IS NULL"
     );
 }
 
