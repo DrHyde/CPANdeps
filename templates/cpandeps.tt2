@@ -84,13 +84,13 @@
         [% INCLUDE 'moduleresult.tt2' module = thismodule reqmodule = module %]
         [% IF !thismodule.textresult %]
 	  [% IF thismodule.pass + thismodule.unknown + thismodule.fail + thismodule.na %]
-            [% successpc = successpc * (thismodule.pass + thismodule.unknown) /
+            [% successpc = successpc * thismodule.pass /
                (thismodule.pass + thismodule.unknown + thismodule.fail + thismodule.na) %]
           [% END %]
 	[% END %]
       [% END %]
       <tr>
-        <th colspan=3 align=right>Chance of success</th>
+        <th colspan=3 align=right>Chance of all tests passing</th>
         <td><img src=static/green.png height=16 width=[% successpc * 2 %]><img src=static/red.png height=16 width=[% 200 - successpc * 2 %]></td>
         <td>
           [% IF successpc < 1 %]
