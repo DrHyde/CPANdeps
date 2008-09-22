@@ -8,7 +8,8 @@ wget -q -O 02packages http://cpan.org/modules/02packages.details.txt.gz &&
 mv 02packages 02packages.details.txt.gz
 
 echo Fetching CPAN-testers database ...
-wget -q -O cpanstatsdatabase http://perl.grango.org/cpanstats.db.gz &&
+# wget -q -O cpanstatsdatabase http://perl.grango.org/cpanstats.db.gz &&
+wget -q -O cpanstatsdatabase http://devel.cpantesters.org/cpanstats.db.gz &&
 mv cpanstatsdatabase cpanstats.db.gz &&
 gzip -fd cpanstats.db.gz && (
   ../optimisedb.pl;
