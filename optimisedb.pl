@@ -42,6 +42,7 @@ my %os_by_platform = (
     '%cygwin%'    => 'Windows (Cygwin)',    '%win32%'     => 'Windows (Win32)',
     '%s390%'      => 'OS390/zOS',           '%VMS_%'      => 'VMS',
     '%dragonfly%' => 'Dragonfly BSD',       '%os2%'       => 'OS/2',
+    '%mirbsd%'    => 'MirOS BSD',
     '%i486-gnu-thread-multi%' => 'Linux', # Debian 4.2.1-6 ?
     '%i686-AT386-gnu%' => 'GNU Hurd',     # GNU debian 0.3 GNU-Mach 1.3/Hurd-0.3 i686-AT386 GNU
     'i486-gnu'     => 'GNU Hurd',
