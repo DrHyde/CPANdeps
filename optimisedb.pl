@@ -14,7 +14,17 @@ print "Creating indices ...\n";
 $dbh->do("CREATE INDEX perlidx ON cpanstats (perl)");
 $dbh->do("CREATE INDEX platformidx ON cpanstats (platform)");
 
-print "Merging perl patch levels etc ...\n";
+print "Finding dev versions of perl ...\n";
+$dbh->do("alter table cpanstats add column is_dev_perl"); # not yet used
+$dbh->do("update cpanstats set is_dev_perl='0'");
+foreach my $ver (qw(5.7 5.9 5.11 %patch)) {
+    print "  $ver\n";
+    $dbh->do("update cpanstats set is_dev_perl='1' where perl like '$ver%'");
+}
+print "Indexing ...\n";
+$dbh->do("CREATE INDEX isdevperlidx ON cpanstats (is_dev_perl)");
+
+print "Merging perl versions ...\n";
 foreach my $ver (qw(
     5.3 5.4 5.5
     5.7.2 5.7.3
