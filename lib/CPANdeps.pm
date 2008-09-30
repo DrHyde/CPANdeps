@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.27 2008/07/02 20:15:53 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.28 2008/09/30 22:03:38 drhyde Exp $
 
 package CPANdeps;
 
@@ -39,7 +39,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.27 2008/07/02 20:15:53 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.28 2008/09/30 22:03:38 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -66,6 +66,7 @@ sub go {
 		                              ANYVERSION
         ),
         pureperl => ($q->param('pureperl') || 0),
+        devperls => ($q->param('devperls') ? 1 : 0),
         os       => ($q->param('os') || ANYOS),
         # ugh, sorting versions is Hard.  Can't use version.pm here
         perls    => [ ANYVERSION, 
@@ -113,7 +114,8 @@ sub go {
             }, 
             (($ttvars->{os} eq ANYOS) ? '' : "os = '".$ttvars->{os}."'"),
             (($ttvars->{perl} eq ANYVERSION)
-                ? '' : "perl LIKE '".$ttvars->{perl}."%'")
+                ? '' : "perl LIKE '".$ttvars->{perl}."%'"),
+	    (($ttvars->{devperls}) ? '' : "is_dev_perl = '0'"),
         )).
         ' GROUP BY state ';
     
@@ -128,7 +130,8 @@ sub go {
             sth => $sth,
             ua => $ua,
             q => $q,
-	    pureperl => $ttvars->{pureperl}
+	    pureperl => $ttvars->{pureperl},
+	    devperls => $ttvars->{devperls}
         )];
     }
 
@@ -137,9 +140,10 @@ sub go {
 
 sub checkmodule {
     my %params = @_;
-    my($module, $moduleversion, $perl, $indent, $distschecked, $sth, $ua, $q, $pureperl) =
+    my($module, $moduleversion, $perl, $indent, $distschecked, $sth, $ua, $q, $pureperl, $devperls) =
         @params{qw(
             module moduleversion perl indent distschecked sth ua q pureperl
+	    devperls
         )};
     my $warning = '';
     $indent += 1;
@@ -186,7 +190,14 @@ sub checkmodule {
         (defined($incore) && $incore >= $moduleversion)
     ) ?
         'Core module' :
-        gettestresults($sth, $distname, $distversion, $q->param('perl'), $q->param('os'));
+        gettestresults(
+	    sth         => $sth,
+	    distname    => $distname,
+	    distversion => $distversion,
+	    perl        => $q->param('perl'),
+	    os          => $q->param('os'),
+	    devperls    => $devperls
+	);
 
     my %requires = ();
     my $ispureperl = '?';
@@ -222,7 +233,8 @@ sub checkmodule {
             sth => $sth,
             ua => $ua,
             q => $q,
-	    pureperl => $pureperl
+	    pureperl => $pureperl,
+	    devperls => $devperls
         )
     } keys %requires
 }
@@ -245,12 +257,15 @@ sub in_core {
 }
 
 sub gettestresults {
-    my($sth, $distname, $distversion, $perl, $os) = @_;
+    my %params = @_;
+    my($sth, $distname, $distversion, $perl, $os, $devperls) =
+        map { $params{$_} } qw(sth distname distversion perl os devperls);
+
     # if we have a suitably recent cache file (< 3 days), read it
     $perl ||= ANYVERSION;
     $os   ||= ANYOS;
     (my $os_without_slashes = $os) =~ s/\///g;
-    (my $cachefile = "$home/db/$distname-$distversion-$perl-$os_without_slashes.dd") =~ s/ /_/g;
+    (my $cachefile = "$home/db/$distname-$distversion-$perl-$os_without_slashes-$devperls.dd") =~ s/ /_/g;
     if(-e $cachefile && (stat($cachefile))[9] + 2 * 86400 > time()) {
         return do($cachefile)
     } else {

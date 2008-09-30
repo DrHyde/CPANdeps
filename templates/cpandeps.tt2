@@ -51,9 +51,14 @@
             <option value="[% thisos %]" [% IF thisos == os %] SELECTED [% END %]>[% thisos %]
           [% END %]
         </select></td>
-        <td colspan=6><input type=checkbox name=pureperl [% IF pureperl %] CHECKED [% END %]><span title="warn about modules which have a C component, ie those that aren't 'pure perl'">purity warnings</span>?</td>
       </tr>
-      <tr><th colspan=2 align=left><input type=submit></th></tr>
+      <tr>
+        <td colspan=6>
+	  <input type=checkbox name=pureperl [% IF pureperl %] CHECKED [% END %]><span title="warn about modules which have a C component, ie those that aren't 'pure perl'">purity warnings</span>?
+          <input type=checkbox name=devperls [% IF devperls %] CHECKED [% END %]>Include dev builds of perl?
+	</td>
+      </tr>
+      <tr><th colspan=6 align=left><input type=submit></th></tr>
     </table>
   </form>
   [% IF module %]
