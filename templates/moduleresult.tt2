@@ -14,6 +14,7 @@
   </nobr></td>
   <td valign=top><nobr>
     <a title="search.cpan.org" href=http://search.cpan.org/search?query=[% module.distname %]&mode=all>S</a>
+    <a title="Bug reports" href=http://rt.cpan.org/Public/Dist/Display.html?Name=[% module.distname %]>B</a>
     <a title="All test results" href=[% module.cpantestersurl %]>R</a>
     <a title="is depended on by ..." href=http://cpants.perl.org/dist/used_by/[% module.distname %]>D</a>
   </nobr></td>
