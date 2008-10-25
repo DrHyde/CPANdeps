@@ -17,7 +17,7 @@ gzip -fd cpanstats.db.gz && (
   mv cpanstats.db cpantestresults
 )
 
-rm cpanstats.db.gz >/dev/null 2>/dev/null
+rm 02packages.details.txt.gz cpanstats.db.gz >/dev/null 2>/dev/null
 
 cd $DIR
 echo
