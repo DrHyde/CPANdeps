@@ -7,6 +7,19 @@ use Data::Dumper;
 
 my $dbh = DBI->connect("dbi:SQLite:dbname=cpanstats.db");
 
+print "Putting 02packages into db ...\n";
+$dbh->do("CREATE TABLE packages (module PRiMARY KEY, version, file)");
+my $sth = $dbh->prepare("INSERT INTO packages (module, version, file) VALUES (?, ?, ?)");
+open(PACKAGES, 'gzip -dc 02packages.details.txt.gz |');
+    while(<PACKAGES> ne "\n") {}; # throw away headers
+    while(my $line = <PACKAGES>) {
+        chomp($line);
+        my($module, $version, $file) = split(/\s+/, $line, 3);
+	die("Couldn't import [$module, $version, $file]\n")
+	  unless($sth->execute($module, $version, $file))
+    }
+close(PACKAGES);
+
 print "Deleting rubbish ...\n";
 $dbh->do(q{delete from cpanstats where state='cpan' or perl='0'});
 

@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.28 2008/09/30 22:03:38 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.29 2008/10/25 12:36:25 drhyde Exp $
 
 package CPANdeps;
 
@@ -8,7 +8,6 @@ use vars qw($VERSION);
 
 use Cwd;
 use CGI;
-use Parse::CPAN::Packages;
 use YAML ();
 
 use Data::Dumper;
@@ -23,7 +22,7 @@ use constant MAXINT => ~0;
 my $home = cwd();
 my $debug = ($home =~ /-dev/) ? 1 : 0;
 
-my $p = Parse::CPAN::Packages->new("$home/db/02packages.details.txt.gz");
+my $dbh;
 
 $Template::Stash::SCALAR_OPS->{int} = sub {
     my $scalar = shift;
@@ -39,7 +38,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.28 2008/09/30 22:03:38 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.29 2008/10/25 12:36:25 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -99,7 +98,7 @@ sub go {
         eval 'use DBI; use LWP::UserAgent;';
         die($@) if($@);
 
-        my $dbh = DBI->connect("dbi:SQLite:dbname=$home/db/cpantestresults");
+        $dbh = DBI->connect("dbi:SQLite:dbname=$home/db/cpantestresults");
         my $ua = LWP::UserAgent->new(
             agent => "cpandeps/$VERSION",
             from => 'cpandeps@cantrell.org.uk'
@@ -148,13 +147,13 @@ sub checkmodule {
     my $warning = '';
     $indent += 1;
 
-    my $m = $p->package($module);
-    return () unless($m);
-    my $dist = $m->distribution();
-
-    my $author       = $dist->cpanid();
-    my $distname     = $dist->prefix();
-    my $distversion  = $dist->version();
+    my $results = $dbh->selectall_arrayref("
+        SELECT version, file FROM packages WHERE module=\"$module\"
+    ");
+    return () unless @{$results};
+    my($distversion, $distname) = @{(@{$results})[0]};
+    return () unless $distname;
+    (my $author = $distname) =~ s{^./../([^/]+)/.*}{$1};
 
     my $CPANfile     = $distname;
     my $incore       = in_core(module => $module, perl => $perl);
@@ -165,17 +164,7 @@ sub checkmodule {
         $module eq 'perl'
     );
 
-
     $distschecked->{$distname} = $distversion;
-
-    return {
-        name   => $module,
-        distname => $distname,
-        version  => $distversion,
-        indent   => $indent,
-        cpantestersurl => "http://search.cpan.org/search?query=$module",
-        warning => "Couldn't find module",
-    } unless(defined($dist) && defined($distname));
 
     $author   = '' unless(defined($author));
     $distname = '' unless(defined($distname));
