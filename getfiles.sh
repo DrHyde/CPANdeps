@@ -12,7 +12,7 @@ echo Fetching CPAN-testers database ...
 wget -q -O cpanstatsdatabase http://devel.cpantesters.org/cpanstats.db.gz &&
 mv cpanstatsdatabase cpanstats.db.gz &&
 gzip -fd cpanstats.db.gz && (
-  ../optimisedb.pl;
+  ../mangledb.pl;
   cp cpantestresults cpantestresults.previous;
   mv cpanstats.db cpantestresults
 )
