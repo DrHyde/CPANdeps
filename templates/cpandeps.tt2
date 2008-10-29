@@ -109,8 +109,7 @@
       </tr>
     </table>
     <p>The chance of success is calculated by multiplying the probabilities
-      of the module and all its dependencies passing their tests, or
-      getting 'unknown' test results.</p>
+      of the module and all its dependencies passing their tests.</p>
   [% END %]
 
 [% debug.replace("\n","<br>").replace(" ","&nbsp;") %]
