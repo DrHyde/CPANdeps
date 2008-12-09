@@ -1,0 +1,31 @@
+<html><head><title>CPAN dependencies and test results checker: A Brief Note On Statistics</title>
+ <link rel="stylesheet" type="text/css" href="/static/style.css" />
+</head>
+<body>
+ <p><a href=http://drhyde.cvs.sourceforge.net/drhyde/perlcpandeps/>Source code</a> |
+    <a href=javascript:history.go(-1)>Go back</a> |
+    <a href=mailto:david@cantrell.org.uk?Subject=cpandeps+bug+report>Report bugs</a> |
+    <a href=static/credits.html>Credits</a> |
+    <a href=static/links.html>Links</a>
+  </p>
+  <h1>A Brief Note on Statistics</h1>
+  <p>The "chance of all tests passing" at the bottom of each set of results
+    doesn't really mean much. That's because it is calculated assuming that
+    passes (and failures too, I suppose) are what a statistician would call
+    "independent events".  That is to say, if a particular test result is
+    X, this gives you no information about any other test results.
+  </p>
+  <p>Unfortunately this is not the case.  Failures "cluster" on particular
+    machines because they've been set up in peculiar ways, or because of
+    faults such as running out of memory or disk space.
+  </p>
+  <p>I could take account of that in my calculations, but:
+  <ul><li>it would take a long time to calculate;
+      <li>it would require writing some vaguely hairy code;
+      <li>I can't be arsed
+  </ul>
+    If you feel that this is a particularly important metric, then you
+    know what the solution is.  The clicky-link at the top of the page
+    is what you want.
+  </p>
+</body></html>

@@ -104,7 +104,7 @@
             [% successpc.sprintf("%.1f") %]% (to 1dp)
            [% ELSE %]
             [% successpc.int %]%
-          [% END %]
+          [% END %] <small>(but <a href=static/overall-chance.html>note</a> that this doesn't mean much)</small>
         </td>
       </tr>
     </table>
