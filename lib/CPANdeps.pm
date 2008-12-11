@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.30 2008/12/10 18:14:21 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.31 2008/12/11 15:28:02 drhyde Exp $
 
 package CPANdeps;
 
@@ -38,7 +38,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.30 2008/12/10 18:14:21 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.31 2008/12/11 15:28:02 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -301,8 +301,8 @@ sub getpurity {
 			        swg        |  # Jonathan Leto
 				xs         |
 				[chi]
-		            )(\s|$)/ix  # deal with comments, eg in HTML::Parser
-			                # NB \s instead of space because of /x
+		            )(\x20|$)/ix # comments, eg in HTML::Parser
+			                 # NB \x20 instead of space cos of /x
 			} @manifest) &&
                         !(grep { /PurePerl/i } @manifest)
 		    ) ||
