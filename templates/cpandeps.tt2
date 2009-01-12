@@ -54,7 +54,7 @@
       </tr>
       <tr>
         <td colspan=6>
-	  <input type=checkbox name=pureperl [% IF pureperl %] CHECKED [% END %]><span title="warn about modules which have a C component, ie those that aren't 'pure perl'">purity warnings</span>?
+	  <input type=checkbox name=pureperl [% IF pureperl %] CHECKED [% END %]><span title="warn about modules which have a C component, ie those that aren't 'pure perl'">purity warnings</span><a href=static/purity.html>?</a>
           <input type=checkbox name=devperls [% IF devperls %] CHECKED [% END %]>Include dev builds of perl?
 	</td>
       </tr>
