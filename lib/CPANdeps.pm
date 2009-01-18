@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.31 2008/12/11 15:28:02 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.32 2009/01/18 17:35:27 drhyde Exp $
 
 package CPANdeps;
 
@@ -38,7 +38,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.31 2008/12/11 15:28:02 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.32 2009/01/18 17:35:27 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -207,7 +207,6 @@ sub checkmodule {
         version  => $distversion,
         indent   => $indent,
         ispureperl => $ispureperl,
-        cpantestersurl => "http://cpantesters.perl.org/show/$distname.html",
         warning => $warning,
         ref($testresults) ?
             %{$testresults} :
