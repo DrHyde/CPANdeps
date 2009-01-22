@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.32 2009/01/18 17:35:27 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.33 2009/01/22 18:12:17 drhyde Exp $
 
 package CPANdeps;
 
@@ -38,7 +38,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.32 2009/01/18 17:35:27 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.33 2009/01/22 18:12:17 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -148,12 +148,13 @@ sub checkmodule {
     $indent += 1;
 
     my $results = $dbh->selectall_arrayref("
-        SELECT version, file FROM packages WHERE module=\"$module\"
+        SELECT file FROM packages WHERE module=\"$module\"
     ");
     return () unless @{$results};
-    my($distversion, $distname) = @{(@{$results})[0]};
+    my $distname = $results->[0]->[0];
     return () unless $distname;
     (my $author = $distname) =~ s{^./../([^/]+)/.*}{$1};
+    (my $distversion = $distname) =~ s{^.*/.*?-([\d_\.]*)\..*?$}{$1};
 
     my $CPANfile     = $distname;
     my $incore       = in_core(module => $module, perl => $perl);
