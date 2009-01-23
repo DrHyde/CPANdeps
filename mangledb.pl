@@ -94,6 +94,7 @@ open(OSES, ">oses") || die("Can't cache list of OSes\n");
 print OSES Dumper([map { $_->[0] } @{$dbh->selectall_arrayref("SELECT DISTINCT os FROM cpanstats")}]);
 close(OSES);
 
-$dbh->do("alter table cpanstats add column osfamily"); # not yet used
-$dbh->do("alter table cpanstats add column perlmajorver"); # not yet used
+$dbh->do("CREATE INDEX distversionidx ON cpanstats (dist, version)");
+# $dbh->do("alter table cpanstats add column osfamily"); # not yet used
+# $dbh->do("alter table cpanstats add column perlmajorver"); # not yet used
 # $dbh->do("VACUUM");
