@@ -25,3 +25,6 @@ echo
 echo Unknown OSes
 echo
 echo select \* from cpanstats where os = \'Unknown OS\'\;|./dbish 2>/dev/null
+
+cd $DIR
+./populate-cache.pl
