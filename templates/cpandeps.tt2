@@ -112,5 +112,6 @@
       of the module and all its dependencies passing their tests.</p>
   [% END %]
 
+<center>code written while listening to<br><a href="http://www.reverbnation.com/c./a4/376797/240116/Artist/0/User/link"><img alt="Rabid%20Gravy" border="0" src="http://www.reverbnation.com/c./a3/376797/240116/Artist/0/User/res.gif" /></a><a href="http://www.quantcast.com/p-05---xoNhTXVc" target="_blank"><img src="http://pixel.quantserve.com/pixel/p-05---xoNhTXVc.gif" style="display: none" border="0" height="1" width="1" alt="Quantcast"/></a><img style="visibility:hidden;width:0px;height:0px;" border=0 width=0 height=0 src="http://counters.gigya.com/wildfire/IMP/CXNID=2000002.0NXC/bT*xJmx*PTEyMzI3OTM4NTU*NDMmcHQ9MTIzMjc5Mzg3MDY5OCZwPTI3MDgxJmQ9YmFubmVyJTVGZmlyc3QlNUZnZW4mZz*xJnQ9Jm89NzBiNzI2M2IxOTU3NDdmN2JmMmRjOGVhZGZmOTBhZTE=.gif" /><br>so the bugs are all his fault</center>
 [% debug.replace("\n","<br>").replace(" ","&nbsp;") %]
 </body></html>
