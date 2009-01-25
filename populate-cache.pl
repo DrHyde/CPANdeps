@@ -24,7 +24,6 @@ foreach my $file (@files) {
     $file =~ m{^./../([^/]+)(/.*)?/([^/]*).(tar.gz|tgz|zip)$};
     my($author, $dist) = ($1, $3);
     my $local_file  = "db/$dist.yml";
-    print "\n$file\n";
     my $remote_file = "http://search.cpan.org/src/$author/$dist/META.yml";
 
     next if(-e $local_file);
