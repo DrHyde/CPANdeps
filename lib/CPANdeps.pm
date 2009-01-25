@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.35 2009/01/23 22:23:55 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.36 2009/01/25 18:16:39 drhyde Exp $
 
 package CPANdeps;
 
@@ -38,7 +38,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.35 2009/01/23 22:23:55 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.36 2009/01/25 18:16:39 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -242,7 +242,8 @@ sub in_core {
     }
     my $incore = $Module::CoreList::version{0+$v}{$module};
     # warn("M:$module I:$incore P:$perl V:$v\n");
-    return $incore || 0;
+    # M:CGI::Application I: P:any version V:5.005000
+    return $incore;
 }
 
 sub gettestresults {
