@@ -23,6 +23,9 @@ my @files = map { @{$_} } @{$dbh->selectall_arrayref("
 foreach my $file (@files) {
     $file =~ m{^./../([^/]+)(/.*)?/([^/]*).(tar.gz|tgz|zip)$};
     my($author, $dist) = ($1, $3);
+    if(!defined($author) || !defined($dist)) {
+        warn("Got A:$author, D:$dist from $file\n");
+    }
     my $local_file  = "db/$dist.yml";
     my $remote_file = "http://search.cpan.org/src/$author/$dist/META.yml";
 
