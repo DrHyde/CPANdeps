@@ -59,17 +59,16 @@ my %os_by_platform = (
     '%openbsd%'   => 'OpenBSD',             '%netbsd%'    => 'NetBSD',
     '%bsdos%'     => 'BSD OS',              '%darwin%'    => 'Mac OS X',
     '%MacOS%'     => 'Mac OS classic',      '%MacPPC%'    => 'Mac OS classic',
-    '%aix%'       => 'AIX',                 '%osf%'       => 'OSF',
+    '%aix%'       => 'AIX',                 '%i686-AT386-gnu%' => 'GNU Hurd',
     '%sco%'       => 'SCO',                 '%pa-risc%'   => 'HP-UX',
     '%irix%'      => 'Irix',                '%solaris%'   => 'SunOS/Solaris',
     '%cygwin%'    => 'Windows (Cygwin)',    '%win32%'     => 'Windows (Win32)',
     '%s390%'      => 'OS390/zOS',           '%VMS_%'      => 'VMS',
     '%dragonfly%' => 'Dragonfly BSD',       '%os2%'       => 'OS/2',
-    '%mirbsd%'    => 'MirOS BSD',
-    '%i486-gnu-thread-multi%' => 'Linux', # Debian 4.2.1-6 ?
-    '%i686-AT386-gnu%' => 'GNU Hurd',     # GNU debian 0.3 GNU-Mach 1.3/Hurd-0.3 i686-AT386 GNU
-    'i486-gnu'     => 'GNU Hurd',
-    '%ARCHREV_0%'  => 'HP-UX', # IA64.ARCHREV_0-LP64 / IA64.ARCHREV_0-thread-multi
+    '%mirbsd%'    => 'MirOS BSD',           'i486-gnu'     => 'GNU Hurd',
+    '%i486-gnu-thread-multi%' => 'GNU Hurd',
+    '%osf%'       => 'Tru64/OSF/Digital UNIX',
+    '%ARCHREV_0%' => 'HP-UX', # IA64.ARCHREV_0-LP64 / IA64.ARCHREV_0-thread-multi
 );
 foreach my $platform (keys %os_by_platform) {
     print "  $platform -> $os_by_platform{$platform}\n";
