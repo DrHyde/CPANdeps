@@ -37,7 +37,6 @@ foreach my $file (@files) {
 	open(FILE, '>', $local_file) || die("Can't write $local_file\n");
 	print FILE $yaml;
 	close(FILE);
-        print "$dist ...\n\t$remote_file -> \n\t$local_file\n";
 	sleep 1;
     }
 }
