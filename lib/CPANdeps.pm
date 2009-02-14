@@ -1,4 +1,4 @@
-# $Id: CPANdeps.pm,v 1.36 2009/01/25 18:16:39 drhyde Exp $
+# $Id: CPANdeps.pm,v 1.37 2009/02/14 23:03:53 drhyde Exp $
 
 package CPANdeps;
 
@@ -38,7 +38,7 @@ my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
 
-($VERSION = '$Id: CPANdeps.pm,v 1.36 2009/01/25 18:16:39 drhyde Exp $')
+($VERSION = '$Id: CPANdeps.pm,v 1.37 2009/02/14 23:03:53 drhyde Exp $')
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
@@ -198,6 +198,19 @@ sub checkmodule {
             %requires = ();
             $warning = "Couldn't get dependencies";
         }
+    }
+
+    if($params{module} eq 'Acme::Mom::Yours') {
+        return {
+            name     => $module,
+    	    author   => $author,
+            distname => $distname,
+            CPANfile => $CPANfile,
+            version  => $distversion,
+            indent   => $indent,
+            ispureperl => 1,
+            warning => "Acme::Mom::Yours is silly.  Stoppit."
+        };
     }
 
     return {
