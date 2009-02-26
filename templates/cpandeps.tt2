@@ -85,7 +85,9 @@
       </small>
     [% successpc = 100 %]
     <table>
+      [% depcounter = -1 %]
       [% FOREACH thismodule = modules %]
+        [% depcounter = depcounter + 1 %]
         [% INCLUDE 'moduleresult.tt2' module = thismodule reqmodule = module %]
         [% IF !thismodule.textresult %]
 	  [% IF thismodule.pass + thismodule.unknown + thismodule.fail + thismodule.na %]

@@ -1,5 +1,5 @@
 <tr>
-  <td valign=top><nobr>
+  <td valign=top><nobr>[% depcounter %].
     [% FOREACH x = [1 .. module.indent] %]&nbsp;&nbsp;&nbsp;&nbsp;[% END %]
       [% IF module.name == reqmodule %]
         <a title="[% module.name %]'s META.yml file" href=http://search.cpan.org/src/[% module.author %]/[% module.distname %]-[% module.version %]/META.yml>[% module.name %]</a>
