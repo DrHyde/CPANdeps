@@ -10,6 +10,7 @@
      <a href=static/credits.html>Credits</a> |
      <a href=static/links.html>Links</a>
   </p>
+  <p>Please note: this site is a tool to analyse the dependencies of modules written in the Perl programming language.  I can not help you with any problems you might have with using any modules.  Do not use the "report bugs" link above to report bugs in anything other than this website.</p>
   <p>Given a <strong>module name</strong>, this service will show you
     its dependencies
     along with a summary of their test results from the CPAN testers.
