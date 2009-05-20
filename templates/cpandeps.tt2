@@ -10,7 +10,6 @@
      <a href=static/credits.html>Credits</a> |
      <a href=static/links.html>Links</a>
   </p>
-  <p>Please note: this site is a tool to analyse the dependencies of modules written in the Perl programming language.  I can not help you with any problems you might have with using any modules.  Do not use the "report bugs" link above to report bugs in anything other than this website.</p>
   <p>Given a <strong>module name</strong>, this service will show you
     its dependencies
     along with a summary of their test results from the CPAN testers.
@@ -18,6 +17,7 @@
     a choice of several modules to use, this will show you which is the
     most reliable.
   </p>
+  <p><small>Please note: this site is a tool to analyse the dependencies of modules written in the Perl programming language.  I can not help you with any problems you might have with using any modules.  Do not use the "report bugs" link above to report bugs in anything other than this website.</small></p>
   <p><small>It relies on modules having META.yml files so it can work
     out their dependencies, and is <strong>case-sensitive</strong>.
     The perl version number is used to filter test results and also to
