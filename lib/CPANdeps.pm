@@ -87,6 +87,8 @@ sub go {
         if($ttvars->{perl} =~ /[^$permitted_chars]/);
         
     $permitted_chars = join('', @{$ttvars->{oses}});
+    # in case list contains [, ] or -
+    $permitted_chars =~ s/([\[\]\-])/\\$1/g;
     die("Naughty naughty - bad OS ".$ttvars->{os}."\n")
         if($ttvars->{os} =~ /[^$permitted_chars]/);
 
