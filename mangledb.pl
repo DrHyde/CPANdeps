@@ -69,6 +69,7 @@ my %os_by_platform = (
     '%i486-gnu-thread-multi%' => 'GNU Hurd',
     '%osf%'       => 'Tru64/OSF/Digital UNIX',
     '%ARCHREV_0%' => 'HP-UX', # IA64.ARCHREV_0-LP64 / IA64.ARCHREV_0-thread-multi
+    '%midnightbsd%' => 'Midnight BSD',
 );
 foreach my $platform (keys %os_by_platform) {
     print "  $platform -> $os_by_platform{$platform}\n";
