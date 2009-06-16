@@ -71,17 +71,22 @@ my %os_by_platform = (
     '%ARCHREV_0%' => 'HP-UX', # IA64.ARCHREV_0-LP64 / IA64.ARCHREV_0-thread-multi
     '%midnightbsd%' => 'Midnight BSD',
 );
+$dbh->do("CREATE INDEX osidx ON cpanstats (os)");
 foreach my $platform (keys %os_by_platform) {
     print "  $platform -> $os_by_platform{$platform}\n";
     $dbh->do("
         UPDATE cpanstats
            SET os='$os_by_platform{$platform}'
-         WHERE platform LIKE '$platform' AND os IS NULL"
-    );
+         WHERE platform LIKE '$platform' AND os IS NULL
+    ");
+    $dbh->do("
+        UPDATE cpanstats
+	   SET os='$os_by_platform{$platform}'
+	 WHERE osname LIKE '$platform' AND os IS NULL
+    ");
 }
 
 print "  anything else -> Unknown OS\n";
-$dbh->do("CREATE INDEX osidx ON cpanstats (os)");
 $dbh->do("UPDATE cpanstats SET os='Unknown OS' WHERE os IS NULL");
 
 print "Caching list of perls\n";
