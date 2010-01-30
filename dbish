@@ -1,3 +1,14 @@
 #!/bin/sh
 
-/usr/local/bin/dbish dbi:SQLite:dbname=db/cpantestresults
+DIR=`echo $0|sed 's/\/dbish//'`
+
+if [ $DIR == . ]; then
+   DIR=`pwd`
+fi
+
+DBNAME=cpandeps
+if [ $DIR == /web/cpandeps-dev.cantrell.org.uk ]; then
+  DBNAME=cpandepsdev
+fi
+
+mysql -u root $DBNAME

@@ -4,109 +4,128 @@ use strict;
 use warnings;
 use DBI;
 use Data::Dumper;
+use FindBin;
+
+my $dbname = ($FindBin::Bin =~ /dev/) ? 'cpandepsdev' : 'cpandeps';
+chdir($FindBin::Bin);
 
 $| = 1;
 
-my $dbh = DBI->connect("dbi:SQLite:dbname=cpanstats.db");
+my $mysqldbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
+my $barbiedbh = DBI->connect("dbi:SQLite:dbname=barbiesdb");
 
 print "Putting 02packages into db ...\n";
-$dbh->do("CREATE TABLE packages (module PRIMARY KEY, version, file)");
-my $sth = $dbh->prepare("INSERT INTO packages (module, version, file) VALUES (?, ?, ?)");
-open(PACKAGES, 'gzip -dc 02packages.details.txt.gz |');
-    while(<PACKAGES> ne "\n") {}; # throw away headers
-    while(my $line = <PACKAGES>) {
-        chomp($line);
-        my($module, $version, $file) = split(/\s+/, $line, 3);
-	die("Couldn't import [$module, $version, $file]\n")
-	  unless($sth->execute($module, $version, $file))
+{
+  my $sth = $mysqldbh->prepare("INSERT INTO packages (module, version, file) VALUES (?, ?, ?)");
+  $mysqldbh->{'AutoCommit'} = 0;
+  $mysqldbh->do('DELETE FROM packages');
+  open(PACKAGES, 'gzip -dc 02packages.details.txt.gz |');
+      while(<PACKAGES> ne "\n") {}; # throw away headers
+      while(my $line = <PACKAGES>) {
+          chomp($line);
+          my($module, $version, $file) = split(/\s+/, $line, 3);
+  	die("Couldn't import [$module, $version, $file]\n")
+  	  unless($sth->execute($module, $version, $file));
+      }
+  close(PACKAGES);
+  $mysqldbh->{'AutoCommit'} = 1;
+}
+
+print "Finding most recent result in db ...\n";
+my $maxid = $mysqldbh->selectall_arrayref('SELECT MAX(id) FROM cpanstats')->[0]->[0] || 0;
+
+my $outputstep = 1000;
+print "Finding/inserting new test results.  Each dot is $outputstep records ...\n";
+{
+  my $insertcount = 0;
+  my @os_by_osname = (
+    '' => 'Unknown OS',
+    'aix' => 'AIX',
+    'beos' => 'BeOS',
+    'bsdos' => 'BSD OS',
+    'cygwin' => 'Windows (Cygwin)',
+    'darwin' => 'Mac OS X',
+    'dec_osf' => 'Tru64/OSF/Digital UNIX',
+    'dragonfly' => 'Dragonfly BSD',
+    'freebsd' => 'FreeBSD',
+    'gnu' => 'GNU Hurd',
+    'haiku' => 'Haiku',
+    'hpux' => 'HP-UX',
+    'irix' => 'Irix',
+    'linThis' => 'Unknown OS',
+    'linuThis' => 'Unknown OS',
+    'linux' => 'Linux',
+    'linuxThis' => 'Unknown OS',
+    'lThis' => 'Unknown OS',
+    'MacOS' => 'Mac OS classic',
+    'midnightbsd' => 'Midnight BSD',
+    'mirbsd' => 'MirOS BSD',
+    'MSWin32' => 'Windows (Win32)',
+    'netbsd' => 'NetBSD',
+    'openbsd' => 'OpenBSD',
+    'OpenBSD' => 'OpenBSD',
+    'openosname=openbsd' => 'OpenBSD',
+    'openThis' => 'Unknown OS',
+    'os2' => 'OS/2',
+    'os390' => 'OS390/zOS',
+    'sco' => 'SCO Unix',
+    'solaris' => 'Solaris',
+    'VMS' => 'VMS',
+  );
+  my $select = $barbiedbh->prepare("
+    SELECT id, state, tester, dist, version, platform, perl, platform, osname
+      FROM cpanstats
+     WHERE id > $maxid AND
+           state != 'cpan' AND
+	   perl != '0'
+  ");
+  my $insert = $mysqldbh->prepare('
+    INSERT INTO cpanstats (id, state, tester, dist, version, perl, is_dev_perl, os, platform, origosname)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  ');
+  $select->execute();
+  $mysqldbh->{'AutoCommit'} = 0;
+  while(my $record = $select->fetchrow_hashref()) {
+    $record->{is_dev_perl} = ($record->{perl} =~ /(^5\.(7|9|11)|patch)/) ? 1 : 0;
+    foreach my $ver (qw(
+        5.3 5.4 5.5
+        5.7.2 5.7.3
+        5.8.0 5.8.1 5.8.2 5.8.3 5.8.4 5.8.5 5.8.6 5.8.7 5.8.8 5.8.9
+        5.9.0 5.9.1 5.9.2 5.9.3 5.9.4 5.9.5 5.9.6
+        5.10.0 5.10.1 5.10.2 5.10.3 5.10.4
+        5.11.0 5.11.1 5.11.2 5.11.3 5.11.4 5.11.5 5.11.6
+    )) {
+      $record->{perl} = $ver if($record->{perl} =~ /^$ver/);
     }
-close(PACKAGES);
-
-print "Deleting rubbish ...\n";
-$dbh->do(q{delete from cpanstats where state='cpan' or perl='0'});
-
-print "Creating indices ...\n";
-$dbh->do("CREATE INDEX perlidx ON cpanstats (perl)");
-$dbh->do("CREATE INDEX platformidx ON cpanstats (platform)");
-
-print "Finding dev versions of perl ...\n";
-$dbh->do("alter table cpanstats add column is_dev_perl"); # not yet used
-$dbh->do("CREATE INDEX isdevperlidx ON cpanstats (is_dev_perl)");
-$dbh->do("update cpanstats set is_dev_perl='0'");
-foreach my $ver (qw(5.7 5.9 5.11 %patch)) {
-    print "  $ver";
-    $dbh->do("update cpanstats set is_dev_perl='1' where perl like '$ver%'");
-}
-print "\n";
-
-print "Merging perl versions ...\n";
-foreach my $ver (qw(
-    5.3 5.4 5.5
-    5.7.2 5.7.3
-    5.8.0 5.8.1 5.8.2 5.8.3 5.8.4 5.8.5 5.8.6 5.8.7 5.8.8 5.8.9
-    5.9.0 5.9.1 5.9.2 5.9.3 5.9.4 5.9.5 5.9.6
-    5.10.0 5.10.1 5.10.2 5.10.3 5.10.4
-    5.11.0 5.11.1 5.11.2 5.11.3 5.11.4 5.11.5 5.11.6
-)) {
-    print "  $ver";
-    $dbh->do("update cpanstats set perl='$ver' where perl like '$ver%'");
-}
-print "\n";
-
-print "Merging OSes ...\n";
-$dbh->do("alter table cpanstats add column os");
-$dbh->do("alter table cpanstats add column arch"); # not yet used
-
-my %os_by_platform = (
-    '%linux%'     => 'Linux',               '%freebsd%'   => 'FreeBSD',
-    '%openbsd%'   => 'OpenBSD',             '%netbsd%'    => 'NetBSD',
-    '%bsdos%'     => 'BSD OS',              '%darwin%'    => 'Mac OS X',
-    '%MacOS%'     => 'Mac OS classic',      '%MacPPC%'    => 'Mac OS classic',
-    '%aix%'       => 'AIX',                 '%i686-AT386-gnu%' => 'GNU Hurd',
-    '%sco%'       => 'SCO',                 '%pa-risc%'   => 'HP-UX',
-    '%irix%'      => 'Irix',                '%solaris%'   => 'SunOS/Solaris',
-    '%cygwin%'    => 'Windows (Cygwin)',    '%win32%'     => 'Windows (Win32)',
-    '%s390%'      => 'OS390/zOS',           '%VMS_%'      => 'VMS',
-    '%dragonfly%' => 'Dragonfly BSD',       '%os2%'       => 'OS/2',
-    '%mirbsd%'    => 'MirOS BSD',           'i486-gnu'     => 'GNU Hurd',
-    '%i486-gnu-thread-multi%' => 'GNU Hurd',
-    '%osf%'       => 'Tru64/OSF/Digital UNIX',
-    '%ARCHREV_0%' => 'HP-UX', # IA64.ARCHREV_0-LP64 / IA64.ARCHREV_0-thread-multi
-    '%BePC-haiku%' => 'Haiku',
-    '%beos'        => 'BeOS',
-    '%midnightbsd%' => 'Midnight BSD',
-);
-$dbh->do("CREATE INDEX osidx ON cpanstats (os)");
-foreach my $platform (keys %os_by_platform) {
-    # print "  $platform -> $os_by_platform{$platform}\n";
-    print "  $os_by_platform{$platform}";
-    $dbh->do("
-        UPDATE cpanstats
-           SET os='$os_by_platform{$platform}'
-         WHERE platform LIKE '$platform' AND os IS NULL
-    ");
-    $dbh->do("
-        UPDATE cpanstats
-	   SET os='$os_by_platform{$platform}'
-	 WHERE osname LIKE '$platform' AND os IS NULL
-    ");
+    $record->{os} = 'Unknown OS';
+    my @temp_os_by_osname = @os_by_osname;
+    while(@temp_os_by_osname) {
+      my($osname, $os) = (shift(@temp_os_by_osname), shift(@temp_os_by_osname));
+      if($record->{osname} eq "$osname") {
+        $record->{os} = $os;
+	last;
+      }
+    }
+    $insert->execute(
+      map { $record->{$_} } qw(id state tester dist version perl is_dev_perl os platform osname)
+    );
+    if(!(++$insertcount % $outputstep)) {
+      print '.';
+      $mysqldbh->{'AutoCommit'} = 1;
+      $mysqldbh->{'AutoCommit'} = 0;
+    }
+  }
+  $mysqldbh->{'AutoCommit'} = 1;
+  print "\n";
 }
 
-print "  Unknown OS\n";
-$dbh->do("UPDATE cpanstats SET os='Unknown OS' WHERE os IS NULL");
-
+mkdir 'db';
 print "Caching list of perls\n";
-open(PERLS, ">perls") || die("Can't cache list of perl versions\n");
-print PERLS Dumper([map { $_->[0] } @{$dbh->selectall_arrayref("SELECT DISTINCT perl FROM cpanstats")}]);
+open(PERLS, ">db/perls") || die("Can't cache list of perl versions\n");
+print PERLS Dumper([map { $_->[0] } @{$mysqldbh->selectall_arrayref("SELECT DISTINCT perl FROM cpanstats")}]);
 close(PERLS);
 
 print "Caching list of OSes\n";
-open(OSES, ">oses") || die("Can't cache list of OSes\n");
-print OSES Dumper([map { $_->[0] } @{$dbh->selectall_arrayref("SELECT DISTINCT os FROM cpanstats")}]);
+open(OSES, ">db/oses") || die("Can't cache list of OSes\n");
+print OSES Dumper([map { $_->[0] } @{$mysqldbh->selectall_arrayref("SELECT DISTINCT os FROM cpanstats")}]);
 close(OSES);
-
-print "Adding final index on (dist, version)\n";
-$dbh->do("CREATE INDEX distversionidx ON cpanstats (dist, version)");
-# $dbh->do("alter table cpanstats add column osfamily"); # not yet used
-# $dbh->do("alter table cpanstats add column perlmajorver"); # not yet used
-# $dbh->do("VACUUM");

@@ -20,6 +20,7 @@ use constant DEFAULTCORE => '5.005';
 use constant MAXINT => ~0;
 
 my $home = cwd();
+my $dbname = ($home =~ /-dev/) ? 'cpandepsdev' : 'cpandeps';
 my $debug = ($home =~ /-dev/) ? 1 : 0;
 
 my $dbh;
@@ -100,7 +101,7 @@ sub go {
         eval 'use DBI; use LWP::UserAgent;';
         die($@) if($@);
 
-        $dbh = DBI->connect("dbi:SQLite:dbname=$home/db/cpantestresults");
+        $dbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
         my $ua = LWP::UserAgent->new(
             agent => "cpandeps/$VERSION",
             from => 'cpandeps@cantrell.org.uk'
@@ -289,7 +290,7 @@ sub gettestresults {
 
 sub getpurity {
     my($author, $distname, $ua) = @_;
-    my $cachefile = "$home/db/$distname.MANIFEST";
+    my $cachefile = "$home/db/MANIFEST/$distname.MANIFEST";
     my $MANIFESTurl = "http://search.cpan.org/src/$author/$distname/MANIFEST";
     local $/ = undef;
 
@@ -334,7 +335,7 @@ sub getpurity {
 
 sub getreqs {
     my($author, $distname, $ua) = @_;
-    my $cachefile = "$home/db/$distname.yml";
+    my $cachefile = "$home/db/META.yml/$distname.yml";
     my $METAymlURL = "http://search.cpan.org/src/$author/$distname/META.yml";
     my $yaml;
     local $/ = undef;
