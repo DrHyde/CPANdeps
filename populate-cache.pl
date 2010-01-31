@@ -49,26 +49,3 @@ foreach my $file (@files) {
 	sleep 1;
     }
 }
-
-sub cache_test_results {
-    my %params = @_;
-    return if(-e $params{dumpfile});
-
-    my %states = map { @{$_} } @{
-        $dbh->selectall_arrayref("
-            SELECT state, count(state)
-	      FROM cpanstats
-	     WHERE dist = '$params{dist}' AND
-	           version = '$params{version}' AND
-        ".($params{perl} ? "perl = '$params{perl}' AND" : "")."
-		   is_dev_perl = '0' AND
-		   '1' = '1'
-    	    GROUP BY dist, version, state
-        ")
-    };
-    open(DUMPFILE, ">", $params{dumpfile}) ||
-        die("Can't write $params{dumpfile}\n");
-    print DUMPFILE Dumper(\%states);
-    close(DUMPFILE);
-    print "Wrote $params{dumpfile}\n";
-}
