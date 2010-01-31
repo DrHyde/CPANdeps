@@ -271,7 +271,15 @@ sub gettestresults {
     $perl ||= ANYVERSION;
     $os   ||= ANYOS;
     (my $os_without_slashes = $os) =~ s/\///g;
-    (my $cachefile = "$home/db/$distname-$distversion-$perl-$os_without_slashes-$devperls.dd") =~ s/ /_/g;
+    my @segments = split('/', "results/dist:$distname/distver:$distversion/perl:$perl/os:$os_without_slashes/devperls:$devperls");
+    my $dir = "$home/db";
+    while(@segments) {
+      $dir .= "/".shift(@segments);
+      mkdir $dir;
+      chmod 0777, $dir;
+    }
+    my $cachefile = "$dir/dumper.dd";
+
     if(-e $cachefile && (stat($cachefile))[9] + 2 * 86400 > time()) {
         return do($cachefile)
     } else {
