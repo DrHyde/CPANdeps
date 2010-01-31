@@ -122,7 +122,7 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
 }
 
 mkdir 'db';
-chmod 0777 'db';
+chmod 0777, 'db';
 
 print "Caching list of perls\n";
 open(PERLS, ">db/perls") || die("Can't cache list of perl versions\n");
