@@ -52,11 +52,7 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
     'haiku' => 'Haiku',
     'hpux' => 'HP-UX',
     'irix' => 'Irix',
-    'linThis' => 'Unknown OS',
-    'linuThis' => 'Unknown OS',
     'linux' => 'Linux',
-    'linuxThis' => 'Unknown OS',
-    'lThis' => 'Unknown OS',
     'MacOS' => 'Mac OS classic',
     'midnightbsd' => 'Midnight BSD',
     'mirbsd' => 'MirOS BSD',
@@ -104,6 +100,12 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
       if($record->{osname} eq "$osname") {
         $record->{os} = $os;
 	last;
+      }
+      if($record->{os} eq 'Unknown OS') { # a handful of records have no osname
+        $record->{os} =
+	  ($record->{platform} =~ /mirbsd/i)  ? 'MirOS BSD' :
+	  ($record->{platform} =~ /openbsd/i) ? 'OpenBSD' :
+	                                        'Unknown OS';
       }
     }
     $insert->execute(
