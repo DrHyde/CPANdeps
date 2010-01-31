@@ -122,6 +122,8 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
 }
 
 mkdir 'db';
+chmod 0777 'db';
+
 print "Caching list of perls\n";
 open(PERLS, ">db/perls") || die("Can't cache list of perl versions\n");
 print PERLS Dumper([map { $_->[0] } @{$mysqldbh->selectall_arrayref("SELECT DISTINCT perl FROM cpanstats")}]);

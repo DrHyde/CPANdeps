@@ -27,6 +27,7 @@ my @files = map { @{$_} } @{$dbh->selectall_arrayref("
 mkdir 'db';
 mkdir 'db/META.yml';
 mkdir 'db/MANIFEST'; # not populated by this script, as not often used
+chmod 0777 qw(db db/META.yml db/MANIFEST);
 
 foreach my $file (@files) {
     $file =~ m{^./../([^/]+)(/.*)?/([^/]*).(tar.gz|tgz|zip)$};
