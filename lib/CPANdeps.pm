@@ -142,10 +142,10 @@ sub go {
 
 sub checkmodule {
     my %params = @_;
-    my($module, $moduleversion, $perl, $indent, $distschecked, $sth, $ua, $q, $pureperl, $devperls) =
+    my($module, $moduleversion, $perl, $indent, $distschecked, $sth, $ua, $q, $pureperl, $devperls, $required_by) =
         @params{qw(
             module moduleversion perl indent distschecked sth ua q pureperl
-	    devperls
+	    devperls required_by
         )};
     my $warning = '';
     $indent += 1;
@@ -225,6 +225,7 @@ sub checkmodule {
         indent   => $indent,
         ispureperl => $ispureperl,
         warning => $warning,
+	$required_by ? (required_by => $required_by) : (),
         ref($testresults) ?
             %{$testresults} :
             (textresult   => $testresults)
@@ -232,6 +233,7 @@ sub checkmodule {
         checkmodule(
             module => $_,
             moduleversion => $requires{$_},
+	    required_by => [grep { $_ } (@{$required_by}, $module)],
             indent => $indent,
             distschecked => $distschecked,
             perl => $perl,
