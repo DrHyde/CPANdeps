@@ -3,11 +3,24 @@
 </head>
 <body>
   <script type='text/javascript'><!--
-    function toggle(id) {
-      // FIXME - find elements with 'id' in their id
-      var d = document.getElementById(id);
-      if(d.style.display == 'none') { d.style.display = 'block' }
-       else { d.style.display = 'none' }
+    function getElementsByClassName(classname, node)  {
+      if(!node) node = document.getElementsByTagName("body")[0];
+      var a = [];
+      var re = new RegExp('\\$' + classname + '\\$');
+      var els = node.getElementsByTagName("*");
+      for(var i=0,j=els.length; i<j; i++)
+        if(re.test(els[i].className))a.push(els[i]);
+      return a;
+    }
+    function toggle(class_to_toggle, cell_to_change) {
+      var cell = document.getElementById(cell_to_change);
+      cell.innerHTML = cell.innerHTML == '-' ? '+' : '-';
+
+      var objects_to_toggle = getElementsByClassName(class_to_toggle);
+      for(var i = 0; i < objects_to_toggle.length; i++) {
+        var obj = objects_to_toggle[i];
+        if(obj.style.display == 'none') { obj.style.display = 'block' }
+         else { obj.style.display = 'none' }
       }
     }
   // -->
