@@ -2,6 +2,16 @@
  <link rel="stylesheet" type="text/css" href="/static/style.css" />
 </head>
 <body>
+  <script type='text/javascript'><!--
+    function toggle(id) {
+      // FIXME - find elements with 'id' in their id
+      var d = document.getElementById(id);
+      if(d.style.display == 'none') { d.style.display = 'block' }
+       else { d.style.display = 'none' }
+      }
+    }
+  // -->
+  </script>
   <div id="perlad3">
     <script type="text/javascript"  src="http://adserver.szabgab.com/ads/direct_link_selflink.js?cnt=2"></script>
   </div>
@@ -98,7 +108,7 @@
 	[% END %]
       [% END %]
       <tr>
-        <th colspan=4 align=right>Chance of all tests passing</th>
+        <th colspan=5 align=right>Chance of all tests passing</th>
         <td><img src=static/green.png height=16 width=[% successpc * 2 %]><img src=static/red.png height=16 width=[% 200 - successpc * 2 %]></td>
         <td>
           [% IF successpc < 1 %]

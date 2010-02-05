@@ -1,4 +1,5 @@
-<tr>
+<tr id='required_by:[% FOREACH r = module.required_by %][% r %]:[%END %]'>
+  <td valign=top><a href=javascript:toggle('[% module.name %]')>+/-</a></td>
   <td valign=top>[% depcounter %].</td>
   <td valign=top><nobr>
     [% FOREACH x = [1 .. module.indent] %]&nbsp;&nbsp;&nbsp;&nbsp;[% END %]
