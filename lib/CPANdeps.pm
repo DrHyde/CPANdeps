@@ -45,10 +45,15 @@ my $tt2 = Template->new(
 sub render {
     my($q, $ttvars) = @_;
 
+    # at the last moment, add has_children: only needed by renderer
+    for(my $i = 0; $i < $#{$ttvars->{modules}}; $i++) {
+      $ttvars->{modules}->[$i]->{has_children} = 
+        ($ttvars->{modules}->[$i]->{indent} < $ttvars->{modules}->[$i + 1]->{indent}) ? 1 : 0;
+    }
 
     $ttvars->{debug} = "<h2>Debug info</h2><pre>".Dumper($ttvars)."</pre>"
         if($debug);
-
+    
     $tt2->process(
         $q->param('xml') ? 'cpandeps-xml.tt2' : 'cpandeps.tt2',
         $ttvars,
@@ -189,7 +194,7 @@ sub checkmodule {
 	    distversion => $distversion,
 	    perl        => $q->param('perl'),
 	    os          => $q->param('os'),
-	    devperls    => $devperls
+	    devperls    => $devperls ? 1 : 0,
 	);
 
     my %requires = ();
@@ -241,7 +246,7 @@ sub checkmodule {
             ua => $ua,
             q => $q,
 	    pureperl => $pureperl,
-	    devperls => $devperls
+	    devperls => $devperls ? 1 : 0,
         )
     } keys %requires
 }

@@ -5,13 +5,12 @@
   <script type='text/javascript'><!--
     var what_i_hid_when = [];
     function getElementsByClassName(classname)  {
-      var node = document.getElementsByTagName("body")[0];
-      var a = [];
+      var allelements = document.getElementsByTagName("*");
+      var myelements = [];
       var re = new RegExp('\\$' + classname + '\\$');
-      var els = node.getElementsByTagName("*");
-      for(var i=0,j=els.length; i<j; i++)
-        if(re.test(els[i].className))a.push(els[i]);
-      return a;
+      for(var i=0; i< allelements.length; i++)
+        if(re.test(allelements[i].className)) myelements.push(allelements[i]);
+      return myelements;
     }
     function toggle(class_to_toggle, cell_to_change) {
       var cell = document.getElementById(cell_to_change);
