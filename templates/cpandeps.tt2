@@ -3,8 +3,9 @@
 </head>
 <body>
   <script type='text/javascript'><!--
-    function getElementsByClassName(classname, node)  {
-      if(!node) node = document.getElementsByTagName("body")[0];
+    var what_i_hid_when = [];
+    function getElementsByClassName(classname)  {
+      var node = document.getElementsByTagName("body")[0];
       var a = [];
       var re = new RegExp('\\$' + classname + '\\$');
       var els = node.getElementsByTagName("*");
@@ -14,13 +15,27 @@
     }
     function toggle(class_to_toggle, cell_to_change) {
       var cell = document.getElementById(cell_to_change);
+
+      if(cell.innerHTML == '-') { hide(class_to_toggle, cell_to_change); }
+       else { show(cell_to_change); }
+
       cell.innerHTML = cell.innerHTML == '-' ? '+' : '-';
+    }
+    function show(cell_to_change) {
+      for(var i = 0; i < what_i_hid_when[cell_to_change].length; i++) {
+        what_i_hid_when[cell_to_change][i].style.display = 'block';
+      }
+    }
+    function hide(class_to_toggle, cell_to_change) {
+      what_i_hid_when[cell_to_change] = [];
 
       var objects_to_toggle = getElementsByClassName(class_to_toggle);
       for(var i = 0; i < objects_to_toggle.length; i++) {
         var obj = objects_to_toggle[i];
-        if(obj.style.display == 'none') { obj.style.display = 'block' }
-         else { obj.style.display = 'none' }
+        if(obj.style.display != 'none') {
+	  obj.style.display = 'none';
+	  what_i_hid_when[cell_to_change].push(obj);
+	}
       }
     }
   // -->

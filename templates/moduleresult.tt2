@@ -1,5 +1,5 @@
 <tr>
-  <td class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' valign=top><!--<a id='toggler_[% depcounter %]' href="javascript:toggle('[% module.name %]','toggler_[% depcounter %]')">-</a>--></td>
+  <td class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' valign=top><a id='toggler_[% depcounter %]' href="javascript:toggle('[% module.name %]','toggler_[% depcounter %]')">-</a></td>
   <td class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' valign=top>[% depcounter %].</td>
   <td class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' valign=top><nobr>
     [% FOREACH x = [1 .. module.indent] %]&nbsp;&nbsp;&nbsp;&nbsp;[% END %]
