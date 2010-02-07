@@ -20,7 +20,13 @@
     <a title="search.cpan.org" href=http://search.cpan.org/search?query=[% module.distname %]&mode=all>S</a>
     <a title="Bug reports" href=http://rt.cpan.org/Public/Dist/Display.html?Name=[% module.distname %]>B</a>
     <a title="Detailed test results" href=http://www.cpantesters.org/show/[% module.distname %].html>R</a>
-    <a title="is depended on by ..." href=depended-on-by.pl?dist=[% module.distname %]-[% module.version %]>D</a>
+    [% TRY %]
+      [% reversefile = 'db/reverse/' _ module.distname _ '-' _ module.version _ '.dd' %]
+      [% USE File(reversefile) %]
+      <a title="is depended on by ..." href=depended-on-by.pl?dist=[% module.distname %]-[% module.version %]>D</a>
+    [% CATCH File %]
+      No such file [% reversefile %]
+    [% END %]
   </nobr></td>
   <td class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' valign=top>
     [% IF !module.textresult %]
