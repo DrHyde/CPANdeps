@@ -43,7 +43,7 @@ my $tt2 = Template->new(
     =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
-    my($q, $ttvars) = @_;
+    my($q, $tt2file, $ttvars) = @_;
 
     # at the last moment, add has_children: only needed by renderer
     for(my $i = 0; $i < $#{$ttvars->{modules}}; $i++) {
@@ -55,10 +55,20 @@ sub render {
         if($debug);
     
     $tt2->process(
-        $q->param('xml') ? 'cpandeps-xml.tt2' : 'cpandeps.tt2',
+        $q->param('xml') ? "$tt2file-xml.tt2" : "$tt2file.tt2",
         $ttvars,
         sub { $q->print(@_); }
     ) || die($tt2->error());
+}
+
+sub depended_on_by {
+  my $q = CGI->new();
+  print "Content-type: text/html\n\n";
+  my $ttvars = {
+    dist => $q->param('dist'),
+    depended_on_by => [ @{ do "$home/db/reverse/".$q->param('dist').".dd" } ]
+  };
+  render($q, 'depended-on-by', $ttvars);
 }
 
 sub go {
@@ -142,7 +152,7 @@ sub go {
         )];
     }
 
-    render($q, $ttvars);
+    render($q, 'cpandeps', $ttvars);
 }
 
 sub checkmodule {

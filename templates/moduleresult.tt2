@@ -20,7 +20,7 @@
     <a title="search.cpan.org" href=http://search.cpan.org/search?query=[% module.distname %]&mode=all>S</a>
     <a title="Bug reports" href=http://rt.cpan.org/Public/Dist/Display.html?Name=[% module.distname %]>B</a>
     <a title="Detailed test results" href=http://www.cpantesters.org/show/[% module.distname %].html>R</a>
-    <a title="is depended on by ..." href=http://cpants.perl.org/dist/used_by/[% module.distname %]>D</a>
+    <a title="is depended on by ..." href=depended-on-by.pl?dist=[% module.distname %]-[% module.version %]>D</a>
   </nobr></td>
   <td class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' valign=top>
     [% IF !module.textresult %]

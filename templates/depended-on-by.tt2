@@ -1,0 +1,27 @@
+<html><head><title>Reverse CPAN dependencies[% IF dist %]: [% dist %][% END %]</title>
+ <link rel="stylesheet" type="text/css" href="/static/style.css" />
+</head>
+<body>
+  <div id="perlad3">
+    <script type="text/javascript"  src="http://adserver.szabgab.com/ads/direct_link_selflink.js?cnt=2"></script>
+  </div>
+  <p><a href=http://www.cantrell.org.uk/cgit/cgit.cgi/cpandeps/>Source code</a> |
+     <a href=mailto:david@cantrell.org.uk?Subject=cpandeps+bug+report>Report bugs</a> |
+     <a href=static/credits.html>Credits</a> |
+     <a href=static/links.html>Links</a>
+  </p>
+  [% IF dist %]
+    <h2>[% dist %] is depended on by</h2>
+    [% IF depended_on_by %]
+      <table>
+        [% FOR dep = depended_on_by %]
+	  <tr><th align=left>[% dep %]</th></tr>
+	[% END %]
+      </table>
+    [% ELSE %]
+      <p>Nothing/p>
+    [% END %]
+  [% END %]
+
+[% debug.replace("\n","<br>").replace(" ","&nbsp;") %]
+</body></html>
