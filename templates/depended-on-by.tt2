@@ -19,7 +19,7 @@
 	[% END %]
       </table>
     [% ELSE %]
-      <p>Nothing/p>
+      <p>Nothing</p>
     [% END %]
   [% END %]
 

@@ -9,6 +9,8 @@ use vars qw($VERSION);
 use Cwd;
 use CGI;
 use YAML ();
+use DBI;
+use LWP::UserAgent;
 
 use Data::Dumper;
 use Template;
@@ -64,9 +66,21 @@ sub render {
 sub depended_on_by {
   my $q = CGI->new();
   print "Content-type: text/html\n\n";
+  my $dist = $q->param('dist');
+  if(!$dist) {
+    my $module = $q->param('module');
+    $dbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
+    my $results = $dbh->selectall_arrayref("
+        SELECT file FROM packages WHERE module=\"$module\"
+    ");
+    return () unless @{$results};
+    $dist = $results->[0]->[0];
+    return () unless $dist;
+    $dist =~ s!(^.*/|(\.tar\.gz|\.zip)$)!!g;
+  }
   my $ttvars = {
-    dist => $q->param('dist'),
-    depended_on_by => [ @{ do "$home/db/reverse/".$q->param('dist').".dd" } ]
+    dist => $dist,
+    depended_on_by => [ @{ do "$home/db/reverse/$dist.dd" } ]
   };
   render($q, 'depended-on-by', $ttvars);
 }
@@ -112,10 +126,6 @@ sub go {
 
     my $distschecked = {};
     if($module) {
-        # load these as late as possible
-        eval 'use DBI; use LWP::UserAgent;';
-        die($@) if($@);
-
         $dbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
         my $ua = LWP::UserAgent->new(
             agent => "cpandeps/$VERSION",
