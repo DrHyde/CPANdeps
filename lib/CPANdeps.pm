@@ -182,7 +182,7 @@ sub checkmodule {
     my $distname = $results->[0]->[0];
     return () unless $distname;
     (my $author = $distname) =~ s{^./../([^/]+)/.*}{$1};
-    (my $distversion = $distname) =~ s{^.*/.*?(v?[\d_\.]*)\..*?$}{$1};
+    (my $distversion = $distname) =~ s{^.*-(v?[\d_\.]+)\.(tar\.gz|zip)$}{$1};
 
     my $CPANfile     = $distname;
     my $incore       = in_core(module => $module, perl => $perl);
@@ -202,7 +202,7 @@ sub checkmodule {
     $distname =~ s!(^.*/|(\.tar\.gz|\.zip)$)!!g;
 
     my $origdistname = $distname;
-    $distname =~ s/\.pm|-[^-]*$//g;
+    $distname =~ s/-[^-]*$//g;
     my $testresults = (
         $distname eq 'perl' ||
         (defined($incore) && $incore >= $moduleversion)
