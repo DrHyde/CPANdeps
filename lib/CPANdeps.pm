@@ -76,7 +76,7 @@ sub depended_on_by {
     return () unless @{$results};
     $dist = $results->[0]->[0];
     return () unless $dist;
-    $dist =~ s!(^.*/|(\.tar\.gz|\.zip)$)!!g;
+    $dist =~ s!(^.*/|(\.t(ar\.)?gz|\.zip)$)!!g;
   }
   my $ttvars = {
     dist => $dist,
@@ -182,7 +182,7 @@ sub checkmodule {
     my $distname = $results->[0]->[0];
     return () unless $distname;
     (my $author = $distname) =~ s{^./../([^/]+)/.*}{$1};
-    (my $distversion = $distname) =~ s{^.*-(v?[\d_\.]+)\.(tar\.gz|zip)$}{$1};
+    (my $distversion = $distname) =~ s{^.*-(v?[\d_\.]+)\.(t(ar\.)?gz|zip)$}{$1};
 
     my $CPANfile     = $distname;
     my $incore       = in_core(module => $module, perl => $perl);
@@ -199,7 +199,7 @@ sub checkmodule {
     $distname = '' unless(defined($distname));
     $distversion = '' unless(defined($distversion));
 
-    $distname =~ s!(^.*/|(\.tar\.gz|\.zip)$)!!g;
+    $distname =~ s!(^.*/|(\.t(ar\.)?gz|\.zip)$)!!g;
 
     my $origdistname = $distname;
     $distname =~ s/-[^-]*$//g;
