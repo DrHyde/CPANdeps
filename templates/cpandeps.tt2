@@ -1,6 +1,19 @@
 <html><head><title>CPAN dependencies and test results checker[% IF module %]: [% module %][% END %]</title>
  <link rel="stylesheet" type="text/css" href="/static/style.css" />
 </head>
+
+<!-- google analytics -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-15765130-1");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+
 <body>
   <script type='text/javascript'><!--
     var what_i_hid_when = [];
