@@ -56,7 +56,7 @@ pageTracker._trackPageview();
     <script type="text/javascript"  src="http://adserver.szabgab.com/ads/direct_link_selflink.js?cnt=2"></script>
   </div>
   <p><a href=http://www.cantrell.org.uk/cgit/cgit.cgi/cpandeps/>Source code</a> |
-     <a href=mailto:david@cantrell.org.uk?Subject=cpandeps+bug+report>Report bugs</a> |
+     <a href=static/reportbug.html>Report a bug in this site</a> |
      <a href=static/credits.html>Credits</a> |
      <a href=static/links.html>Links</a>
   </p>
@@ -67,7 +67,7 @@ pageTracker._trackPageview();
     a choice of several modules to use, this will show you which is the
     most reliable.
   </p>
-  <p><small>Please note: this site is a tool to analyse the dependencies of modules written in the Perl programming language.  I can not help you with any problems you might have with using any modules.  Do not use the "report bugs" link above to report bugs in anything other than this website.</small></p>
+  <p><small>Please note: this site is a tool to analyse the dependencies of modules written in the Perl programming language.  I can not help you with any problems you might have with using any modules.</small></p>
   <p><small>It relies on modules having META.yml files so it can work
     out their dependencies, and is <strong>case-sensitive</strong>.
     The perl version number is used to filter test results and also to
