@@ -5,6 +5,7 @@ use warnings;
 use DBI;
 use Data::Dumper;
 use FindBin;
+use YAML ();
 
 $/ = undef;
 
@@ -29,7 +30,15 @@ my %METAyml;
 opendir(DIR, 'db/META.yml') || die("can't open db/META.yml\n");
 foreach(grep { -f "db/META.yml/$_" } readdir(DIR)) {
   open FILE, "db/META.yml/$_" || die("Can't read db/META.yml/$_\n");
-  $METAyml{$_} = <FILE>;
+  eval {
+    $METAyml{$_} = YAML::Load(<FILE>);
+    $METAyml{$_} = join("\n",
+      keys %{$METAyml{$_}->{requires}},
+      keys %{$METAyml{$_}->{build_requires}},
+      keys %{$METAyml{$_}->{configure_requires}},
+    );
+  };
+  delete $METAyml{$_} if($@);
   close(FILE);
 }
 closedir(DIR);

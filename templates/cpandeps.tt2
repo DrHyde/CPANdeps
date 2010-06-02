@@ -147,19 +147,26 @@ pageTracker._trackPageview();
           [% END %]
 	[% END %]
       [% END %]
-      <tr>
-        <th colspan=5 align=right>Chance of all tests passing</th>
-        <td><img src=static/green.png height=16 width=[% successpc * 2 %]><img src=static/red.png height=16 width=[% 200 - successpc * 2 %]></td>
-        <td>
-          [% IF successpc < 1 %]
-            [% successpc.sprintf("%.3f") %]% (to 3dp)
-           [% ELSIF successpc < 10 %]
-            [% successpc.sprintf("%.1f") %]% (to 1dp)
-           [% ELSE %]
-            [% successpc.int %]%
-          [% END %] <small>(but <a href=static/overall-chance.html>note</a> that this doesn't mean much)</small>
-        </td>
-      </tr>
+      [% IF modules.size %]
+        <tr>
+          <th colspan=5 align=right>Chance of all tests passing</th>
+          <td><img src=static/green.png height=16 width=[% successpc * 2 %]><img src=static/red.png height=16 width=[% 200 - successpc * 2 %]></td>
+          <td>
+            [% IF successpc < 1 %]
+              [% successpc.sprintf("%.3f") %]% (to 3dp)
+             [% ELSIF successpc < 10 %]
+              [% successpc.sprintf("%.1f") %]% (to 1dp)
+             [% ELSE %]
+              [% successpc.int %]%
+            [% END %] <small>(but <a href=static/overall-chance.html>note</a> that this doesn't mean much)</small>
+          </td>
+        </tr>
+       [% ELSE %]
+        <tr>
+	  <th>No results.</th>
+	  <td colspan=6>make sure you enter a valid module name</td>
+	</tr>
+      [% END %]
     </table>
     <p>The chance of success is calculated by multiplying the probabilities
       of the module and all its dependencies passing their tests.</p>
