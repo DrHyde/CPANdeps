@@ -90,7 +90,8 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
         5.9.0 5.9.1 5.9.2 5.9.3 5.9.4 5.9.5 5.9.6
         5.10.0 5.10.1 5.10.2 5.10.3 5.10.4
         5.11.0 5.11.1 5.11.2 5.11.3 5.11.4 5.11.5 5.11.6
-	5.12.0 5.12.1
+	5.12.0 5.12.1 5.12.2
+	5.13.0 5.13.1 5.13.2
     )) {
       $record->{perl} = $ver if($record->{perl} =~ /^$ver/);
     }
