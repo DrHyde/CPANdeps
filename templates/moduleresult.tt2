@@ -8,7 +8,7 @@
       [% IF module.name == reqmodule %]
         <a title="[% module.name %]'s META.yml file" href=http://search.cpan.org/src/[% module.author %]/[% module.distname %]-[% module.version %]/META.yml>[% module.name %]</a>
       [% ELSE %]
-        <a title="[% module.name %]'s dependency tree" href=?module=[% module.name %];perl=[% perl %];os=[% os | uri %];pureperl=[% pureperl %]>[% module.name %]</a>
+        <a title="[% module.name %]'s dependency tree" href="?module=[% module.name %];perl=[% perl %];os=[% os | uri %];pureperl=[% pureperl %]">[% module.name %]</a>
       [% END %]
     [% IF module.warning %]
       <br>
