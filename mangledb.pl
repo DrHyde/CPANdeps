@@ -49,6 +49,7 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
     'dragonfly' => 'Dragonfly BSD',
     'freebsd' => 'FreeBSD',
     'gnu' => 'GNU Hurd',
+    'gnukfreebsd' => 'FreeBSD (Debian)',
     'haiku' => 'Haiku',
     'hpux' => 'HP-UX',
     'irix' => 'Irix',
