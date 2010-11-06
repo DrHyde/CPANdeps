@@ -78,9 +78,18 @@ sub depended_on_by {
     return () unless $dist;
     $dist =~ s!(^.*/|(\.t(ar\.)?gz|\.zip)$)!!g;
   }
+  my $datafile = "$home/db/reverse/$dist.dd";
+  if(!-e $datafile) {
+    opendir(DIR, "$home/db/reverse") || die("Can't open dir $home/db/reverse: $!");
+    $datafile = (
+      grep { -f $_ && m/\/$dist-v?\d[\d.]*\.dd$/ } map { "$home/db/reverse/$_" } readdir(DIR)
+    )[0];
+    closedir(DIR);
+  }
   my $ttvars = {
     dist => $dist,
-    depended_on_by => [ @{ do "$home/db/reverse/$dist.dd" } ]
+    depended_on_by => [ @{ $datafile ? do $datafile : [] } ],
+    datafile => $datafile,
   };
   render($q, 'depended-on-by', $ttvars);
 }
