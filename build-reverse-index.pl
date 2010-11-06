@@ -47,11 +47,12 @@ foreach my $file (@files) {
     $file =~ m{^./../([^/]+)(/.*)?/([^/]*).(tar.gz|tgz|zip)$};
     my($author, $dist) = ($1, $3);
     next if(!defined($author) || !defined($dist));
-    my $local_file  = "db/reverse/$dist.yml";
 
     $mods_in_file->execute($file);
     my $modules = join('|', map { $_->[0] } @{$mods_in_file->fetchall_arrayref()});
     open(FILE, ">db/reverse/$dist.dd") || die("Can't write db/reverse/$dist.dd\n");
-    print FILE Dumper([map { s/\.yml$//; $_ } grep { $METAyml{$_} =~ /\b($modules)\b/ } keys %METAyml]);
+    print FILE Dumper([
+      sort keys %{{ map { s/\.yml$//; s/-v?\d[\d.]*$//; $_ => 1 } grep { $METAyml{$_} =~ /\b($modules)\b/ } keys %METAyml }}
+    ]);
     close(FILE);
 }
