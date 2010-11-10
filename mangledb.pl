@@ -108,6 +108,13 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
         $record->{os} =
 	  ($record->{platform} =~ /mirbsd/i)  ? 'MirOS BSD' :
 	  ($record->{platform} =~ /openbsd/i) ? 'OpenBSD' :
+	  ($record->{id} =~ /^( # Linux reports with no osname or platform
+	    8360088| 8391786| 8426789| 8426792| 8666860| 8666986| 8666992|
+	    8667489| 8846399| 8846457| 8846785| 8846842| 8847736| 8847756|
+	    8847763| 8848211| 8850666| 8851147| 8851289| 8851322| 8851324|
+	    8864608| 8864626| 8865575| 8866632| 8867205| 8868845| 8870420|
+	    8876404| 8876438| 8878792| 8878811| 8878885
+	                                )$/x) ? 'Linux' :
 	                                        'Unknown OS';
       }
     }
