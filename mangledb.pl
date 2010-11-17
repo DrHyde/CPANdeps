@@ -65,6 +65,7 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
     'openThis' => 'Unknown OS',
     'os2' => 'OS/2',
     'os390' => 'OS390/zOS',
+    'nto' => 'QNX Neutrino',
     'sco' => 'SCO Unix',
     'solaris' => 'Solaris',
     'VMS' => 'VMS',
