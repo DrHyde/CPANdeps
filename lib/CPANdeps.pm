@@ -69,6 +69,61 @@ sub depended_on_by {
   my $dist = $q->param('dist');
   if(!$dist) {
     my $module = $q->param('module');
+
+    if (!$module)
+    {
+      print <<'EOF';
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE
+    html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+<head>
+<title>The CPAN Reverse Dependency Lister</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h1>The CPAN Reverse Dependency Lister</h1>
+
+<p>
+Enter a module or a distribution in the GET parameters and we will return the 
+CPAN distributions that depend on them. You can also fill on of these forms:
+</p>
+
+<h2>Find by Distribution</h2>
+
+<form method="get" action="">
+
+<p>
+<b>Distribution:</b> <input name="dist" />
+</p>
+
+<p>
+<input type="submit" value="Search" />
+</p>
+
+</form>
+
+<h2>Find by Module</h2>
+
+<form method="get" action="">
+
+<p>
+<b>Module:</b> <input name="module" />
+</p>
+
+<p>
+<input type="submit" value="Search" />
+</p>
+
+</form>
+
+</body>
+</html>
+EOF
+      return ();
+    }
+
     $dbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
     # TODO : Shouldn't we prepare this statement, keep it persistent and
     # execute it on each module separately?
