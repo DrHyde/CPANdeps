@@ -70,9 +70,11 @@ sub depended_on_by {
   if(!$dist) {
     my $module = $q->param('module');
     $dbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
-    my $results = $dbh->selectall_arrayref("
-        SELECT file FROM packages WHERE module=\"$module\"
-    ");
+    # TODO : Shouldn't we prepare this statement, keep it persistent and
+    # execute it on each module separately?
+    my $results = $dbh->selectall_arrayref(
+        'SELECT file FROM packages WHERE module=?', {}, $module
+    );
     return () unless @{$results};
     $dist = $results->[0]->[0];
     return () unless $dist;
