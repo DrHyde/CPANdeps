@@ -52,7 +52,11 @@ foreach my $file (@files) {
     my $modules = join('|', map { $_->[0] } @{$mods_in_file->fetchall_arrayref()});
     open(FILE, ">db/reverse/$dist.dd") || die("Can't write db/reverse/$dist.dd\n");
     print FILE Dumper([
-      sort keys %{{ map { s/\.yml$//; s/-v?\d[\d.]*$//; $_ => 1 } grep { $METAyml{$_} =~ /\b($modules)\b/ } keys %METAyml }}
+      sort keys %{{
+        map { s/\.yml$//; s/-v?\d[\d.]*$//; $_ => 1 }
+	grep { $METAyml{$_} =~ /(^|\s)($modules)(\s|$)/ }
+	keys %METAyml
+      }}
     ]);
     close(FILE);
 }

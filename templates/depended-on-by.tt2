@@ -15,7 +15,7 @@
     [% IF depended_on_by.size %]
       <ul>
         [% FOR dep = depended_on_by %]
-	  <li>[% dep %]
+	  <li><a href=http://search.cpan.org/search?query=[% dep %]>[% dep %]</a>
 	[% END %]
       </ul>
     [% ELSE %]
