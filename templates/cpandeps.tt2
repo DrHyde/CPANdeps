@@ -58,6 +58,7 @@ pageTracker._trackPageview();
   <p><a href=http://www.cantrell.org.uk/cgit/cgit.cgi/cpandeps/>Source code</a> |
      <a href=static/reportbug.html>Report a bug in this site</a> |
      <a href=static/credits.html>Credits</a> |
+     <a href=depended-on-by.pl>Reverse lookup</a> |
      <a href=static/links.html>Links</a>
   </p>
   <p>Given a <strong>module name</strong>, this service will show you
