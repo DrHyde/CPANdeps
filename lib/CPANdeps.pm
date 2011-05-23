@@ -465,7 +465,7 @@ sub getreqs {
     $yaml->{build_requires} ||= {};
     $yaml->{configure_requires} ||= {};
     $yaml->{test_requires} ||= {};
-    return %{$yaml->{requires}}, %{$yaml->{build_requires}}, %{$yaml->{configure_requires}, %{$yaml->{test_requires}};
+    return %{$yaml->{requires}}, %{$yaml->{build_requires}}, %{$yaml->{configure_requires}}, %{$yaml->{test_requires}};
 }
 
 1;
