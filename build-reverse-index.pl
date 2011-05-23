@@ -36,6 +36,7 @@ foreach(grep { -f "db/META.yml/$_" } readdir(DIR)) {
       keys %{$METAyml{$_}->{requires}},
       keys %{$METAyml{$_}->{build_requires}},
       keys %{$METAyml{$_}->{configure_requires}},
+      keys %{$METAyml{$_}->{test_requires}},
     );
   };
   delete $METAyml{$_} if($@);
