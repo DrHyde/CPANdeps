@@ -8,6 +8,7 @@ use vars qw($VERSION);
 
 use Cwd;
 use CGI;
+use CGI::Carp qw(fatalsToBrowser);
 use YAML ();
 use DBI;
 use LWP::UserAgent;
@@ -66,6 +67,9 @@ sub render {
 sub depended_on_by {
   my $q = CGI->new();
   print "Content-type: text/html\n\n";
+
+  check_params($q);
+
   my $dist = $q->param('dist');
   if(!$dist) {
     my $module = $q->param('module');
@@ -151,9 +155,31 @@ EOF
   render($q, 'depended-on-by', $ttvars);
 }
 
+sub check_params {
+  my $q = shift;
+
+  my $checks = {
+    module => qr/^[\w:]+$/,
+    dist   => qr/^[\w\.-]+$/,
+    pureperl => qr/^[01]?$/,
+    devperls => qr/^[01]?$/,
+    # FIXME
+    # perl => not tested here, search for "bad perl version" in sub go {}
+    # os   => not tested here, search for "bad OS"
+  };
+
+  foreach my $param (keys %{$checks}) {
+    die("Illegal parameter '$param', should match ".$checks->{$param}."\n")
+      if($q->param($param) && $q->param($param) !~ $checks->{$param});
+  }
+}
+
 sub go {
     my $q = CGI->new();
     print "Content-type: text/".($q->param('xml') ? 'xml' : 'html')."\n\n";
+
+    check_params($q);
+
     my $ttvars = {
         perl => (
 	    ($q->param('perl') eq 'latest') ? LATESTPERL :
