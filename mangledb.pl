@@ -84,7 +84,7 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
   $select->execute();
   $mysqldbh->{'AutoCommit'} = 0;
   while(my $record = $select->fetchrow_hashref()) {
-    $record->{is_dev_perl} = ($record->{perl} =~ /(^5\.(7|9|11|13|15)|rc|patch)/) ? 1 : 0;
+    $record->{is_dev_perl} = ($record->{perl} =~ /(^5\.(7|9|11|13|15)|rc|patch)/i) ? 1 : 0;
     foreach my $ver (qw(
         5.3 5.4 5.5
         5.7.2 5.7.3
