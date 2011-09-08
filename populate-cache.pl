@@ -20,15 +20,26 @@ my $dbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
 
 print "Updating cache ...\n";
 
-my @files = map { @{$_} } @{$dbh->selectall_arrayref("
-    SELECT DISTINCT(file) FROM packages
-")};
-
 mkdir 'db';
 mkdir 'db/META.yml';
 mkdir 'db/MANIFEST'; # not populated by this script, as not often used
 chmod 0777, qw(db db/META.yml db/MANIFEST);
 
+print "Caching list of perls\n";
+open(PERLS, ">db/perls") || die("Can't cache list of perl versions\n");
+print PERLS Dumper([map { $_->[0] } @{$dbh->selectall_arrayref("SELECT DISTINCT perl FROM cpanstats")}]);
+close(PERLS);
+
+print "Caching list of OSes\n";
+open(OSES, ">db/oses") || die("Can't cache list of OSes\n");
+print OSES Dumper([map { $_->[0] } @{$dbh->selectall_arrayref("SELECT DISTINCT os FROM cpanstats")}]);
+close(OSES);
+
+my @files = map { @{$_} } @{$dbh->selectall_arrayref("
+    SELECT DISTINCT(file) FROM packages
+")};
+
+print "Getting META.ymls\n";
 foreach my $file (@files) {
     $file =~ m{^./../([^/]+)(/.*)?/([^/]*).(tar.gz|tgz|zip)$};
     my($author, $dist) = ($1, $3);
