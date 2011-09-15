@@ -1,11 +1,7 @@
-<tr class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]'>
+<tr class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' onMouseover="this.bgColor='#f5f5f5'"onMouseout="this.bgColor='#FFFFFF'">
   <td valign=top>
     [% IF module.has_children %]<a id='toggler_[% depcounter %]' href="javascript:toggle('[% module.name %]','toggler_[% depcounter %]')">-</a>[% END %]
   </td>
-  <td valign=top>[%# depcounter %]</td>
-
-
-
 <td valign=top ><nobr>
     [% FOREACH x = [1 .. module.indent] %]&nbsp;&nbsp;&nbsp;&nbsp;[% END %]
       [% IF module.name == reqmodule %]
@@ -20,8 +16,6 @@
     [% END %]
   </nobr>
 </td>
-  
-
 <td valign="top" ><nobr>
     <a title="search.cpan.org" href=http://search.cpan.org/search?query=[% module.distname %]&mode=all><img src="static/search.png" width="20" height="20"></a>
     <a title="Bug reports" href=http://rt.cpan.org/Public/Dist/Display.html?Name=[% module.distname %]><img src="static/bug.png" width="20" height="20"></a>

@@ -56,7 +56,7 @@ pageTracker._trackPageview();
 <h1> CPAN Dependencies </h1>
 
 	<div id="menu">
-		<a href=https://github.com/DrHyde/CPANdeps>Source code</a> 
+		<a href="https://github.com/DrHyde/CPANdeps" class="first">Source code</a> 
 		<a href=static/reportbug.html>Report a bug in this site</a>
 		<a href="/static/credits.html">Credits</a>
 		<a href=depended-on-by.pl>Reverse lookup</a>
@@ -118,7 +118,6 @@ pageTracker._trackPageview();
 	
 	<tr> <!-- headers -->
 		<th width="10">&nbsp;</th>
-		<th width="5">&nbsp;</th>
 		<th align="left">Module</th>
 		<th width="100">&nbsp;</th>
 		<th width="200" align="left">Pass rate</th>
@@ -144,7 +143,7 @@ pageTracker._trackPageview();
 <!-- CHANCES OF ALL TEST PASSING -->    
 	<tr> &nbsp; </tr>
 	<tr class="results_chances">
-		<th colspan="4" align="center">Chance of all tests passing</th>
+		<th colspan="3" valign="bottom" align="center">Chance of all tests passing</th>
         
 		<td colspan="1" ><img src="static/green.png" height="16" width="[% successpc * 2 %]"><img src="static/red.png" height="16" width="[% 200 - successpc * 2 %]">
 			</td>
@@ -164,9 +163,19 @@ pageTracker._trackPageview();
 	  <td colspan=6>make sure you enter a valid module name</td>
 	</tr>
       [% END %]
+	<tr> &nbsp; </tr>
 
-<!-- CLOSE THE TABLE -->
-
+	<tr class="key">
+		<td colspan="8"> 
+			Key : 
+			<img src="static/search.png" /> = Search
+			<img src="static/bug.png" /> = Bug reports
+			<img src="static/tick.png" /> = Test results
+			<img src="static/graph.png" /> = Results matrix
+		</td>
+	</tr>
+	
+	<!-- CLOSE THE TABLE -->
     </table>
 </fieldset>
 <!-- end of main results table -->
