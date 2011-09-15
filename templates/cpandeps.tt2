@@ -154,7 +154,7 @@ pageTracker._trackPageview();
               [% successpc.sprintf("%.1f") %]% (to 1dp)
              [% ELSE %]
               [% successpc.int %]%
-            [% END %] <small>(but <a href=static/overall-chance.html>note</a> that this doesn't mean much)</small>
+            [% END %] <small>(<a href=static/overall-chance.html>note</a>  this doesn't mean much)</small>
         </td>
 	</tr>
        [% ELSE %]
@@ -163,7 +163,10 @@ pageTracker._trackPageview();
 	  <td colspan=6>make sure you enter a valid module name</td>
 	</tr>
       [% END %]
-	<tr> &nbsp; </tr>
+	<tr>
+		<td colspan="8"><small class="results_disclaimer">The chance of success is calculated by multiplying the probabilities of the module and all its dependencies passing their tests.</small>
+		</td>
+	</tr>
 
 	<tr class="key">
 		<td colspan="8"> 
@@ -171,7 +174,7 @@ pageTracker._trackPageview();
 			<img src="static/search.png" /> = Search
 			<img src="static/bug.png" /> = Bug reports
 			<img src="static/tick.png" /> = Test results
-			<img src="static/graph.png" /> = Results matrix
+			<img src="static/graph.png" /> = OS/Perl results matrix
 		</td>
 	</tr>
 	
@@ -179,10 +182,7 @@ pageTracker._trackPageview();
     </table>
 </fieldset>
 <!-- end of main results table -->
-    
-	<small class="results_disclaimer">The chance of success is calculated by multiplying the probabilities
-      of the module and all its dependencies passing their tests.</small>
-  [% END %]
+[% END %]
 
 
   <p>Please note: this site is a tool to analyse the dependencies of modules written in the Perl programming language.  I can not help you with any problems you might have with using any modules.</p>
