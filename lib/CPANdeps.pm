@@ -84,7 +84,7 @@ sub depended_on_by {
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
 <head>
 <title>The CPAN Reverse Dependency Lister</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="static/style.css" />
 </head>
 <body>
 <h1>The CPAN Reverse Dependency Lister</h1>
