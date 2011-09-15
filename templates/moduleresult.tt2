@@ -1,9 +1,8 @@
-<tr>
-  <td class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' valign=top>
+<tr class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' onMouseover="this.bgColor='#f5f5f5'"onMouseout="this.bgColor='#FFFFFF'">
+  <td valign=top>
     [% IF module.has_children %]<a id='toggler_[% depcounter %]' href="javascript:toggle('[% module.name %]','toggler_[% depcounter %]')">-</a>[% END %]
   </td>
-  <td class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' valign=top>[% depcounter %].</td>
-  <td class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' valign=top><nobr>
+<td valign=top ><nobr>
     [% FOREACH x = [1 .. module.indent] %]&nbsp;&nbsp;&nbsp;&nbsp;[% END %]
       [% IF module.name == reqmodule %]
         <a title="[% module.name %]'s META.yml file" href=http://search.cpan.org/src/[% module.author %]/[% module.distname %]-[% module.version %]/META.yml>[% module.name %]</a>
@@ -15,24 +14,25 @@
       [% FOREACH x = [1 .. module.indent] %]&nbsp;&nbsp;&nbsp;&nbsp;[% END %]
       <small>[% module.warning %]</small>
     [% END %]
-  </nobr></td>
-  <td class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' valign=top><nobr>
-    <a title="search.cpan.org" href=http://search.cpan.org/search?query=[% module.distname %]&mode=all>S</a>
-    <a title="Bug reports" href=http://rt.cpan.org/Public/Dist/Display.html?Name=[% module.distname %]>B</a>
-    <a title="Detailed test results" href=http://www.cpantesters.org/show/[% module.distname %].html>R</a>
+  </nobr>
+</td>
+<td valign="top" ><nobr>
+    <a title="search.cpan.org" href=http://search.cpan.org/search?query=[% module.distname %]&mode=all><img src="static/search.png" width="20" height="20"></a>
+    <a title="Bug reports" href=http://rt.cpan.org/Public/Dist/Display.html?Name=[% module.distname %]><img src="static/bug.png" width="20" height="20"></a>
+    <a title="Detailed test results" href=http://www.cpantesters.org/show/[% module.distname %].html><img src="static/tick.png" width="20" height="20"></a>
     [% TRY %]
       [% reversefile = 'db/reverse/' _ module.distname _ '-' _ module.version _ '.dd' %]
       [% USE File(reversefile) %]
       <a title="is depended on by ..." href=depended-on-by.pl?dist=[% module.distname %]-[% module.version %]>D</a>
     [% CATCH File %]
     [% END %]
-  </nobr></td>
-  <td class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' valign=top>
-    [% IF !module.textresult %]
-      <a title="Results by OS and perl version" href=http://matrix.cpantesters.org/?dist=[% module.distname %]><img alt="Results by OS and perl version" border=0 height=16 width=16 src=static/matrix.png></a>
+  		[% IF !module.textresult %]
+      <a title="Results by OS and perl version" href=http://matrix.cpantesters.org/?dist=[% module.distname %]><img alt="Results by OS and perl version" border=0 height=16 width=16 src=static/graph.png></a>
     [% END %]
-  </td>
-  <td class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' valign=top>
+  	</nobr>
+	</td>
+
+  <td valign=top>
     [% IF pureperl && module.ispureperl == 'N' %]
       <nobr><font color=red>Not a pure perl module</font>
       <a title="What does this mean?" href=static/purity.html>(?)</a></nobr>
@@ -50,14 +50,24 @@
       [% END %]
     [% END %]
   </td>
-  <td class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' valign=top><small><nobr>
-    [% IF module.textresult %] [% module.textresult %]
-    [% ELSIF !total %]No results
-     [% ELSE %]
-      <font color=green>[% module.pass %] PASS[% IF module.pass != 1 %]es[% END %]</font>,
-      <font color=gold>[% module.unknown %] UNKNOWN[% IF module.unknown != 1 %]s[% END %]</font>,
-      <font color=red>[% module.fail %] FAIL[% IF module.fail != 1 %]s[% END %]</font>,
-      <font color=blue>[% module.na %] NA[% IF module.na != 1 %]s[% END %]</font>
+
+	[% IF module.textresult || !total%]
+		<td align="center" colspan="4">
+			[% module.textresult || 'No results' %]
+		</td>
+    [% ELSE %]
+	<td align=center>
+      <font color=green>[% module.pass %]</font>
+	</td>
+	<td align=center>
+      <font color="#ff6000">[% module.unknown %]</font>
+	</td>
+	<td align=center>
+      <font color=red>[% module.fail %]</font>
+	</td>
+	<td align=center>
+      <font color=blue>[% module.na %]</font>
+	</td>
     [% END %]
   </nobr></small></td>
 </tr>

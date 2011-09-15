@@ -1,7 +1,10 @@
-<html><head><title>CPAN dependencies and test results checker[% IF module %]: [% module %][% END %]</title>
- <link rel="stylesheet" type="text/css" href="/static/style.css" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>CPAN dependencies and test results checker[% IF module %]: [% module %][% END %]</title>
+ 	<link rel="stylesheet" type="text/css" href="static/style.css" />
 </head>
-
 <!-- google analytics -->
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -13,8 +16,8 @@ var pageTracker = _gat._getTracker("UA-15765130-1");
 pageTracker._trackPageview();
 } catch(err) {}
 </script>
-
 <body>
+	
   <script type='text/javascript'><!--
     var what_i_hid_when = [];
     function getElementsByClassName(classname)  {
@@ -35,7 +38,7 @@ pageTracker._trackPageview();
     }
     function show(cell_to_change) {
       for(var i = 0; i < what_i_hid_when[cell_to_change].length; i++) {
-        what_i_hid_when[cell_to_change][i].style.display = 'block';
+        what_i_hid_when[cell_to_change][i].style.display = 'table-row';
       }
     }
     function hide(class_to_toggle, cell_to_change) {
@@ -52,15 +55,17 @@ pageTracker._trackPageview();
     }
   // -->
   </script>
-  <div id="perlad3">
-    <script type="text/javascript"  src="http://adserver.szabgab.com/ads/direct_link_selflink.js?cnt=2"></script>
-  </div>
-  <p><a href=https://github.com/DrHyde/CPANdeps>Source code</a> |
-     <a href=static/reportbug.html>Report a bug in this site</a> |
-     <a href=static/credits.html>Credits</a> |
-     <a href=depended-on-by.pl>Reverse lookup</a> |
-     <a href=static/links.html>Links</a>
-  </p>
+
+<h1> CPAN Dependencies </h1>
+
+	<div id="menu">
+		<a href="https://github.com/DrHyde/CPANdeps" class="first">Source code</a> 
+		<a href=static/reportbug.html>Report a bug in this site</a>
+		<a href="/static/credits.html">Credits</a>
+		<a href=depended-on-by.pl>Reverse lookup</a>
+		<a href=static/links.html class="last">Links</a>
+	</div>
+
   <p>Given a <strong>module name</strong>, this service will show you
     its dependencies
     along with a summary of their test results from the CPAN testers.
@@ -68,25 +73,10 @@ pageTracker._trackPageview();
     a choice of several modules to use, this will show you which is the
     most reliable.
   </p>
-  <p><small>Please note: this site is a tool to analyse the dependencies of modules written in the Perl programming language.  I can not help you with any problems you might have with using any modules.</small></p>
-  <p><small>It relies on modules having META.yml files so it can work
-    out their dependencies, and is <strong>case-sensitive</strong>.
-    The perl version number is used to filter test results and also to
-    <a href=/?module=XML%3A%3AFeed&perl=5.8.8>determine what's a core
-    module</a> and what's not - some core modules
-    also exist seperately on the CPAN, but we don't bother looking at
-    their dependencies.  If you choose a version like X.Y as opposed to
-    X.Y.Z, then you'll get test results for all X.Y.* versions, and we
-    <a href=/?module=XML%3A%3AFeed&perl=5.8>assume X.Y.<strong>0</strong>
-    for figuring out what's in core</a>.  If you
-    choose 'any version', then you get all test results and we
-    <a href=/?module=XML%3A%3AFeed>divine
-    core modules from perl <strong>5.005</strong></a>.  Test results are
-    cached for performance and may be up to three days out of date.
-    Modules can depend
-    on particular versions of other modules.  We ignore that.  Patches welcome.
-  </small></p>
-  <form method=get action=.>
+
+<fieldset class="search">
+<legend>Search</legend>
+<form class="search" method=get action=.>
     <table>
       <tr>
         <th align=right>Module</th>
@@ -110,33 +100,36 @@ pageTracker._trackPageview();
           <input type=checkbox name=devperls [% IF devperls %] CHECKED [% END %]>Include dev builds of perl?
 	</td>
       </tr>
-      <tr><th colspan=6 align=left><input type=submit></th></tr>
+      <tr><th colspan=6 align=right><input type=submit></th></tr>
     </table>
   </form>
-  [% IF module %]
-    <p>
-      <TABLE ALIGN=RIGHT><TR><TD WIDTH=100 ALIGN=CENTER>
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-          <input type="hidden" name="cmd" value="_xclick">
-          <input type="hidden" name="business" value="david@cantrell.org.uk">
-          <input type="hidden" name="item_name" value="CPANdeps">
-          <input type="hidden" name="no_note" value="1">
-          <input type="hidden" name="currency_code" value="EUR">
-          <input type="hidden" name="tax" value="0">
-          <input type="image" src="https://www.paypal.com/images/x-click-butcc-donate.gif" border="0" name="submit" alt="Make payments with PayPal">
-        </form></TD></TR></TABLE>
-      This service costs &euro;50 a month to run.  If you think it rocks
-      incredibly hard, then I like
-      <a href=http://www.cantrell.org.uk/david/wishlist/>shiny beads</a>,
-      but wouldn't say no to a little something to help defray costs either.
-      <br clear=both>
+</fieldset>
 
-    <p>
-      <small>
-        (<a href="?xml=1;module=[% module | html %];perl=[% perl %];os=[% os | html %];pureperl=[% pureperl %]">Get results in XML</a>)
-      </small>
-    [% successpc = 100 %]
-    <table>
+  [% IF module %]
+
+<!-- Main results table -->
+<fieldset class="results">
+<legend>Results</legend>
+
+<small class="xml">
+    (<a href="?xml=1;module=[% module | html %];perl=[% perl %];os=[% os | html %];pureperl=[% pureperl %]">Get results in XML</a>)
+  </small>
+
+[% successpc = 100 %]
+
+    <table class="results">
+	
+	<tr> <!-- headers -->
+		<th width="10">&nbsp;</th>
+		<th align="left">Module</th>
+		<th width="100">&nbsp;</th>
+		<th width="200" align="left">Pass rate</th>
+		<th width="50">Pass</th>
+		<th width="50">Unknown</th>
+		<th width="50">Fail</th>
+		<th width="50">NA</th>
+	</tr>
+
       [% depcounter = -1 %]
       [% FOREACH thismodule = modules %]
         [% depcounter = depcounter + 1 %]
@@ -149,30 +142,101 @@ pageTracker._trackPageview();
 	[% END %]
       [% END %]
       [% IF modules.size %]
-        <tr>
-          <th colspan=5 align=right>Chance of all tests passing</th>
-          <td><img src=static/green.png height=16 width=[% successpc * 2 %]><img src=static/red.png height=16 width=[% 200 - successpc * 2 %]></td>
-          <td>
+    	
+<!-- CHANCES OF ALL TEST PASSING -->    
+	<tr> &nbsp; </tr>
+	<tr class="results_chances">
+		<th colspan="3" valign="bottom" align="center">Chance of all tests passing</th>
+        
+		<td colspan="1" ><img src="static/green.png" height="16" width="[% successpc * 2 %]"><img src="static/red.png" height="16" width="[% 200 - successpc * 2 %]">
+			</td>
+        <td colspan="4">
             [% IF successpc < 1 %]
               [% successpc.sprintf("%.3f") %]% (to 3dp)
              [% ELSIF successpc < 10 %]
               [% successpc.sprintf("%.1f") %]% (to 1dp)
              [% ELSE %]
               [% successpc.int %]%
-            [% END %] <small>(but <a href=static/overall-chance.html>note</a> that this doesn't mean much)</small>
-          </td>
-        </tr>
+            [% END %] <small>(<a href=static/overall-chance.html>note</a>  this doesn't mean much)</small>
+        </td>
+	</tr>
        [% ELSE %]
-        <tr>
+    <tr>
 	  <th>No results.</th>
 	  <td colspan=6>make sure you enter a valid module name</td>
 	</tr>
       [% END %]
-    </table>
-    <p>The chance of success is calculated by multiplying the probabilities
-      of the module and all its dependencies passing their tests.</p>
-  [% END %]
+	<tr>
+		<td colspan="8"><small class="results_disclaimer">The chance of success is calculated by multiplying the probabilities of the module and all its dependencies passing their tests.</small>
+		</td>
+	</tr>
 
-<center>code written while listening to<br><a href="http://www.reverbnation.com/c./a4/376797/240116/Artist/0/User/link"><img alt="Rabid%20Gravy" border="0" src="http://www.reverbnation.com/c./a3/376797/240116/Artist/0/User/res.gif" /></a><a href="http://www.quantcast.com/p-05---xoNhTXVc" target="_blank"><img src="http://pixel.quantserve.com/pixel/p-05---xoNhTXVc.gif" style="display: none" border="0" height="1" width="1" alt="Quantcast"/></a><img style="visibility:hidden;width:0px;height:0px;" border=0 width=0 height=0 src="http://counters.gigya.com/wildfire/IMP/CXNID=2000002.0NXC/bT*xJmx*PTEyMzI3OTM4NTU*NDMmcHQ9MTIzMjc5Mzg3MDY5OCZwPTI3MDgxJmQ9YmFubmVyJTVGZmlyc3QlNUZnZW4mZz*xJnQ9Jm89NzBiNzI2M2IxOTU3NDdmN2JmMmRjOGVhZGZmOTBhZTE=.gif" /><br>so the bugs are all his fault</center>
-[% debug.replace("\n","<br>").replace(" ","&nbsp;") %]
-</body></html>
+	<tr class="key">
+		<td colspan="8"> 
+			Key : 
+			<img src="static/search.png" /> = Search
+			<img src="static/bug.png" /> = Bug reports
+			<img src="static/tick.png" /> = Test results
+			<img src="static/graph.png" /> = OS/Perl results matrix
+		</td>
+	</tr>
+	
+	<!-- CLOSE THE TABLE -->
+    </table>
+</fieldset>
+<!-- end of main results table -->
+[% END %]
+
+
+  <p>Please note: this site is a tool to analyse the dependencies of modules written in the Perl programming language.  I can not help you with any problems you might have with using any modules.</p>
+  <p>It relies on modules having META.yml files so it can work
+    out their dependencies, and is <strong>case-sensitive</strong>.
+    The perl version number is used to filter test results and also to
+    <a href=/?module=XML%3A%3AFeed&perl=5.8.8>determine what's a core
+    module</a> and what's not - some core modules
+    also exist seperately on the CPAN, but we don't bother looking at
+    their dependencies.  If you choose a version like X.Y as opposed to
+    X.Y.Z, then you'll get test results for all X.Y.* versions, and we
+    <a href=/?module=XML%3A%3AFeed&perl=5.8>assume X.Y.<strong>0</strong>
+    for figuring out what's in core</a>.  If you
+    choose 'any version', then you get all test results and we
+    <a href=/?module=XML%3A%3AFeed>divine
+    core modules from perl <strong>5.005</strong></a>.  Test results are
+    cached for performance and may be up to three days out of date.
+    Modules can depend
+    on particular versions of other modules.  We ignore that.  Patches welcome.
+  </p>
+
+<div id="footer">
+	<table class="donation">
+			<TR>
+				<TD WIDTH="100" ALIGN="CENTER">
+					<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+		          		<input type="hidden" name="cmd" value="_xclick">
+				        <input type="hidden" name="business" value="david@cantrell.org.uk">
+				        <input type="hidden" name="item_name" value="CPANdeps">
+				        <input type="hidden" name="no_note" value="1">
+				        <input type="hidden" name="currency_code" value="EUR">
+				        <input type="hidden" name="tax" value="0">
+		          	  	<input type="image" src="/static/paypal_donate_button.png" border="0" name="submit" width="100" height="48" alt="Make a donation with PayPal">
+					</form>
+				</TD>
+			</TR>
+		</TABLE>
+	    This service costs &euro;50 a month to run.  If you think it rocks
+	    incredibly hard, then I like
+	    <a href=http://www.cantrell.org.uk/david/wishlist/>shiny beads</a>,
+	    but wouldn't say no to a little something to help defray costs either.
+	    <br clear="both">
+		[% debug.replace("\n","<br>").replace(" ","&nbsp;") %]
+</div>
+
+<div id="adverts">
+	<h3>Adverts</h3>
+  <script type="text/javascript"  src="http://adserver.szabgab.com/ads/direct_link_selflink.js?cnt=2"></script>
+</div>
+
+
+
+</body>
+</html>
