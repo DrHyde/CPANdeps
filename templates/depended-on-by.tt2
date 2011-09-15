@@ -1,21 +1,28 @@
-<html><head><title>Reverse CPAN dependencies[% IF dist %]: [% dist %][% END %]</title>
- <link rel="stylesheet" type="text/css" href="/static/style.css" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Reverse CPAN dependencies[% IF dist %]: [% dist %][% END %]</title>
+ 	<link rel="stylesheet" type="text/css" href="/static/style.css" />
 </head>
 <body>
-  <div id="perlad3">
-    <script type="text/javascript"  src="http://adserver.szabgab.com/ads/direct_link_selflink.js?cnt=2"></script>
-  </div>
-  <p><a href=http://www.cantrell.org.uk/cgit/cgit.cgi/cpandeps/>Source code</a> |
-     <a href=mailto:david@cantrell.org.uk?Subject=cpandeps+bug+report>Report bugs</a> |
-     <a href=static/credits.html>Credits</a> |
-     <a href=static/links.html>Links</a>
+	<h1> CPAN Dependencies </h1>
+
+		<div id="menu">
+			<a href="https://github.com/DrHyde/CPANdeps" class="first">Source code</a> 
+			<a href=static/reportbug.html>Report a bug in this site</a>
+			<a href="/static/credits.html">Credits</a>
+			<a href=depended-on-by.pl>Reverse lookup</a>
+			<a href=static/links.html class="last">Links</a>
+		</div>
+		
   </p>
   [% IF dist %]
     <h2>[% dist %] is depended on by</h2>
     [% IF depended_on_by.size %]
-      <ul>
+      <ul class="depended_on">
         [% FOR dep = depended_on_by %]
-	  <li><a href=http://search.cpan.org/search?query=[% dep %]>[% dep %]</a>
+	  <li><a href="http://search.cpan.org/search?query=[% dep %]">[% dep %]</a>
 	[% END %]
       </ul>
     [% ELSE %]
@@ -24,4 +31,11 @@
   [% END %]
 
 [% debug.replace("\n","<br>").replace(" ","&nbsp;") %]
-</body></html>
+
+<div id="adverts">
+	<h3>Adverts</h3>
+  <script type="text/javascript"  src="http://adserver.szabgab.com/ads/direct_link_selflink.js?cnt=2"></script>
+</div>
+
+</body>
+</html>

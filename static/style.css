@@ -1,29 +1,184 @@
-<style type="text/css">
-#perlad1 {
-    text-align: left;
-    font-size: 12px;
-    background-color: #EEEEEE;
-}
-#perlad2 li {
-    text-align: center;
-    display: inline;
-    padding: 4px;
-    background-color: #EEEEEE;
-    font-size: 12px;
+body, html {
+	font-family: Helvetica,Arial, sans-serif;
+	margin:0 auto;
+	padding:10px;
+	font-size:100%;
 }
 
-#perlad3 li {
-    text-align: center;
-    display: inline;
-    padding: 2px;
-    padding-left: 4px;
-    padding-right: 4px;
-    border-style: solid;
-    border-width: 1px;
-    background-color: #EEEE00;
-    font-size: 12px;
+h1, p{
+	clear:both;
+	line-height:22px;
 }
-#perlad3 li.perlAdserverSelflink {
-    background-color: #FFFFFF;
+
+a, img { 
+	border:0; 
+	color:#f00; 
+	text-decoration:none; 
 }
-</style>
+h2 {
+	font-size:100%;
+}
+
+legend { color:#000; }
+                                 /* MENU */
+
+#menu{
+	clear:both;
+	border-top:solid thin #ccc;
+	border-bottom:solid thin #ccc;
+	padding:15px 0 15px 0;
+	text-align:left;
+	margin:10px 0 30px 0;
+	font-size:110%;
+}
+	#menu a {
+		color:#222;
+		padding:0 15px 0 10px;
+		border-right:solid thin black;
+	}
+		#menu a.first  {
+			padding-left:0px;
+		}
+		#menu a.last  {
+			border:none;
+		}
+		#menu a:hover {
+			color:#f00;
+		}
+
+                             /* MAIN CONTENT */
+
+ul.depended_on a {
+	color:#000;
+}
+
+	ul.depended_on a:hover {
+		color:#f00;
+	}
+
+	ul.depended_on li {
+		list-style:a;
+		padding:2px 0;
+	}
+							/* RESULTS TABLE */
+
+fieldset.results {
+	margin-bottom:5px; 
+}
+
+table.results {
+	margin:10px 0;
+	padding:0;
+}
+	table.results th {
+		padding-bottom:10px;
+	}
+	table.results tr {
+		height:25px;
+	}
+	
+	table.results a {
+		color:#000;
+	}
+	 
+table.results tr.results_chances {
+	height:30px;
+	background-color:#f5f5f5;
+}
+	
+table.results tr.key {
+	font-size:85%;
+	background:#f5f5f5;
+	text-align:left;
+}
+	table.results tr.key img {
+		width:15px;
+		height:15px;
+		padding:0 0 0 10px;	
+	}
+ 							  /* SEARCH FORM */
+
+fieldset.search { 
+	margin:25px 0 30px 0;
+}
+
+form.search {
+    float:left;
+    padding: 0px;
+	margin:10px 0 0px 0;
+}
+	form.search table, tbody { 
+		margin:0px auto;
+	}
+	
+	form.search table { 
+		margin:0px auto;
+	}
+	
+	form.search tr {
+		height:30px;
+	}
+	
+	form.search a {
+		color:#000;
+		margin-left:5px;
+	}
+
+	small.xml, small.results_disclaimer {
+		margin:10px 0;
+		line-height:30px;
+	}
+
+					/* DONATION */
+table.donation {
+	float:right;
+	margin: -10px 0 0 0 ;
+	overflow:hidden;
+}
+
+                       /*  FOOTER   */
+
+#footer {
+	clear:both;
+	border-top: thin solid #ccc;
+	float:left;
+	height:50px;
+	font-size:90%;
+	padding:15px 0 0 0;
+	width:100%;
+}
+
+#footer a img {
+	width:30px;
+	height:30px;
+}
+
+                       /*  ADVERTS  */
+#adverts {
+	clear:both;
+	border-top: thin solid #ccc;
+}
+
+	#adverts h3{
+		font-size:90%;
+	}
+
+	#adverts ul {
+		margin:0 0 10px 0;
+		padding:0;
+		float:left;
+	}
+	#adverts li {
+	    text-align: center;
+	    display: inline;
+	    padding: 5px;
+		padding: 0 20px 0 0;
+	    font-size: 80%;
+		color:#222;
+	}
+	#adverts li.perlAdserverSelflink {
+		margin: 0 10px;
+	}
+	#adverts li a {
+		color:#111;
+	}
