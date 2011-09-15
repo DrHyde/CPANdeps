@@ -15,6 +15,9 @@ a, img {
 	color:#f00; 
 	text-decoration:none; 
 }
+h2 {
+	font-size:100%;
+}
 
 legend { color:#000; }
                                  /* MENU */
@@ -45,6 +48,18 @@ legend { color:#000; }
 
                              /* MAIN CONTENT */
 
+ul.depended_on a {
+	color:#000;
+}
+
+	ul.depended_on a:hover {
+		color:#f00;
+	}
+
+	ul.depended_on li {
+		list-style:a;
+		padding:2px 0;
+	}
 							/* RESULTS TABLE */
 
 fieldset.results {
