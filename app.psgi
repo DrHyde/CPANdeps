@@ -5,7 +5,7 @@
 # I am testing 
 use strict;
 use warnings;
-
+use lib qw(/home/kam/git/Plack-Middleware-TemplateToolkit/lib);
 use Plack::Builder;
 use Plack::Middleware::Static;
 use Plack::Middleware::TemplateToolkit;
@@ -32,7 +32,7 @@ my $app = Plack::Middleware::TemplateToolkit->new(
 $app = Plack::Middleware::Static->wrap(
     $app,
     path => qr{^/static},
-    root => './static'
+    root => './'
 );
 
 return builder {
