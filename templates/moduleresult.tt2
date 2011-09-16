@@ -23,7 +23,7 @@
     [% TRY %]
       [% reversefile = 'db/reverse/' _ module.distname _ '-' _ module.version _ '.dd' %]
       [% USE File(reversefile) %]
-      <a title="is depended on by ..." href=depended-on-by.pl?dist=[% module.distname %]-[% module.version %]>D</a>
+      <a title="is depended on by ..." href=depended-on-by.pl?dist=[% module.distname %]-[% module.version %]><img src="static/depended.png" width="20" height="20"></a>
     [% CATCH File %]
     [% END %]
   		[% IF !module.textresult %]
