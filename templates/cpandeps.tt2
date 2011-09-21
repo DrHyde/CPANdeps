@@ -177,6 +177,7 @@ pageTracker._trackPageview();
 			<img src="static/search.png" /> = Search
 			<img src="static/bug.png" /> = Bug reports
 			<img src="static/tick.png" /> = Test results
+			<img src="static/depended.png" /> = Reverse dependencies
 			<img src="static/graph.png" /> = OS/Perl results matrix
 		</td>
 	</tr>
