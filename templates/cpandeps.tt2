@@ -4,6 +4,17 @@
 <head>
 	<title>CPAN dependencies and test results checker[% IF module %]: [% module %][% END %]</title>
  	<link rel="stylesheet" type="text/css" href="static/style.css" />
+	<script type="text/javascript">
+	/* <![CDATA[ */
+	    (function() {
+	      var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+	      s.type = 'text/javascript';
+	      s.async = true;
+      	      s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+	      t.parentNode.insertBefore(s, t);
+	    })();
+	/* ]]> */
+	</script>
 </head>
 <!-- google analytics -->
 <script type="text/javascript">
@@ -222,6 +233,11 @@ pageTracker._trackPageview();
 		          	  	<input type="image" src="/static/paypal_donate_button.png" border="0" name="submit" width="100" height="48" alt="Make a donation with PayPal">
 					</form>
 				</TD>
+				<td>
+				  <a class="FlattrButton" style="display:none;" href="http://deps.cpantesters.org/"></a>
+				  <noscript><a href="http://flattr.com/thing/423225/CPANdeps" target="_blank">
+				  <img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
+				</td>
 			</TR>
 		</TABLE>
 	    This service costs &euro;50 a month to run.  If you think it rocks
