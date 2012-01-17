@@ -229,7 +229,6 @@ sub go {
                 SELECT state, COUNT(state) FROM cpanstats
                  WHERE dist=?
                    AND version=?
-                   AND state IN ('fail', 'pass', 'na', 'unknown')
             }, 
             (($ttvars->{os} eq ANYOS) ? '' : "os = '".$ttvars->{os}."'"),
             (($ttvars->{perl} eq ANYVERSION)

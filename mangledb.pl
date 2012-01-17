@@ -84,7 +84,7 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
     SELECT id, state, tester, dist, version, platform, perl, platform, osname
       FROM cpanstats
      WHERE id > $maxid AND
-           state != 'cpan' AND
+           state IN ('pass', 'fail', 'na', 'unknown') AND
 	   perl != '0'
   ");
   my $insert = $mysqldbh->prepare('
