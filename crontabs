@@ -1,5 +1,8 @@
-david@keyweb:~$ crontab -l
 # m h  dom mon dow   command
 MAILTO=david@cantrell.org.uk
-0 9 * * * nice -n 19 /web/cpandeps.cantrell.org.uk/getfiles.sh
-0 7 * * * find /web/cpandeps.cantrell.org.uk/db/ -type f -mtime 7 -exec rm -f {} \;
+0 9 * * * time nice -n 19 /web/cpandeps.cantrell.org.uk/getfiles.sh
+0 7 * * * PID=$$;touch -d "7 days ago" /tmp/$PID;time find /web/cpandeps.cantrell.org.uk/db/ -type f -not -newer /tmp/$PID -exec rm -f {} \;
+
+# and for the dev site, just update once a week - Sundays
+0 21 * * 0 time nice -n 19 /web/cpandeps-dev.cantrell.org.uk/getfiles.sh
+0 19 * * 0 PID=$$;touch -d "7 days ago" /tmp/$PID;find /web/cpandeps-dev.cantrell.org.uk/db/ -type f -not -newer /tmp/$PID -exec rm -f {} \;
