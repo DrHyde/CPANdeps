@@ -7,7 +7,7 @@ if [ $DIR == . ]; then
 fi
 
 DBNAME=cpandeps
-if [ $DIR == /web/cpandeps-dev.cantrell.org.uk ]; then
+if [ $DIR == /web/cpandeps-dev ]; then
   DBNAME=cpandepsdev
 fi
 
