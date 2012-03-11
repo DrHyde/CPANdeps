@@ -240,15 +240,16 @@ pageTracker._trackPageview();
 				</td>
 			</TR>
 		</TABLE>
-	    This service costs &euro;50 a month to run.  If you think it rocks
+	    If you think this service rocks
 	    incredibly hard, then I like
 	    <a href=http://www.cantrell.org.uk/david/wishlist/>shiny beads</a>,
 	    but wouldn't say no to a little something to help defray costs either.
+
+    <br><br>Hosted on <a href=http://www.uk2.net/dedicated-servers/>dedicated servers</a> from UK2.net
+
 	    <br clear="both">
 		[% debug.replace("\n","<br>").replace(" ","&nbsp;") %]
 </div>
-
-    <p>Hosted on <a href=http://www.uk2.net/dedicated-servers/>dedicated servers</a> from UK2.net
 
 </body>
 </html>
