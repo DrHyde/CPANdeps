@@ -248,12 +248,7 @@ pageTracker._trackPageview();
 		[% debug.replace("\n","<br>").replace(" ","&nbsp;") %]
 </div>
 
-<div id="adverts">
-	<h3>Adverts</h3>
-  <script type="text/javascript"  src="http://adserver.szabgab.com/ads/direct_link_selflink.js?cnt=2"></script>
-</div>
-
-
+    <p>Hosted on <a href=http://www.uk2.net/dedicated-servers/>dedicated servers</a> from UK2.net
 
 </body>
 </html>
