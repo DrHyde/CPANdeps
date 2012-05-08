@@ -71,7 +71,7 @@ pageTracker._trackPageview();
 
 	<div id="menu">
 		<a href="https://github.com/DrHyde/CPANdeps" class="first">Source code</a> 
-		<a href=static/reportbug.html>Report a bug in this site</a>
+		<a href=https://github.com/DrHyde/CPANdeps/issues/new>Report a bug in this site</a>
 		<a href="/static/credits.html">Credits</a>
 		<a href=depended-on-by.pl>Reverse lookup</a>
 		<a href=static/links.html class="last">Links</a>
