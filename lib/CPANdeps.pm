@@ -1,5 +1,3 @@
-# $Id: CPANdeps.pm,v 1.37 2009/02/14 23:03:53 drhyde Exp $
-
 package CPANdeps;
 
 use strict;
@@ -10,6 +8,7 @@ use Cwd;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
 use YAML ();
+use JSON ();
 use DBI;
 use LWP::UserAgent;
 
@@ -461,36 +460,64 @@ sub getpurity {
 
 sub getreqs {
     my($author, $distname, $ua) = @_;
-    my $cachefile = "$home/db/META.yml/$distname.yml";
-    my $METAymlURL = "http://search.cpan.org/src/$author/$distname/META.yml";
-    my $yaml;
+    my $METAymlfile  = "$home/db/META.yml/$distname.yml";
+    my $METAjsonfile = "$home/db/META.yml/$distname.json";
+    my $METAymlURL   = "http://search.cpan.org/src/$author/$distname/META.yml";
+    my $METAjsonURL  = "http://search.cpan.org/src/$author/$distname/META.json";
+    my $meta;
     local $/ = undef;
 
-    # if we have a cache file, read it
-    if(-e $cachefile) {
-        open(YAML, $cachefile) || die("Can't read $cachefile\n");
-        $yaml = <YAML>;
+    my $parsed_meta;
+    if(-e $METAymlfile) {
+        warn("Cached YAML\n");
+        open(YAML, $METAymlfile) || die("Can't read $METAymlfile\n");
+        $meta = <YAML>;
         close(YAML);
+        $parsed_meta = eval { YAML::Load($meta); };
+    } elsif(-e $METAjsonfile) {
+        warn("Cached JSON\n");
+        open(JSON, $METAjsonfile) || die("Can't read $METAjsonfile\n");
+        $meta = <JSON>;
+        close(JSON);
+        $parsed_meta = eval { JSON::decode_json($meta); };
+    } elsif((my $res = $ua->request(HTTP::Request->new(GET => $METAymlURL)))->is_success()) {
+        warn("Fetching YAML\n");
+        $meta = $res->content();
+        open(META, ">$METAymlfile") || die("Can't write $METAymlfile\n");
+        print META $meta;
+        close(META);
+        $parsed_meta = eval { YAML::Load($meta); };
+    } elsif((my $res = $ua->request(HTTP::Request->new(GET => $METAjsonURL)))->is_success()) {
+        warn("Fetching JSON\n");
+        $meta = $res->content();
+        open(META, ">$METAjsonfile") || die("Can't write $METAjsonfile\n");
+        print META $meta;
+        close(META);
+        $parsed_meta = eval { JSON::decode_json($meta); };
     } else {
-        # read from interwebnet
-        my $res = $ua->request(HTTP::Request->new(GET => $METAymlURL));
-        if(!$res->is_success()) {
-            return ('!', '!');
-        } else {
-            $yaml = $res->content();
-        }
-        open(YAML, ">$cachefile") || die("Can't write $cachefile\n");
-        print YAML $yaml;
-        close(YAML);
+        warn("nothing!?!?\n");
     }
-    eval { $yaml = YAML::Load($yaml); };
-    return ('!', '!') if($@ || !defined($yaml));
+    return ('!', '!') if($@ || !defined($parsed_meta));
 
-    $yaml->{requires} ||= {};
-    $yaml->{build_requires} ||= {};
-    $yaml->{configure_requires} ||= {};
-    $yaml->{test_requires} ||= {};
-    return %{$yaml->{requires}}, %{$yaml->{build_requires}}, %{$yaml->{configure_requires}}, %{$yaml->{test_requires}};
+    # These are for META.yml
+    $parsed_meta->{requires} ||= {};
+    $parsed_meta->{build_requires} ||= {};
+    $parsed_meta->{configure_requires} ||= {};
+    $parsed_meta->{test_requires} ||= {};
+    # These are for META.json
+    $parsed_meta->{prereqs}->{runtime}->{requires} ||= {};
+    $parsed_meta->{prereqs}->{configure}->{requires} ||= {};
+    $parsed_meta->{prereqs}->{build}->{requires} ||= {};
+    $parsed_meta->{prereqs}->{test}->{requires} ||= {};
+    return 
+        %{$parsed_meta->{requires}},
+        %{$parsed_meta->{build_requires}},
+        %{$parsed_meta->{configure_requires}},
+        %{$parsed_meta->{test_requires}},
+        %{$parsed_meta->{prereqs}->{runtime}->{requires}},
+        %{$parsed_meta->{prereqs}->{configure}->{requires}},
+        %{$parsed_meta->{prereqs}->{build}->{requires}},
+        %{$parsed_meta->{prereqs}->{test}->{requires}};
 }
 
 1;

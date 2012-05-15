@@ -248,7 +248,7 @@ pageTracker._trackPageview();
     <br><br>Hosted on <a href=http://www.uk2.net/dedicated-servers/>dedicated servers</a> from UK2.net
 
 	    <br clear="both">
-		[% debug.replace("\n","<br>").replace(" ","&nbsp;") %]
+		[% debug.replace("\n","<br>").replace(" ","&nbsp;"); %]
 </div>
 
 </body>

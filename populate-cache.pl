@@ -39,24 +39,30 @@ my @files = map { @{$_} } @{$dbh->selectall_arrayref("
     SELECT DISTINCT(file) FROM packages
 ")};
 
-print "Getting META.ymls\n";
+print "Getting META.ymls and META.jsons\n";
 foreach my $file (@files) {
     $file =~ m{^./../([^/]+)(/.*)?/([^/]*).(tar.gz|tgz|zip)$};
     my($author, $dist) = ($1, $3);
     next if(!defined($author) || !defined($dist));
-    my $local_file  = "db/META.yml/$dist.yml";
-    my $remote_file = "http://search.cpan.org/src/$author/$dist/META.yml";
 
-    next if(-e $local_file);
+    foreach my $tuple (
+        { local => "db/META.yml/$dist.yml", remote => "http://search.cpan.org/src/$author/$dist/META.yml" },
+        { local => "db/META.yml/$dist.json", remote => "http://search.cpan.org/src/$author/$dist/META.json" },
+    ) {
+        my $local_file  = $tuple->{local};
+        my $remote_file = $tuple->{remote};
 
-    my $res = $ua->request(HTTP::Request->new(GET => $remote_file));
-    if(!$res->is_success()) {
-	next;
-    } else {
-        my $yaml = $res->content();
-	open(FILE, '>', $local_file) || die("Can't write $local_file\n");
-	print FILE $yaml;
-	close(FILE);
-	sleep 1;
+        next if(-e $local_file);
+  
+        my $res = $ua->request(HTTP::Request->new(GET => $remote_file));
+        if(!$res->is_success()) {
+            next;
+        } else {
+          my $yaml = $res->content();
+          open(FILE, '>', $local_file) || die("Can't write $local_file\n");
+          print FILE $yaml;
+          close(FILE);
+          sleep 1;
+        }
     }
 }

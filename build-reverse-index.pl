@@ -6,6 +6,7 @@ use DBI;
 use Data::Dumper;
 use FindBin;
 use YAML ();
+use JSON ();
 
 $/ = undef;
 
@@ -26,20 +27,30 @@ mkdir 'db';
 mkdir 'db/reverse';
 chmod 0777, qw(db db/reverse);
 
-my %METAyml;
+my %META;
 opendir(DIR, 'db/META.yml') || die("can't open db/META.yml\n");
 foreach(grep { -f "db/META.yml/$_" } readdir(DIR)) {
   open FILE, "db/META.yml/$_" || die("Can't read db/META.yml/$_\n");
   eval {
-    $METAyml{$_} = YAML::Load(<FILE>);
-    $METAyml{$_} = join("\n",
-      keys %{$METAyml{$_}->{requires}},
-      keys %{$METAyml{$_}->{build_requires}},
-      keys %{$METAyml{$_}->{configure_requires}},
-      keys %{$METAyml{$_}->{test_requires}},
-    );
+    if($_ =~ /yml$/) {
+        $META{$_} = YAML::Load(<FILE>);
+        $META{$_} = join("\n",
+          keys %{$META{$_}->{requires}},
+          keys %{$META{$_}->{build_requires}},
+          keys %{$META{$_}->{configure_requires}},
+          keys %{$META{$_}->{test_requires}},
+        );
+    } else {
+        $META{$_} = JSON::decode_json(<FILE>);
+        $META{$_} = join("\n",
+          keys %{$META{$_}->{prereqs}->{runtime}->{requires}},
+          keys %{$META{$_}->{prereqs}->{configure}->{requires}},
+          keys %{$META{$_}->{prereqs}->{build}->{requires}},
+          keys %{$META{$_}->{prereqs}->{test}->{requires}},
+        );
+    }
   };
-  delete $METAyml{$_} if($@);
+  delete $META{$_} if($@);
   close(FILE);
 }
 closedir(DIR);
@@ -55,8 +66,8 @@ foreach my $file (@files) {
     print FILE Dumper([
       sort keys %{{
         map { s/\.yml$//; s/-v?\d[\d.]*$//; $_ => 1 }
-	grep { $METAyml{$_} =~ /(^|\s)($modules)(\s|$)/ }
-	keys %METAyml
+	grep { $META{$_} =~ /(^|\s)($modules)(\s|$)/ }
+	keys %META
       }}
     ]);
     close(FILE);
