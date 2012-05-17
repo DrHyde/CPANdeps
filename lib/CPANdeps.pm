@@ -439,6 +439,7 @@ sub getpurity {
 	    return '?';
         } else {
             my @manifest = split(/[\r\n]+/, $res->content());
+            my $parsed_meta = read_meta (@_);
 	    my $ispureperl =
 	        (
 		    (
@@ -452,7 +453,7 @@ sub getpurity {
 			} @manifest) &&
                         !(grep { /PurePerl/i } @manifest)
 		    ) ||
-	            (grep { /^Inline/ } keys %{{getreqs(@_)}})
+	            (grep { /^Inline/ } keys %{{getreqs($parsed_meta)}})
 		) ? 'N' : 'Y';
             open(MANIFEST, ">$cachefile") || die("Can't write $cachefile\n");
             print MANIFEST $ispureperl;
@@ -505,6 +506,7 @@ sub read_meta {
 }
 
 sub getreqs {
+    my ($parsed_meta) = @_;
     return ('!', '!') if($@ || !defined($parsed_meta));
 
     # These are for META.yml
