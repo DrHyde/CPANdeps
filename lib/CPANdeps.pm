@@ -309,8 +309,10 @@ sub checkmodule {
 
     my %requires = ();
     my $ispureperl = '?';
+    my $parsed_meta; 
     if($testresults ne 'Core module') {
-        %requires = getreqs($author, $origdistname, $ua);
+        $parsed_meta = read_meta($author, $origdistname, $ua);
+        %requires = getreqs($parsed_meta);
         $ispureperl = getpurity($author, $origdistname, $ua) if($pureperl);
         if(defined($requires{'!'}) && $requires{'!'} eq '!') {
             %requires = ();
@@ -328,6 +330,7 @@ sub checkmodule {
             indent   => $indent,
             ispureperl => 1,
             warning => "Acme::Mom::Yours is silly.  Stoppit."
+            parsed_meta => $parsed_meta,
         };
     }
 
@@ -340,6 +343,7 @@ sub checkmodule {
         indent   => $indent,
         ispureperl => $ispureperl,
         warning => $warning,
+        parsed_meta => $parsed_meta,
 	$required_by ? (required_by => $required_by) : (),
         ref($testresults) ?
             %{$testresults} :
@@ -458,7 +462,7 @@ sub getpurity {
     }
 }
 
-sub getreqs {
+sub read_meta {
     my($author, $distname, $ua) = @_;
     my $METAymlfile  = "$home/db/META.yml/$distname.yml";
     my $METAjsonfile = "$home/db/META.yml/$distname.json";
@@ -497,6 +501,10 @@ sub getreqs {
     } else {
         warn("nothing!?!?\n");
     }
+    return $parsed_meta;
+}
+
+sub getreqs {
     return ('!', '!') if($@ || !defined($parsed_meta));
 
     # These are for META.yml
