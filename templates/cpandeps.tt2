@@ -201,7 +201,7 @@ pageTracker._trackPageview();
 
 
   <p>Please note: this site is a tool to analyse the dependencies of modules written in the Perl programming language.  I can not help you with any problems you might have with using any modules.</p>
-  <p>It relies on modules having META.yml files so it can work
+  <p>It relies on modules having META.yml or META.json files so it can work
     out their dependencies, and is <strong>case-sensitive</strong>.
     The perl version number is used to filter test results and also to
     <a href=/?module=XML%3A%3AFeed&perl=5.8.8>determine what's a core

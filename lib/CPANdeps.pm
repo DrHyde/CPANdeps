@@ -183,13 +183,13 @@ sub go {
         perl => (
 	    ($q->param('perl') eq 'latest') ? LATESTPERL :
 	    $q->param('perl')               ? $q->param('perl') :
-		                              ANYVERSION
+		                              LATESTPERL
         ),
         pureperl => ($q->param('pureperl') || 0),
         devperls => ($q->param('devperls') ? 1 : 0),
         os       => ($q->param('os') || ANYOS),
         # ugh, sorting versions is Hard.  Can't use version.pm here
-        perls    => [ ANYVERSION, 
+        perls    => [ 'latest', ANYVERSION,
             sort {
                 my($A, $B) = map {
                     my @v = split('\.', $_);
