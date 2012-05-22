@@ -18,7 +18,14 @@
 </td>
 <td valign="top" ><nobr>
     <a title="search.cpan.org" href=http://search.cpan.org/search?query=[% module.distname %]&mode=all><img src="static/search.png" width="20" height="20"></a>
-    <a title="Bug reports" href=http://rt.cpan.org/Public/Dist/Display.html?Name=[% module.distname %]><img src="static/bug.png" width="20" height="20"></a>
+[%- bugtracker = module.parsed_meta.resources.bugtracker.web %]
+    <a title="Bug reports" href='
+      [%- IF bugtracker -%]
+        [%- bugtracker -%]
+      [%- ELSE -%]
+        http://rt.cpan.org/Public/Dist/Display.html?Name=[% module.distname %]
+      [%- END -%]
+    '><img src="static/bug.png" width="20" height="20"></a>
     <a title="Detailed test results" href=http://www.cpantesters.org/show/[% module.distname %].html><img src="static/tick.png" width="20" height="20"></a>
     [% TRY %]
       [% reversefile = 'db/reverse/' _ module.distname _ '-' _ module.version _ '.dd' %]
