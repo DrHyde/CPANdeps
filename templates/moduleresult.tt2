@@ -18,7 +18,9 @@
 </td>
 <td valign="top" ><nobr>
     <a title="search.cpan.org" href=http://search.cpan.org/search?query=[% module.distname %]&mode=all><img src="static/search.png" width="20" height="20"></a>
-[%- bugtracker = module.parsed_meta.resources.bugtracker.web %]
+[%- bugtracker = module.parsed_meta.resources.bugtracker.web ||
+                 module.parsed_meta.resources.bugtracker
+%]
     <a title="Bug reports" href='
       [%- IF bugtracker -%]
         [%- bugtracker -%]

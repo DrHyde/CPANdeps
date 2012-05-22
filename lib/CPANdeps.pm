@@ -329,7 +329,7 @@ sub checkmodule {
             version  => $distversion,
             indent   => $indent,
             ispureperl => 1,
-            warning => "Acme::Mom::Yours is silly.  Stoppit."
+            warning => "Acme::Mom::Yours is silly.  Stoppit.",
             parsed_meta => $parsed_meta,
         };
     }
