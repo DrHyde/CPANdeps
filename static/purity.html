@@ -4,7 +4,7 @@
 <body>
  <p><a href=http://drhyde.cvs.sourceforge.net/drhyde/perlcpandeps/>Source code</a> |
     <a href=javascript:history.go(-1)>Go back</a> |
-    <a href=mailto:david@cantrell.org.uk?Subject=cpandeps+bug+report>Report bugs</a> |
+    <a href=https://github.com/DrHyde/CPANdeps/issues/new>Report bugs</a> |
     <a href=static/credits.html>Credits</a> |
     <a href=static/links.html>Links</a>
   </p>
@@ -19,14 +19,14 @@
     If a distribution depends on any of the
     <a href=http://search.cpan.org/search?query=Inline&mode=all>Inline</a>
     modules, or if it contains any files with any of the following extensions,
-    then it is assuming to not be "pure perl".
+    then it is assumed to not be "pure perl".
     <ul><li>swg<li>xs<li>c<li>h<li>i</ul>
     However if the string "PurePerl" appears anywhere in the MANIFEST, then
     I assume that there is a "pure perl" version *as well as* any "impure"
     version of the code, bundled up in the same distribution.
   </p>
   <p>This is, of course, only a heuristic.  You can't accurately determine
-    a file's content from it's filename.  Possible errors from this heuristic
+    a file's content from its filename.  Possible errors from this heuristic
     include:
     <ul>
       <li>the "pure" version has some other name - eg, Params::ValidatePP
