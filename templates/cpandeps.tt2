@@ -206,7 +206,7 @@ pageTracker._trackPageview();
     The perl version number is used to filter test results and also to
     <a href=/?module=XML%3A%3AFeed&perl=5.8.8>determine what's a core
     module</a> and what's not - some core modules
-    also exist seperately on the CPAN, but we don't bother looking at
+    also exist separately on the CPAN, but we don't bother looking at
     their dependencies.  If you choose a version like X.Y as opposed to
     X.Y.Z, then you'll get test results for all X.Y.* versions, and we
     <a href=/?module=XML%3A%3AFeed&perl=5.8>assume X.Y.<strong>0</strong>
