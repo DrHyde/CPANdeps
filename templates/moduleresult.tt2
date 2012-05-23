@@ -43,8 +43,8 @@
 
   <td valign=top>
     [% IF pureperl && module.ispureperl == 'N' %]
-      <nobr><font color=red>Not a pure perl module</font>
-      <a title="What does this mean?" href=static/purity.html>(?)</a></nobr>
+      <nobr>Not a pure perl module
+      <a style='color:#f00' title="What does this mean?" href=static/purity.html>(?)</a></nobr>
       [% IF !module.textresult;
          total = module.pass + module.fail + module.na   + module.unknown;
 	 END %]
