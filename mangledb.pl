@@ -50,6 +50,7 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
     'dragonfly' => 'Dragonfly BSD',
     'freebsd' => 'FreeBSD',
     'Freebsd' => 'FreeBSD',
+    'FreeBSD' => 'FreeBSD',
     'gnu' => 'GNU Hurd',
     'gnukfreebsd' => 'FreeBSD (Debian)',
     'haiku' => 'Haiku',
@@ -63,6 +64,7 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
     'lThis'     => 'Linux',
     'linuThis'  => 'Linux', 
     'MacOS' => 'Mac OS classic',
+    'macos' => 'Mac OS classic',
     'midnightbsd' => 'Midnight BSD',
     'mirbsd' => 'MirOS BSD',
     'MSWin32' => 'Windows (Win32)',
@@ -79,6 +81,7 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
     'sco' => 'SCO Unix',
     'solaris' => 'Solaris',
     'VMS' => 'VMS',
+    'vms' => 'VMS',
   );
   my $select = $barbiedbh->prepare("
     SELECT id, state, tester, dist, version, platform, perl, platform, osname
