@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<title>CPAN dependencies and test results checker[% IF module %]: [% module %][% END %]</title>
- 	<link rel="stylesheet" type="text/css" href="static/style.css" />
+	<link rel="stylesheet" type="text/css" href="static/style.css" />
+	<link rel="search" type="application/opensearchdescription+xml" href="/static/opensearch.xml" title="Search module dependencies" />
 	<script type="text/javascript">
 	/* <![CDATA[ */
 	    (function() {

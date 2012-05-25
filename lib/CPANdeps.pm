@@ -84,6 +84,7 @@ sub depended_on_by {
 <head>
 <title>The CPAN Reverse Dependency Lister</title>
 <link rel="stylesheet" type="text/css" href="static/style.css" />
+<link rel="search" type="application/opensearchdescription+xml" href="/static/opensearch.xml" title="Search module dependencies" />
 </head>
 <body>
 <h1>The CPAN Reverse Dependency Lister</h1>
