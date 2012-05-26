@@ -65,7 +65,7 @@ sub render {
 
 sub depended_on_by {
   my $q = CGI->new();
-  print "Content-type: text/html\n\n";
+  print "Content-type: text/html; charset=UTF-8\n\n";
 
   check_params($q);
 
@@ -76,7 +76,7 @@ sub depended_on_by {
     if (!$module)
     {
       print <<'EOF';
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE
     html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
