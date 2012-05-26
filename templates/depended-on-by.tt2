@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<title>Reverse CPAN dependencies[% IF dist %]: [% dist %][% END %]</title>
- 	<link rel="stylesheet" type="text/css" href="/static/style.css" />
+	<link rel="stylesheet" type="text/css" href="/static/style.css" />
+	<link rel="search" type="application/opensearchdescription+xml" href="/static/opensearch.xml" title="Search module dependencies" />
 </head>
 <body>
 	<h1> CPAN Dependencies </h1>
