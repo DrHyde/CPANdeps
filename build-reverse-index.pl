@@ -65,7 +65,7 @@ foreach my $file (@files) {
     open(FILE, ">db/reverse/$dist.dd") || die("Can't write db/reverse/$dist.dd\n");
     print FILE Dumper([
       sort keys %{{
-        map { s/\.yml$//; s/-v?\d[\d.]*$//; $_ => 1 }
+        map { s/\.(json|yml)$//; s/-v?\d[\d.]*$//; $_ => 1 }
 	grep { $META{$_} =~ /(^|\s)($modules)(\s|$)/ }
 	keys %META
       }}
