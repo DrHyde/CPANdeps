@@ -16,13 +16,12 @@
 			<a href="static/links.html" class="last">Links</a>
 		</div>
 		
-  </p>
   [% IF dist %]
     <h2>[% dist %] is depended on by</h2>
     [% IF depended_on_by.size %]
       <ul class="depended_on">
         [% FOR dep = depended_on_by %]
-	  <li><a href="http://search.cpan.org/search?query=[% dep %]">[% dep %]</a>
+	  <li><a href="http://search.cpan.org/search?query=[% dep %]">[% dep %]</a></li>
 	[% END %]
       </ul>
     [% ELSE %]
