@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- See http://www.opensearch.org/Specifications/OpenSearch/1.1 -->
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+	<ShortName>CPAN deps</ShortName>
+	<Description>Get dependancies of a CPAN module</Description>
+	<Tags>CPAN Perl</Tags>
+	<AdultContent>false</AdultContent>
+	<Language>en</Language>
+	<Url type="text/html" template="http://deps.cpantesters.org/?module={searchTerms}"/>
+	<Image height="32" width="32" type="image/vnd.microsoft.icon">http://deps.cpantesters.org/favicon.ico</Image>
+	<InputEncoding>UTF-8</InputEncoding>
+	<OutputEncoding>UTF-8</OutputEncoding>
+</OpenSearchDescription>
