@@ -223,7 +223,7 @@ pageTracker._trackPageview();
 <div id="footer">
 	<table class="donation">
 			<tr>
-				<td width="100" align="CENTER">
+				<td width="100" align="center">
 					<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 		          		<input type="hidden" name="cmd" value="_xclick" />
 				        <input type="hidden" name="business" value="david@cantrell.org.uk" />
