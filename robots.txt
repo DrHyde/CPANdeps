@@ -1,2 +1,3 @@
 User-agent: *
 Disallow: /
+# there must be a line after the Disallow.  Stupid file format
