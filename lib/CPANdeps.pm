@@ -493,7 +493,7 @@ sub read_meta {
         print META $meta;
         close(META);
         $parsed_meta = eval { YAML::Load($meta); };
-    } elsif((my $res = $ua->request(HTTP::Request->new(GET => $METAjsonURL)))->is_success()) {
+    } elsif(($res = $ua->request(HTTP::Request->new(GET => $METAjsonURL)))->is_success()) {
         warn("Fetching JSON\n");
         $meta = $res->content();
         open(META, ">$METAjsonfile") || die("Can't write $METAjsonfile\n");
