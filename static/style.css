@@ -66,6 +66,10 @@ fieldset.results {
 	margin-bottom:5px; 
 }
 
+label {
+	font-weight:bold;
+}
+
 table.results {
 	margin:10px 0;
 	padding:0;

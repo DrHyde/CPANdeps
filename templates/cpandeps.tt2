@@ -91,16 +91,16 @@ pageTracker._trackPageview();
 <form class="search" method="get" action=".">
     <table>
       <tr>
-        <th align="right">Module</th>
-        <td><input type="text" name="module" value="[% module | html %]"></td>
-        <th align="right">Perl</th>
-        <td><select name="perl">
+        <th align="right"><label for="module">Module</label></th>
+        <td><input type="text" id="module" name="module" value="[% module | html %]"></td>
+        <th align="right"><label for="perl">Perl</label></th>
+        <td><select id="perl" name="perl">
           [% FOREACH thisperl = perls %]
             <option value="[% thisperl %]" [% IF thisperl == perl %] selected="selected" [% END %]>[% thisperl %]
           [% END %]
         </select></td>
-        <th align="right">OS</th>
-        <td><select name="os">
+        <th align="right"><label for="os">OS</label></th>
+        <td><select id="os" name="os">
           [% FOREACH thisos = oses %]
             <option value="[% thisos %]" [% IF thisos == os %] selected="selected" [% END %]>[% thisos %]
           [% END %]
@@ -108,8 +108,8 @@ pageTracker._trackPageview();
       </tr>
       <tr>
         <td colspan="6">
-	  <input type="checkbox" name="pureperl" [% IF pureperl %] checked="checked" [% END %]><span title="warn about modules which have a C component, ie those that aren't 'pure perl'">purity warnings</span><a style='color:#f00' href="static/purity.html">(?)</a>
-          <input type="checkbox" name="devperls" [% IF devperls %] checked="checked" [% END %]>Include dev builds of perl?
+	  <input type="checkbox" id="pureperl" name="pureperl" [% IF pureperl %] checked="checked" [% END %]><label for="pureperl" title="warn about modules which have a C component, ie those that aren't 'pure perl'">purity warnings<a style='color:#f00' href="static/purity.html">(?)</a></label>
+          <input type="checkbox" id="devperls" name="devperls" [% IF devperls %] checked="checked" [% END %]><label for="devperls">Include dev builds of perl?</label>
 	</td>
       </tr>
       <tr><th colspan="6" align="right"><input type="submit"></th></tr>
