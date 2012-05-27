@@ -10,10 +10,10 @@ h1, p{
 	line-height:22px;
 }
 
-a, img { 
-	border:0; 
-	color:#f00; 
-	text-decoration:none; 
+a, img {
+	border:0;
+	color:#f00;
+	text-decoration:none;
 }
 h2 {
 	font-size:100%;
@@ -63,7 +63,11 @@ ul.depended_on a {
 							/* RESULTS TABLE */
 
 fieldset.results {
-	margin-bottom:5px; 
+	margin-bottom:5px;
+}
+
+label {
+	font-weight:bold;
 }
 
 table.results {
@@ -80,7 +84,7 @@ table.results {
 	table.results a {
 		color:#000;
 	}
-	 
+	
 table.results tr.results_chances {
 	height:30px;
 	background-color:#f5f5f5;
@@ -98,7 +102,7 @@ table.results tr.key {
 	}
  							  /* SEARCH FORM */
 
-fieldset.search { 
+fieldset.search {
 	margin:25px 0 30px 0;
 }
 
@@ -107,11 +111,11 @@ form.search {
     padding: 0px;
 	margin:10px 0 0px 0;
 }
-	form.search table, tbody { 
+	form.search table, tbody {
 		margin:0px auto;
 	}
 	
-	form.search table { 
+	form.search table {
 		margin:0px auto;
 	}
 	
