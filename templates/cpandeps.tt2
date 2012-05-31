@@ -96,13 +96,13 @@ pageTracker._trackPageview();
         <th align="right"><label for="perl">Perl</label></th>
         <td><select id="perl" name="perl">
           [% FOREACH thisperl = perls %]
-            <option value="[% thisperl %]" [% IF thisperl == perl %] selected="selected" [% END %]/>[% thisperl %]</option>
+            <option value="[% thisperl %]" [% IF thisperl == perl %] selected="selected" [% END %]>[% thisperl %]</option>
           [% END %]
         </select></td>
         <th align="right"><label for="os">OS</label></th>
         <td><select id="os" name="os">
           [% FOREACH thisos = oses %]
-            <option value="[% thisos %]" [% IF thisos == os %] selected="selected" [% END %]/>[% thisos %]</option>
+            <option value="[% thisos %]" [% IF thisos == os %] selected="selected" [% END %]>[% thisos %]</option>
           [% END %]
         </select></td>
       </tr>
