@@ -1,4 +1,8 @@
-<html><head><title>CPAN dependencies and test results checker: How do purity warnings work?</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+ <title>CPAN dependencies and test results checker: How do purity warnings work?</title>
 	<link rel="stylesheet" type="text/css" href="/static/style.css" />
 	<link rel="search" type="application/opensearchdescription+xml" href="/static/opensearch.xml" title="Search module dependencies" />
 </head>
@@ -13,10 +17,12 @@
     MANIFEST file (which should contain a list of all files in a distribution,
     such as <a href="http://search.cpan.org/src/TIMB/DBI-1.607/MANIFEST">here</a>).
     If a distribution depends on any of the
-    <a href="http://search.cpan.org/search?query=Inline&mode=all">Inline</a>
+    <a href="http://search.cpan.org/search?query=Inline&amp;mode=all">Inline</a>
     modules, or if it contains any files with any of the following extensions,
     then it is assumed to not be "pure perl".
-    <ul><li>swg</li><li>xs</li><li>c</li><li>h</li><li>i</li></ul>
+  </p>
+  <ul><li>swg</li><li>xs</li><li>c</li><li>h</li><li>i</li></ul>
+  <p>
     However if the string "PurePerl" appears anywhere in the MANIFEST, then
     I assume that there is a "pure perl" version *as well as* any "impure"
     version of the code, bundled up in the same distribution.
@@ -24,6 +30,7 @@
   <p>This is, of course, only a heuristic.  You can't accurately determine
     a file's content from its filename.  Possible errors from this heuristic
     include:
+  </p>
     <ul>
       <li>the "pure" version has some other name - eg, Params::ValidatePP
         (but looking for the PP suffix will just lead to other errors, with
@@ -36,5 +43,4 @@
         a string, and build and run it in some crazy non-XS, non-Inline
 	way</li>
     </ul>
-  </p>
 </body></html>
