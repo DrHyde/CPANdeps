@@ -96,13 +96,13 @@ pageTracker._trackPageview();
         <th align="right"><label for="perl">Perl</label></th>
         <td><select id="perl" name="perl">
           [% FOREACH thisperl = perls %]
-            <option value="[% thisperl %]" [% IF thisperl == perl %] selected="selected" [% END %]>[% thisperl %]
+            <option value="[% thisperl %]" [% IF thisperl == perl %] selected="selected" [% END %]>[% thisperl %]</option>
           [% END %]
         </select></td>
         <th align="right"><label for="os">OS</label></th>
         <td><select id="os" name="os">
           [% FOREACH thisos = oses %]
-            <option value="[% thisos %]" [% IF thisos == os %] selected="selected" [% END %]>[% thisos %]
+            <option value="[% thisos %]" [% IF thisos == os %] selected="selected" [% END %]>[% thisos %]</option>
           [% END %]
         </select></td>
       </tr>
@@ -248,7 +248,7 @@ pageTracker._trackPageview();
 
     <br/><br/>Hosted on <a href="http://www.uk2.net/dedicated-servers/">dedicated servers</a> from UK2.net
 
-	    <br clear="both"/>
+	    <br clear="all"/>
 		[% debug.replace("\n","<br/>").replace(" ","&nbsp;"); %]
 </div>
 
