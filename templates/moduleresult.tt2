@@ -5,7 +5,7 @@
 <td valign="top"><nobr>
     [% FOREACH x = [1 .. module.indent] %]&nbsp;&nbsp;&nbsp;&nbsp;[% END %]
       [% IF module.name == reqmodule %]
-        <a title="[% module.name %]'s META.yml file" href=http://search.cpan.org/src/[% module.author %]/[% module.distname %]-[% module.version %]/META.yml>[% module.name %]</a>
+        <a title="[% module.name %]'s META.yml file" href="http://search.cpan.org/src/[% module.author %]/[% module.distname %]-[% module.version %]/META.yml">[% module.name %]</a>
       [% ELSE %]
         <a title="[% module.name %]'s dependency tree" href="?module=[% module.name %];perl=[% perl %];os=[% os | uri %];pureperl=[% pureperl %]">[% module.name %]</a>
       [% END %]
@@ -17,7 +17,7 @@
   </nobr>
 </td>
 <td valign="top"><nobr>
-    <a title="search.cpan.org" href=http://search.cpan.org/search?query=[% module.distname %]&mode=all><img src="static/search.png" width="20" height="20" /></a>
+    <a title="search.cpan.org" href="http://search.cpan.org/search?query=[% module.distname %]&amp;mode=all"><img src="static/search.png" width="20" height="20" /></a>
 [%- bugtracker = module.parsed_meta.resources.bugtracker.web ||
                  module.parsed_meta.resources.bugtracker
 %]
