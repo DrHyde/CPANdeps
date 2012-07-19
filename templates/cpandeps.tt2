@@ -156,7 +156,6 @@ pageTracker._trackPageview();
       [% IF modules.size %]
 
 <!-- CHANCES OF ALL TEST PASSING -->
-	<tr> &nbsp; </tr>
 	<tr class="results_chances">
 		<th colspan="3" valign="bottom" align="center">Chance of all tests passing</th>
 
