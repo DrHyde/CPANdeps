@@ -26,7 +26,7 @@
       [%- ELSE -%]
         http://rt.cpan.org/Public/Dist/Display.html?Name=[% module.distname %]
       [%- END -%]
-    '><img src="static/bug.png" width="20" height="20" alt="Bug reports"></a>
+    '><img src="static/bug.png" width="20" height="20" alt="Bug reports" title="Bug reports"></a>
     <a href="http://www.cpantesters.org/show/[% module.distname %].html"><img src="static/tick.png" width="20" height="20" alt="Detailed test results" title="Detailed test results"/></a>
     [% TRY %]
       [% reversefile = 'db/reverse/' _ module.distname _ '-' _ module.version _ '.dd' %]
@@ -39,8 +39,9 @@
     [% END %]
 	</td>
 
-  <td valign="top">
+  <td valign="top" style="white-space: nowrap">
     [% IF pureperl && module.ispureperl == 'N' %]
+      Not a pure perl module
       <a style='color:#f00; white-space: nowrap' title="What does this mean?" href="static/purity.html">(?)</a>
       [% IF !module.textresult;
          total = module.pass + module.fail + module.na   + module.unknown;
@@ -52,7 +53,7 @@
       [% IF total == 0 %]
         <img alt="No results" src="static/grey.png" height="16" width="200" />
       [% ELSE %]
-        <img alt="PASS [% module.pass %]" src="static/green.png" height="16" width="[% module.pass * 200 / total %]" /><img alt="UNKNOWN [% module.unknown%]" src="static/yellow.png" height="16" width="[% module.unknown * 200 / total %]" /><img alt="FAIL [% module.fail %]" src="static/red.png" height="16" width="[% module.fail * 200 / total %]" /><img alt="NA [% module.na %]" src="static/blue.png" height="16" width="[% module.na * 200 / total %]" />
+        <img alt="PASS [% module.pass %]" title="PASS [% module.pass %]" src="static/green.png" height="16" width="[% module.pass * 200 / total %]" /><img alt="UNKNOWN [% module.unknown%]" title="UNKNOWN [% module.unknown%]" src="static/yellow.png" height="16" width="[% module.unknown * 200 / total %]" /><img alt="FAIL [% module.fail %]" title="FAIL [% module.fail %]" src="static/red.png" height="16" width="[% module.fail * 200 / total %]" /><img alt="NA [% module.na %]" title="NA [% module.na %]" src="static/blue.png" height="16" width="[% module.na * 200 / total %]" />
       [% END %]
     [% END %]
   </td>
