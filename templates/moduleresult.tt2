@@ -1,8 +1,8 @@
-<tr class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' onMouseover="this.bgColor='#f5f5f5'"onMouseout="this.bgColor='#FFFFFF'">
+<tr class='required_by$[% FOREACH r = module.required_by %][% r %]$[%END %]' onmouseover="this.bgColor='#f5f5f5'" onmouseout="this.bgColor='#FFFFFF'">
   <td valign="top">
     [% IF module.has_children %]<a id='toggler_[% depcounter %]' href="javascript:toggle('[% module.name %]','toggler_[% depcounter %]')">-</a>[% END %]
   </td>
-<td valign="top"><nobr>
+<td valign="top" style="white-space: nowrap">
     [% FOREACH x = [1 .. module.indent] %]&nbsp;&nbsp;&nbsp;&nbsp;[% END %]
       [% IF module.name == reqmodule %]
         <a title="[% module.name %]'s META.yml file" href="http://search.cpan.org/src/[% module.author %]/[% module.distname %]-[% module.version %]/META.yml">[% module.name %]</a>
@@ -14,37 +14,34 @@
       [% FOREACH x = [1 .. module.indent] %]&nbsp;&nbsp;&nbsp;&nbsp;[% END %]
       <small>[% module.warning %]</small>
     [% END %]
-  </nobr>
 </td>
-<td valign="top"><nobr>
+<td valign="top" style="white-space: nowrap">
     <a title="search.cpan.org" href="http://search.cpan.org/search?query=[% module.distname %]&amp;mode=all"><img src="static/search.png" width="20" height="20" /></a>
 [%- bugtracker = module.parsed_meta.resources.bugtracker.web ||
                  module.parsed_meta.resources.bugtracker
 %]
-    <a title="Bug reports" href='
+    <a href='
       [%- IF bugtracker -%]
         [%- bugtracker -%]
       [%- ELSE -%]
         http://rt.cpan.org/Public/Dist/Display.html?Name=[% module.distname %]
       [%- END -%]
-    '><img src="static/bug.png" width="20" height="20"></a>
-    <a title="Detailed test results" href="http://www.cpantesters.org/show/[% module.distname %].html"><img src="static/tick.png" width="20" height="20" /></a>
+    '><img src="static/bug.png" width="20" height="20" alt="Bug reports"></a>
+    <a href="http://www.cpantesters.org/show/[% module.distname %].html"><img src="static/tick.png" width="20" height="20" alt="Detailed test results" title="Detailed test results"/></a>
     [% TRY %]
       [% reversefile = 'db/reverse/' _ module.distname _ '-' _ module.version _ '.dd' %]
       [% USE File(reversefile) %]
-      <a title="is depended on by ..." href="depended-on-by.pl?dist=[% module.distname %]-[% module.version %]"><img src="static/depended.png" width="20" height="20" /></a>
+      <a href="depended-on-by.pl?dist=[% module.distname %]-[% module.version %]"><img src="static/depended.png" width="20" height="20" alt="is depended on by ..." title="is depended on by ..."/></a>
     [% CATCH File %]
     [% END %]
   		[% IF !module.textresult %]
-      <a title="Results by OS and perl version" href="http://matrix.cpantesters.org/?dist=[% module.distname %]"><img alt="Results by OS and perl version" border="0" height="16" width="16" src="static/graph.png" /></a>
+      <a href="http://matrix.cpantesters.org/?dist=[% module.distname %]"><img alt="Results by OS and perl version" title="Results by OS and perl version" border="0" height="16" width="16" src="static/graph.png" /></a>
     [% END %]
-  	</nobr>
 	</td>
 
   <td valign="top">
     [% IF pureperl && module.ispureperl == 'N' %]
-      <nobr>Not a pure perl module
-      <a style='color:#f00' title="What does this mean?" href="static/purity.html">(?)</a></nobr>
+      <a style='color:#f00; white-space: nowrap' title="What does this mean?" href="static/purity.html">(?)</a>
       [% IF !module.textresult;
          total = module.pass + module.fail + module.na   + module.unknown;
 	 END %]
@@ -55,7 +52,7 @@
       [% IF total == 0 %]
         <img alt="No results" src="static/grey.png" height="16" width="200" />
       [% ELSE %]
-        <img alt="[% module.pass %] PASS" src="static/green.png" height="16" width="[% module.pass * 200 / total %]" /><img alt="[% module.unknown%] UNKNOWN" src="static/yellow.png" height="16" width="[% module.unknown * 200 / total %]" /><img alt="[% module.fail %] FAIL" src="static/red.png" height="16" width="[% module.fail * 200 / total %]" /><img alt="[% module.na %] NA" src="static/blue.png" height="16" width="[% module.na * 200 / total %]" />
+        <img alt="PASS [% module.pass %]" src="static/green.png" height="16" width="[% module.pass * 200 / total %]" /><img alt="UNKNOWN [% module.unknown%]" src="static/yellow.png" height="16" width="[% module.unknown * 200 / total %]" /><img alt="FAIL [% module.fail %]" src="static/red.png" height="16" width="[% module.fail * 200 / total %]" /><img alt="NA [% module.na %]" src="static/blue.png" height="16" width="[% module.na * 200 / total %]" />
       [% END %]
     [% END %]
   </td>
@@ -78,5 +75,4 @@
       <font color="blue">[% module.na %]</font>
 	</td>
     [% END %]
-  </nobr></small></td>
 </tr>

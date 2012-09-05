@@ -156,11 +156,10 @@ pageTracker._trackPageview();
       [% IF modules.size %]
 
 <!-- CHANCES OF ALL TEST PASSING -->
-	<tr> &nbsp; </tr>
 	<tr class="results_chances">
 		<th colspan="3" valign="bottom" align="center">Chance of all tests passing</th>
 
-		<td colspan="1" ><img src="static/green.png" height="16" width="[% successpc * 2 %]"><img src="static/red.png" height="16" width="[% 200 - successpc * 2 %]">
+		<td><img src="static/green.png" height="16" width="[% successpc * 2 %]" alt="PASS [% successpc.int %]%"><img src="static/red.png" height="16" width="[% 200 - successpc * 2 %]" alt="FAIL [% 100 - successpc.int %]%">
 			</td>
         <td colspan="4">
             [% IF successpc < 1 %]
@@ -183,14 +182,14 @@ pageTracker._trackPageview();
 		</td>
 	</tr>
 
-	<tr class="key">
+	<tr class="legend">
 		<td colspan="8">
-			Key :
-			<img src="static/search.png" /> = Search
-			<img src="static/bug.png" /> = Bug reports
-			<img src="static/tick.png" /> = Test results
-			<img src="static/depended.png" /> = Reverse dependencies
-			<img src="static/graph.png" /> = OS/Perl results matrix
+			Legend :
+			<img src="static/search.png" alt="&quote;Search&quote; icon"/> = Search
+			<img src="static/bug.png" alt="&quote;Bug&quote; icon"/> = Bug reports
+			<img src="static/tick.png" alt="&quote;Test&quote; icon"/> = Test results
+			<img src="static/depended.png" alt="&quote;Depend&quote; icon"/> = Reverse dependencies
+			<img src="static/graph.png" alt="&quote;Matrix&quote; icon"/> = OS/Perl results matrix
 		</td>
 	</tr>
 	
@@ -231,7 +230,7 @@ pageTracker._trackPageview();
 				        <input type="hidden" name="no_note" value="1" />
 				        <input type="hidden" name="currency_code" value="EUR" />
 				        <input type="hidden" name="tax" value="0" />
-		          	  	<input type="image" src="/static/paypal_donate_button.png" border="0" name="submit" width="100" height="48" alt="Make a donation with PayPal" />
+		          	  	<input type="image" src="/static/paypal_donate_button.png" name="submit" border="0" alt="Make a donation with PayPal" />
 					</form>
 				</td>
 				<td>
