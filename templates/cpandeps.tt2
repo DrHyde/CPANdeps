@@ -96,7 +96,10 @@ pageTracker._trackPageview();
         <th align="right"><label for="perl">Perl</label></th>
         <td><select id="perl" name="perl">
           [% FOREACH thisperl = perls %]
-            <option value="[% thisperl %]" [% IF thisperl == perl %] selected="selected" [% END %]>[% thisperl %]</option>
+            <option value="[% thisperl %]" [% IF thisperl == perl %] selected="selected" [% END %]>
+              [% thisperl %]
+              [% IF thisperl == 'latest' %] ([% latest_perl %]) [% END %]
+            </option>
           [% END %]
         </select></td>
         <th align="right"><label for="os">OS</label></th>

@@ -1,0 +1,5 @@
+# m h  dom mon dow   command
+MAILTO=david@cantrell.org.uk
+
+# update CoreList every Sunday
+0 0 * * 0 /usr/local/bin/cpan Module::CoreList

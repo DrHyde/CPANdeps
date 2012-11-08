@@ -17,7 +17,7 @@ use Template;
 
 use constant ANYVERSION => 'any version';
 use constant ANYOS      => 'any OS';
-use constant LATESTPERL  => '5.16.1';
+use constant LATESTPERL  => '5.16.2';
 use constant DEFAULTCORE => '5.005';
 use constant MAXINT => ~0;
 
@@ -55,6 +55,8 @@ sub render {
 
     $ttvars->{debug} = "<h2>Debug info</h2><pre>".Dumper($ttvars)."</pre>"
         if($debug);
+
+    $ttvars->{latest_perl} = LATESTPERL;
     
     $tt2->process(
         $q->param('xml') ? "$tt2file-xml.tt2" : "$tt2file.tt2",
