@@ -163,7 +163,7 @@ sub check_params {
   my $checks = {
     module => qr/^[\w:]+$/,
     dist   => qr/^[\w\.-]+$/,
-    pureperl => qr/^on|([01])?$/,
+    pureperl => qr/^[01]?$/,
     devperls => qr/^[01]?$/,
     # FIXME
     # perl => not tested here, search for "bad perl version" in sub go {}
