@@ -26,7 +26,7 @@
 	[% END %]
       </ul>
     [% ELSE %]
-      <p>Nothing</p>
+      <p>Nothing (or maybe it's just not been calculated yet)</p>
     [% END %]
   [% END %]
 
