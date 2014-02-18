@@ -226,6 +226,14 @@ pageTracker._trackPageview();
 <div id="footer">
 	<table class="donation">
 			<tr>
+				<td>
+				  <a class="FlattrButton" style="display:none;" href="http://deps.cpantesters.org/"></a>
+				  <noscript><a href="http://flattr.com/thing/423225/CPANdeps" target="_blank">
+				  <img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
+				</td>
+                                <td>
+                                  <script data-gittip-username="DrHyde" data-gittip-widget="button" src="//gttp.co/v1.js"></script>
+                                </td>
 				<td width="100" align="center">
 					<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 		          		<input type="hidden" name="cmd" value="_xclick" />
@@ -237,11 +245,6 @@ pageTracker._trackPageview();
                                         <!-- width and height are necessary. don't care if they break the standard, they *work*. standards-compliant patches *that work* welcome -->
 		          	  	<input type="image" src="/static/paypal_donate_button.png" name="submit" border="0" width="100" height="48" alt="Make a donation with PayPal" />
 					</form>
-				</td>
-				<td>
-				  <a class="FlattrButton" style="display:none;" href="http://deps.cpantesters.org/"></a>
-				  <noscript><a href="http://flattr.com/thing/423225/CPANdeps" target="_blank">
-				  <img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
 				</td>
 			</tr>
 		</table>
