@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/local/bin/perl
 
 # use 5.010;
 use strict;
@@ -80,7 +80,6 @@ refill-cpanstatsdb-minutes.pl
 
 use FindBin;
 use lib "$FindBin::Bin/../CPAN-Blame/lib";
-use CPAN::Blame::Config::Cnntp;
 
 use Dumpvalue;
 use File::Basename ();
@@ -106,12 +105,7 @@ $Opt{sleeplimit} ||= 500;
 $Opt{sleeptime} ||= 150;
 $Opt{maxtime} = 1770 unless defined $Opt{maxtime};
 
-my($workdir);
-BEGIN {
-    $workdir = File::Spec->catdir
-        ($CPAN::Blame::Config::Cnntp::Config->{solver_vardir},
-         "workdir");
-}
+my $workdir = "/tmp/refill-testers-db";
 
 my($basename) = File::Basename::basename(__FILE__);
 my $limit = IPC::ConcurrencyLimit->new
@@ -133,31 +127,31 @@ use CPAN::Testers::WWW::Reports::Query::Reports;
 
 our $jsonxs = JSON::XS->new->indent(0);
 
-my($pgsth,$pgmaxid);
+my($sth,$current_max_id);
 {
-    my $pgdbh = DBI->connect("dbi:Pg:dbname=analysis") or die "Could not connect to 'analysis': $DBI::err";
+    my $dbh = DBI->connect("dbi:mysql:dbname=cpantesters", 'root', '') or die "Could not connect to 'cpantesters': $DBI::err";
     my $sql = "select max(id) from cpanstats";
-    $pgsth = $pgdbh->prepare($sql);
+    $sth = $dbh->prepare($sql);
     {
-        my $rv = eval { $pgsth->execute(); };
+        my $rv = eval { $sth->execute(); };
         unless ($rv) {
-            my $err = $pgsth->errstr;
+            my $err = $sth->errstr;
             die "Warning: error occurred while executing '$sql': $err";
         }
     }
-    my(@row) = $pgsth->fetchrow_array();
-    $pgmaxid = $row[0];
-    warn "INFO: In Pg found max id '$pgmaxid'";
+    my(@row) = $sth->fetchrow_array();
+    $current_max_id = $row[0] || 0;
+    warn "INFO: In cpantesters db found max id '$current_max_id'";
     $sql = "INSERT INTO cpanstats
- (id,guid,state,postdate,tester,dist,version,platform,perl,osname,osvers,fulldate,type) values
- (?, ?,   ?,    ?,       ?,     ?,   ?,      ?,       ?,   ?,     ?,     ?,       ?)";
-    $pgsth = $pgdbh->prepare($sql);
+ (id,guid,state,dist,version,platform,perl,osname,osvers) values
+ (?, ?,   ?,    ?,   ?,      ?,       ?,   ?,     ?)";
+    $sth = $dbh->prepare($sql);
 }
 my $query = CPAN::Testers::WWW::Reports::Query::Reports->new;
 my $nextid;
-$nextid = $pgmaxid+1;
+$nextid = $current_max_id+1;
 my($inscount) = 0;
-my($pg_n,$pg_time) = (0,0);
+my($queries_n,$queries_time) = (0,0);
 QUERY: while () {
     warn sprintf "%s: Next query starting with %s\n", scalar gmtime(), $nextid;
     my $result = $query->range("$nextid-");
@@ -165,6 +159,9 @@ QUERY: while () {
     my $thismax = $querycnt > 0 ? max(keys %$result) : undef;
     warn sprintf "%s: Got %d records from '%s' to '%s'\n", scalar gmtime(), $querycnt, $nextid, $thismax||"<UNDEF>";
     if (defined($Opt{maxins}) && $Opt{maxins} <= 0) {
+        last QUERY;
+    }
+    if ( $Opt{finishlimit} && $querycnt < $Opt{finishlimit}) {
         last QUERY;
     }
     unless ($thismax){
@@ -219,11 +216,11 @@ QUERY: while () {
         }
         $max_seen = $id;
         my $record = $result->{$id};
-        if ($id > $pgmaxid) {
+        if ($id > $current_max_id) {
             my $start = time;
-            $pgsth->execute($id,@{$record}{qw(guid state postdate tester dist version platform perl osname osvers fulldate type)});
-            $pg_n++;
-            $pg_time += time - $start;
+            $sth->execute($id,@{$record}{qw(guid state dist version platform perl osname osvers)});
+            $queries_n++;
+            $queries_time += time - $start;
         }
         # ddx $record; # see also Data::Dump line
         print $fh $jsonxs->encode($record), "\n";
@@ -241,9 +238,6 @@ QUERY: while () {
     }
     $finallogfile =~ s/MAX/$max_seen/;
     rename $logfile, $finallogfile or die "Could not rename $logfile, $finallogfile: $!";
-    if ( $Opt{finishlimit} && $querycnt < $Opt{finishlimit}) {
-        last QUERY;
-    }
     if (defined($Opt{maxins}) && $inscount >= $Opt{maxins}) {
         last QUERY;
     }
@@ -259,8 +253,8 @@ QUERY: while () {
     }
     $nextid = $thismax+1;
 }
-if ($pg_n) {
-    warn sprintf "STATS: pg avg ins time per rec %.5f\n", $pg_time/$pg_n;
+if ($queries_n) {
+    warn sprintf "STATS: avg ins time per rec %.5f\n", $queries_time/$queries_n;
 }
 
 # for the record: today I added the two:
