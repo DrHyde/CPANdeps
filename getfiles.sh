@@ -10,9 +10,12 @@ wget -q -O 02packages http://cpan.org/modules/02packages.details.txt.gz &&
 mv 02packages 02packages.details.txt.gz
 
 echo Fetching CPAN-testers database ...
-wget -q -O barbiesdb.gz.tmp http://devel.cpantesters.org/cpanstats.db.gz &&
-mv barbiesdb.gz.tmp barbiesdb.gz &&
-gzip -fd barbiesdb.gz &&
+
+# this talks to the CPAN-testers metabase and populates our
+# cpantesters db
+./refill-cpanstatsdb.pl --finishlimit=1
+
+# move/rewrite records into cpandeps[dev] db
 ./mangledb.pl
 
 ./populate-cache.pl
