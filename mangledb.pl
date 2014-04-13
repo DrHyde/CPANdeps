@@ -28,6 +28,7 @@ print "Putting 02packages into db ...\n";
   	  unless($sth->execute($module, $version, $file));
       }
   close(PACKAGES);
+  unlink('02packages.details.txt.gz');
   $cpandepsdbh->{'AutoCommit'} = 1;
 }
 
