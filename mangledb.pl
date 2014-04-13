@@ -11,14 +11,14 @@ chdir($FindBin::Bin);
 
 $| = 1;
 
-my $mysqldbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
-my $barbiedbh = DBI->connect("dbi:SQLite:dbname=barbiesdb");
+my $cpandepsdbh    = DBI->connect("dbi:mysql:database=$dbname", "root", "");
+my $cpantestersdbh = DBI->connect("dbi:mysql:database=cpantesters", "root", "");
 
 print "Putting 02packages into db ...\n";
 {
-  my $sth = $mysqldbh->prepare("INSERT INTO packages (module, version, file) VALUES (?, ?, ?)");
-  $mysqldbh->{'AutoCommit'} = 0;
-  $mysqldbh->do('DELETE FROM packages');
+  my $sth = $cpandepsdbh->prepare("INSERT INTO packages (module, version, file) VALUES (?, ?, ?)");
+  $cpandepsdbh->{'AutoCommit'} = 0;
+  $cpandepsdbh->do('DELETE FROM packages');
   open(PACKAGES, 'gzip -dc 02packages.details.txt.gz |');
       while(<PACKAGES> ne "\n") {}; # throw away headers
       while(my $line = <PACKAGES>) {
@@ -28,16 +28,12 @@ print "Putting 02packages into db ...\n";
   	  unless($sth->execute($module, $version, $file));
       }
   close(PACKAGES);
-  $mysqldbh->{'AutoCommit'} = 1;
+  $cpandepsdbh->{'AutoCommit'} = 1;
 }
 
-print "Finding most recent result in db ...\n";
-my $maxid = $mysqldbh->selectall_arrayref('SELECT MAX(id) FROM cpanstats')->[0]->[0] || 0;
-
-my $outputstep = 1000;
+my $outputstep = 10000;
 print "Finding/inserting new test results.  Each dot is $outputstep records ...\n";
 {
-  my $insertcount = 0;
   my @os_by_osname = (
     '' => 'Unknown OS',
     'aix' => 'AIX',
@@ -83,19 +79,27 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
     'VMS' => 'VMS',
     'vms' => 'VMS',
   );
-  my $select = $barbiedbh->prepare("
-    SELECT id, state, tester, dist, version, platform, perl, platform, osname
+  my $insert = $cpandepsdbh->prepare('
+    INSERT INTO cpanstats (id, state, dist, version, perl, is_dev_perl, os, platform, origosname)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  ');
+
+  # can't deal with eleventy zillion records at once, so eat them this many at a time
+  my $records_to_fetch = 1000000;
+
+SELECTLOOP:
+  my $insertcount = 0;
+  my $maxid = $cpandepsdbh->selectall_arrayref('SELECT MAX(id) FROM cpanstats')->[0]->[0] || 0;
+  my $select = $cpantestersdbh->prepare("
+    SELECT id, state, dist, version, platform, perl, platform, osname
       FROM cpanstats
      WHERE id > $maxid AND
+           id < $maxid + $records_to_fetch AND
            state IN ('pass', 'fail', 'na', 'unknown') AND
 	   perl != '0'
   ");
-  my $insert = $mysqldbh->prepare('
-    INSERT INTO cpanstats (id, state, tester, dist, version, perl, is_dev_perl, os, platform, origosname)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  ');
   $select->execute();
-  $mysqldbh->{'AutoCommit'} = 0;
+  $cpandepsdbh->{'AutoCommit'} = 0;
   while(my $record = $select->fetchrow_hashref()) {
     $record->{is_dev_perl} = ($record->{perl} =~ /(^5\.(7|9|11|13|15|17|19)|rc|patch)/i) ? 1 : 0;
     foreach my $ver (qw(
@@ -147,15 +151,20 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
       }
     }
     $insert->execute(
-      map { $record->{$_} } qw(id state tester dist version perl is_dev_perl os platform osname)
+      map { $record->{$_} } qw(id state dist version perl is_dev_perl os platform osname)
     );
     if(!(++$insertcount % $outputstep)) {
       print '.';
-      $mysqldbh->{'AutoCommit'} = 1;
-      $mysqldbh->{'AutoCommit'} = 0;
+      $cpandepsdbh->{'AutoCommit'} = 1;
+      $cpandepsdbh->{'AutoCommit'} = 0;
     }
   }
-  $mysqldbh->{'AutoCommit'} = 1;
+  $cpandepsdbh->{'AutoCommit'} = 1;
+
+  # times 0.9 because there are occasional gaps in the series, especially
+  # early on
+  goto SELECTLOOP if($insertcount > $records_to_fetch * 0.9);
+
   print "\n";
 }
 
