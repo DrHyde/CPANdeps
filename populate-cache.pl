@@ -55,6 +55,7 @@ foreach my $file (@files) {
         next if(-e $local_file);
   
         my $res = $ua->request(HTTP::Request->new(GET => $remote_file));
+        print "$remote_file\n";
         if(!$res->is_success()) {
             next;
         } else {
@@ -62,7 +63,7 @@ foreach my $file (@files) {
           open(FILE, '>', $local_file) || die("Can't write $local_file\n");
           print FILE $yaml;
           close(FILE);
-          sleep 1;
         }
     }
+    select undef, undef, undef, 0.1;
 }
