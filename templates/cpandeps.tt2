@@ -98,6 +98,13 @@ pageTracker._trackPageview();
           [% FOREACH thisperl = perls %]
             <option value="[% thisperl %]" [% IF thisperl == perl %] selected="selected" [% END %]>
               [% thisperl %]
+              [% IF thisperl.split('\.').size == 2 AND
+                 thisperl != '5.5' AND
+                 thisperl != '5.4' AND
+                 thisperl != '5.3'
+               %]
+                (any sub-version)
+              [% END %]
               [% IF thisperl == 'latest' %] ([% latest_perl %]) [% END %]
             </option>
           [% END %]

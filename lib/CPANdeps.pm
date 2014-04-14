@@ -193,7 +193,7 @@ sub go {
         os       => ($q->param('os') || ANYOS),
         # ugh, sorting versions is Hard.  Can't use version.pm here
         perls    => [ 'latest', ANYVERSION,
-            sort {
+            reverse sort {
                 my($A, $B) = map {
                     my @v = split('\.', $_);
                     $v[2] = defined($v[2]) ? $v[2] : 0;
