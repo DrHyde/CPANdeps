@@ -122,7 +122,7 @@ SELECTLOOP:
         5.19.0 5.19.1 5.19.2 5.19.3 5.19.4 5.19.5 5.19.6 5.19.7 5.19.8 5.19.9
           5.19.10
     )) {
-      $record->{perl} = $ver if($record->{perl} =~ /^$ver/);
+      $record->{perl} = $ver if($record->{perl} =~ /^v?$ver/);
     }
     $record->{os} = 'Unknown OS';
     my @temp_os_by_osname = @os_by_osname;
