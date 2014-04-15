@@ -21,8 +21,6 @@ echo Fetching CPAN-testers database ...
 ./populate-cache.pl
 ./build-reverse-index.pl
 
-rm 02packages.details.txt.gz
-
 echo
 echo
 echo Unknown OSes

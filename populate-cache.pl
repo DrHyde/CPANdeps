@@ -7,10 +7,12 @@ use Data::Dumper;
 use LWP::UserAgent;
 use FindBin;
 
+$| = 1;
+
 chdir $FindBin::Bin;
 my $dbname = ($FindBin::Bin =~ /dev/) ? 'cpandepsdev' : 'cpandeps';
 
-my $VERSION = 0.9;
+my $VERSION = 1.0;
 my $ua = LWP::UserAgent->new(
     agent => "cpandeps-cache/$VERSION",
     from => 'cpandeps@cantrell.org.uk'
@@ -54,8 +56,9 @@ foreach my $file (@files) {
 
         next if(-e $local_file);
   
+        print '.';
+
         my $res = $ua->request(HTTP::Request->new(GET => $remote_file));
-        print "$remote_file\n";
         if(!$res->is_success()) {
             next;
         } else {
@@ -65,5 +68,5 @@ foreach my $file (@files) {
           close(FILE);
         }
     }
-    select undef, undef, undef, 0.1;
 }
+print "\n";

@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
+$VERSION = '2.0';
+
 use Cwd;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
@@ -40,9 +42,6 @@ $Data::Dumper::Sortkeys = 1;
 my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
-
-($VERSION = '$Id: CPANdeps.pm,v 1.37 2009/02/14 23:03:53 drhyde Exp $')
-    =~ s/.*,v (.*?) .*/$1/;
 
 sub render {
     my($q, $tt2file, $ttvars) = @_;
