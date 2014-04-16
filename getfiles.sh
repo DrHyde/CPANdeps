@@ -24,4 +24,4 @@ echo
 echo
 echo Unknown OSes
 echo
-echo select \* from cpanstats where os = \'Unknown OS\'\;|./dbish 2>/dev/null
+echo select platform, origosname, count\(\*\) from cpanstats where os=\'Unknown OS\' group by platform, origosname\; |./dbish 2>/dev/null

@@ -11,4 +11,4 @@ if [ $DIR == /web/cpandeps-dev ]; then
   DBNAME=cpandepsdev
 fi
 
-mysql -u root $DBNAME
+mysql -t -u root $DBNAME
