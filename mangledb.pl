@@ -39,6 +39,7 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
     '' => 'Unknown OS',
     'aix' => 'AIX',
     'beos' => 'BeOS',
+    'bitrig' => 'Bitrig BSD',
     'bsdos' => 'BSD OS',
     'cygwin' => 'Windows (Cygwin)',
     'darwin' => 'Mac OS X',
@@ -46,8 +47,6 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
     'dec_osf' => 'Tru64/OSF/Digital UNIX',
     'dragonfly' => 'Dragonfly BSD',
     'freebsd' => 'FreeBSD',
-    'Freebsd' => 'FreeBSD',
-    'FreeBSD' => 'FreeBSD',
     'gnu' => 'GNU Hurd',
     'gnukfreebsd' => 'FreeBSD (Debian)',
     'haiku' => 'Haiku',
@@ -60,16 +59,13 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
     'linuxThis' => 'Linux',
     'lThis'     => 'Linux',
     'linuThis'  => 'Linux', 
-    'MacOS' => 'Mac OS classic',
     'macos' => 'Mac OS classic',
     'midnightbsd' => 'Midnight BSD',
+    'minix'       => 'Minix',
     'mirbsd' => 'MirOS BSD',
-    'MSWin32' => 'Windows (Win32)',
     'mswin32' => 'Windows (Win32)',
     'netbsd' => 'NetBSD',
-    'NetBSD' => 'NetBSD',
     'openbsd' => 'OpenBSD',
-    'OpenBSD' => 'OpenBSD',
     'openosname=openbsd' => 'OpenBSD',
     'openThis' => 'OpenBSD',
     'os2' => 'OS/2',
@@ -77,7 +73,6 @@ print "Finding/inserting new test results.  Each dot is $outputstep records ...\
     'nto' => 'QNX Neutrino',
     'sco' => 'SCO Unix',
     'solaris' => 'Solaris',
-    'VMS' => 'VMS',
     'vms' => 'VMS',
   );
   my $insert = $cpandepsdbh->prepare('
@@ -128,7 +123,7 @@ SELECTLOOP:
     my @temp_os_by_osname = @os_by_osname;
     while(@temp_os_by_osname) {
       my($osname, $os) = (shift(@temp_os_by_osname), shift(@temp_os_by_osname));
-      if($record->{osname} eq "$osname") {
+      if($record->{osname} =~ /^$osname$/i) {
         $record->{os} = $os;
 	last;
       }
