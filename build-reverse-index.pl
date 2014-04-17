@@ -13,6 +13,10 @@ $/ = undef;
 chdir $FindBin::Bin;
 my $dbname = ($FindBin::Bin =~ /dev/) ? 'cpandepsdev' : 'cpandeps';
 
+use lib "$FindBin::Bin/lib";
+use CPANdeps;
+my $limit = CPANdeps::concurrency_limit("/tmp/$dbname/rebuild-reverse-index/lock");
+
 my $dbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
 
 print "Building reverse index ...\n";

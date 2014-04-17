@@ -6,8 +6,12 @@ use DBI;
 use Data::Dumper;
 use FindBin;
 
-my $dbname = ($FindBin::Bin =~ /dev/) ? 'cpandepsdev' : 'cpandeps';
 chdir($FindBin::Bin);
+my $dbname = ($FindBin::Bin =~ /dev/) ? 'cpandepsdev' : 'cpandeps';
+
+use lib "$FindBin::Bin/lib";
+use CPANdeps;
+my $limit = CPANdeps::concurrency_limit("/tmp/$dbname/refill-deps-db/lock");
 
 $| = 1;
 

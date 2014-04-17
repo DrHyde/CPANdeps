@@ -12,6 +12,10 @@ $| = 1;
 chdir $FindBin::Bin;
 my $dbname = ($FindBin::Bin =~ /dev/) ? 'cpandepsdev' : 'cpandeps';
 
+use lib "$FindBin::Bin/lib";
+use CPANdeps;
+my $limit = CPANdeps::concurrency_limit("/tmp/$dbname/populate-cache/lock");
+
 my $VERSION = 1.0;
 my $ua = LWP::UserAgent->new(
     agent => "cpandeps-cache/$VERSION",

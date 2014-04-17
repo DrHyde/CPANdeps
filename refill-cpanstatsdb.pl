@@ -79,7 +79,8 @@ refill-cpanstatsdb-minutes.pl
 
 
 use FindBin;
-use lib "$FindBin::Bin/../CPAN-Blame/lib";
+use lib "$FindBin::Bin/lib";
+use CPANdeps;
 
 use Dumpvalue;
 use File::Basename ();
@@ -90,7 +91,6 @@ use Getopt::Long;
 use Pod::Usage;
 use Hash::Util qw(lock_keys);
 use List::Util qw(min);
-use IPC::ConcurrencyLimit;
 
 our %Opt;
 lock_keys %Opt, map { /([^=|!]+)/ } @opt;
@@ -105,19 +105,7 @@ $Opt{sleeplimit} ||= 500;
 $Opt{sleeptime} ||= 150;
 $Opt{maxtime} = 1770 unless defined $Opt{maxtime};
 
-my $workdir = "/tmp/refill-testers-db";
-
-my($basename) = File::Basename::basename(__FILE__);
-my $limit = IPC::ConcurrencyLimit->new
-    (
-     max_procs => 1,
-     path      => "$workdir/IPC-ConcurrencyLimit-$basename",
-    );
-my $limitid = $limit->get_lock;
-if (not $limitid) {
-    warn "Another process appears to be still running. Exiting.";
-    exit(0);
-}
+my $limit = CPANdeps::concurrency_limit("/tmp/refill-testers-db/lock");
 
 use DBI;
 use Time::HiRes qw(time);

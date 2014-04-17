@@ -13,6 +13,7 @@ use YAML ();
 use JSON ();
 use DBI;
 use LWP::UserAgent;
+use IPC::ConcurrencyLimit;
 
 use Data::Dumper;
 use Template;
@@ -42,6 +43,20 @@ $Data::Dumper::Sortkeys = 1;
 my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
 );
+
+sub concurrency_limit {
+    my $lockfile = shift;
+    my $limit = IPC::ConcurrencyLimit->new(
+        max_procs => 1,
+        path      => $lockfile,
+    );
+    my $limitid = $limit->get_lock;
+    if(not $limitid) {
+        warn "Another process appears to be still running. Exiting.";
+        exit(0);
+    }
+    return $limit;
+}
 
 sub render {
     my($q, $tt2file, $ttvars) = @_;
