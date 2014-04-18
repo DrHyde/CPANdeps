@@ -6,13 +6,13 @@ cd $DIR
 
 echo Fetching 02packages ...
 
-wget -O 02packages http://cpan.org/modules/02packages.details.txt.gz && mv 02packages 02packages.details.txt.gz
+wget -q -O 02packages http://cpan.org/modules/02packages.details.txt.gz && mv 02packages 02packages.details.txt.gz
 
 echo Fetching CPAN-testers database ...
 
 # this talks to the CPAN-testers metabase and populates our
 # cpantesters db
-./refill-cpanstatsdb.pl --finishlimit=1
+./refill-cpanstatsdb.pl --finishlimit=1 --quiet
 
 # move/rewrite records into cpandeps[dev] db
 ./mangledb.pl
