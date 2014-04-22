@@ -1,5 +1,7 @@
 # m h  dom mon dow   command
 MAILTO=david@cantrell.org.uk
+
+# refresh webshite at 09:00. Takes about 2 hours
 0 9 * * * time nice -n 19 /web/cpandeps/getfiles.sh
 0 7 * * * PID=$$;touch -d "7 days ago" /tmp/$PID;time find /web/cpandeps/db/r* -type f -not -newer /tmp/$PID -exec rm -f {} \;
 
