@@ -6,7 +6,11 @@ cd $DIR
 
 echo Fetching 02packages ...
 
-wget -q -O 02packages http://cpan.org/modules/02packages.details.txt.gz && mv 02packages 02packages.details.txt.gz
+(
+  wget -q -O 02packages http://cpan.org/modules/02packages.details.txt.gz &&
+  mv 02packages 02packages.details.txt.gz
+) ||
+  exit
 
 echo Fetching CPAN-testers database ...
 
