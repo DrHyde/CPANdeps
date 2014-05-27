@@ -101,7 +101,7 @@ SELECTLOOP:
   $select->execute();
   $cpandepsdbh->{'AutoCommit'} = 0;
   while(my $record = $select->fetchrow_hashref()) {
-    $record->{is_dev_perl} = ($record->{perl} =~ /(^5\.(7|9|11|13|15|17|19)|rc|patch)/i) ? 1 : 0;
+    $record->{is_dev_perl} = ($record->{perl} =~ /(^5\.(7|9|11|13|15|17|19|21)|rc|patch)/i) ? 1 : 0;
     foreach my $ver (qw(
         5.3 5.4 5.5
         5.7.2 5.7.3
@@ -120,6 +120,7 @@ SELECTLOOP:
         5.18.0 5.18.1 5.18.2 5.18.3
         5.19.0 5.19.1 5.19.2 5.19.3 5.19.4 5.19.5 5.19.6 5.19.7 5.19.8 5.19.9
           5.19.10
+        5.20.0
     )) {
       $record->{perl} = $ver if($record->{perl} =~ /^v?$ver/);
     }
