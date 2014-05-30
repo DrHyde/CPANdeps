@@ -13,7 +13,23 @@
   [% IF module %]
     [% successpc = 100 %]
     [% FOREACH module = modules %]
-      [% INCLUDE 'moduleresult-xml.tt2' module = module %]
+      <dependency>
+        <module>[% module.name %]</module>
+        <dist>[% module.distname %]</dist>
+        <cpanfile>[% module.CPANfile %]</cpanfile>
+        <depth>[% module.indent %]</depth>
+        <warning>[% module.warning %]</warning>
+        <textresult>[% module.textresult %]</textresult>
+        <ispureperl>[% module.ispureperl %]</ispureperl>
+        [% total = module.pass + module.fail + module.na   + module.unknown %]
+        <totalresults>[% total %]</totalresults>
+        [% IF total != 0 %]
+          <passes>[% module.pass %]</passes>
+          <fails>[% module.fail %]</fails>
+          <unknowns>[% module.unknown %]</unknowns>
+          <nas>[% module.na %]</nas>
+        [% END %]
+      </dependency>
       [% IF module.pass + module.unknown + module.fail + module.na %]
         [% successpc = successpc * (module.pass + module.unknown) /
            (module.pass + module.unknown + module.fail + module.na) %]
@@ -30,5 +46,5 @@
     </chanceofsuccess>
   [% END %]
 
-<debug>[% debug %]</debug>
+<debug>[% debug | html %]</debug>
 </cpandeps>
