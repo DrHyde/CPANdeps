@@ -4,7 +4,7 @@
     <dist>
       <name>[% dist %]</name>
       <version>[% distversion %]</version>
-      <depended_on_by>
+      <depended_on_by count="[% depended_on_by.size %]">
       [% IF depended_on_by.size %]
         [% FOR dep = depended_on_by %]
           <dist><name>[% dep %]</name></dist>
