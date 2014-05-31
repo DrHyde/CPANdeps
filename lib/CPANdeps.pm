@@ -397,8 +397,6 @@ sub in_core {
         die($@) if($@);
     }
     my $incore = $Module::CoreList::version{0+$v}{$module};
-    # warn("M:$module I:$incore P:$perl V:$v\n");
-    # M:CGI::Application I: P:any version V:5.005000
     return $incore;
 }
 
@@ -493,33 +491,27 @@ sub read_meta {
 
     my $parsed_meta;
     if(-e $METAymlfile) {
-        warn("Cached YAML\n");
         open(YAML, $METAymlfile) || die("Can't read $METAymlfile\n");
         $meta = <YAML>;
         close(YAML);
         $parsed_meta = eval { YAML::Load($meta); };
     } elsif(-e $METAjsonfile) {
-        warn("Cached JSON\n");
         open(JSON, $METAjsonfile) || die("Can't read $METAjsonfile\n");
         $meta = <JSON>;
         close(JSON);
         $parsed_meta = eval { JSON::decode_json($meta); };
     } elsif((my $res = $ua->request(HTTP::Request->new(GET => $METAymlURL)))->is_success()) {
-        warn("Fetching YAML\n");
         $meta = $res->content();
         open(META, ">$METAymlfile") || die("Can't write $METAymlfile\n");
         print META $meta;
         close(META);
         $parsed_meta = eval { YAML::Load($meta); };
     } elsif(($res = $ua->request(HTTP::Request->new(GET => $METAjsonURL)))->is_success()) {
-        warn("Fetching JSON\n");
         $meta = $res->content();
         open(META, ">$METAjsonfile") || die("Can't write $METAjsonfile\n");
         print META $meta;
         close(META);
         $parsed_meta = eval { JSON::decode_json($meta); };
-    } else {
-        warn("nothing!?!?\n");
     }
     return $parsed_meta;
 }
