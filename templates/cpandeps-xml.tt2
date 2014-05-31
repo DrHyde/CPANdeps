@@ -10,9 +10,25 @@
   <module>[% module %]</module>
   <perl>[% perl %]</perl>
   <os>[% os %]</os>
+
+  [% prevdepth = -1 %]
+
   [% IF module %]
     [% successpc = 100 %]
     [% FOREACH module = modules %]
+
+      [% thisdepth = module.indent %]
+
+      [% IF thisdepth == prevdepth %]
+        </dependency>
+      [% ELSIF thisdepth < prevdepth %]
+        [% FILTER repeat(prevdepth + 1 - thisdepth) %]
+          </dependency>
+        [% END %]
+      [% END %]
+
+      [% prevdepth = thisdepth %]
+
       <dependency>
         <module>[% module.name %]</module>
         <dist>[% module.distname %]</dist>
@@ -21,29 +37,17 @@
         <warning>[% module.warning %]</warning>
         <textresult>[% module.textresult %]</textresult>
         <ispureperl>[% module.ispureperl %]</ispureperl>
+        <passes>[% module.pass %]</passes>
+        <fails>[% module.fail %]</fails>
+        <unknowns>[% module.unknown %]</unknowns>
+        <nas>[% module.na %]</nas>
         [% total = module.pass + module.fail + module.na   + module.unknown %]
         <totalresults>[% total %]</totalresults>
-        [% IF total != 0 %]
-          <passes>[% module.pass %]</passes>
-          <fails>[% module.fail %]</fails>
-          <unknowns>[% module.unknown %]</unknowns>
-          <nas>[% module.na %]</nas>
-        [% END %]
-      </dependency>
-      [% IF module.pass + module.unknown + module.fail + module.na %]
-        [% successpc = successpc * (module.pass + module.unknown) /
-           (module.pass + module.unknown + module.fail + module.na) %]
-      [% END %]
     [% END %]
-    <chanceofsuccess>
-      [% IF successpc < 1 %]
-        [% successpc.sprintf("%.3f") %]% (to 3dp)
-       [% ELSIF successpc < 10 %]
-        [% successpc.sprintf("%.1f") %]% (to 1dp)
-       [% ELSE %]
-        [% successpc.int %]%
-      [% END %]
-    </chanceofsuccess>
+
+    [% FILTER repeat(1 + thisdepth) %]
+      </dependency>
+    [% END %]
   [% END %]
 
 <debug>[% debug | html %]</debug>

@@ -42,6 +42,8 @@ $Template::Stash::SCALAR_OPS->{sprintf} = sub {
 $Data::Dumper::Sortkeys = 1;
 my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
+    PRE_CHOMP    => 1,
+    POST_CHOMP   => 1,
 );
 
 sub concurrency_limit {
