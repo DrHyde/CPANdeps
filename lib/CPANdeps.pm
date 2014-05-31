@@ -83,7 +83,7 @@ sub render {
 
 sub depended_on_by {
   my $q = CGI->new();
-  print "Content-type: text/html; charset=UTF-8\n\n";
+  print "Content-type: text/".($q->param('xml') ? 'xml' : 'html')."\n\n";
 
   check_params($q);
 
@@ -165,8 +165,12 @@ EOF
     )[0];
     closedir(DIR);
   }
+
+  (my $distversion = $dist) =~ s{^.*-(v?[\d_\.]+)$}{$1};
+
   my $ttvars = {
     dist => $dist,
+    distversion => $distversion,
     depended_on_by => [ @{ $datafile ? do $datafile : [] } ],
     datafile => $datafile,
   };

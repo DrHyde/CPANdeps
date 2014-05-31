@@ -17,6 +17,9 @@
 			<a href="static/links.html" class="last">Links</a>
 		</div>
 		
+  <small class="xml">
+    (<a href="depended-on-by.pl?xml=1;dist=[% dist %]">Get results in XML</a>)
+  </small>
   [% IF dist %]
     <h2>[% dist %] is depended on by</h2>
     [% IF depended_on_by.size %]

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<reversedependencies>
+  [% IF dist %]
+    <dist>
+      <name>[% dist %]</name>
+      <version>[% distversion %]</version>
+      <depended_on_by>
+      [% IF depended_on_by.size %]
+        [% FOR dep = depended_on_by %]
+          <dist><name>[% dep %]</name></dist>
+        [% END %]
+      [% ELSE %]
+        <warning>None found (or maybe it's just not been calculated yet)</warning>
+      [% END %]
+      </depended_on_by>
+    </dist>
+  [% END %]
+
+<debug>[% debug | html %]</debug>
+</reversedependencies>
