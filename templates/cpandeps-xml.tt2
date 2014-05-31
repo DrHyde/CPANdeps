@@ -1,9 +1,5 @@
 <?xml version="1.0"?>
 <!--
-  This XML interface will soon be replaced by something better
-  with nested <dependency> elements so that you don't have to
-  reconstruct the tree yourself.
-
   If you want more/different data, please ask.
 -->
 <cpandeps>
