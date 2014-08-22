@@ -2,8 +2,8 @@
 MAILTO=david@cantrell.org.uk
 
 # refresh webshite at 09:00. Takes about 2.5 hours
-0 9 * * * time nice -n 19 /web/cpandeps/getfiles.sh
-0 7 * * * PID=$$;touch -d "7 days ago" /tmp/$PID;time find /web/cpandeps/db/r* -type f -not -newer /tmp/$PID -exec rm -f {} \;
+0 9 * * * nice -n 19 /web/cpandeps/getfiles.sh
+0 7 * * * PID=$$;touch -d "7 days ago" /tmp/$PID;find /web/cpandeps/db/r* -type f -not -newer /tmp/$PID -exec rm -f {} \;
 
-0 21 * * 3 time nice -n 19 /web/cpandeps-dev/getfiles.sh
-0 19 * * 3 PID=$$;touch -d "7 days ago" /tmp/$PID;time find /web/cpandeps-dev/db/r* -type f -not -newer /tmp/$PID -exec rm -f {} \;
+0 21 * * 3 nice -n 19 /web/cpandeps-dev/getfiles.sh
+0 19 * * 3 PID=$$;touch -d "7 days ago" /tmp/$PID;find /web/cpandeps-dev/db/r* -type f -not -newer /tmp/$PID -exec rm -f {} \;
