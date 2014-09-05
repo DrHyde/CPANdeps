@@ -51,11 +51,13 @@
       <img alt="[% module.textresult | html %]" src="static/grey.png" height="16" width="200" />
     [% ELSE %]
       [% total = module.pass + module.fail + module.na   + module.unknown %]
-      [% IF total == 0 %]
-        <img alt="No results" src="static/grey.png" height="16" width="200" />
-      [% ELSE %]
-        <img alt="PASS [% module.pass %]" title="PASS [% module.pass %]" src="static/green.png" height="16" width="[% module.pass * 200 / total %]" /><img alt="UNKNOWN [% module.unknown%]" title="UNKNOWN [% module.unknown%]" src="static/yellow.png" height="16" width="[% module.unknown * 200 / total %]" /><img alt="FAIL [% module.fail %]" title="FAIL [% module.fail %]" src="static/red.png" height="16" width="[% module.fail * 200 / total %]" /><img alt="NA [% module.na %]" title="NA [% module.na %]" src="static/blue.png" height="16" width="[% module.na * 200 / total %]" />
-      [% END %]
+      <span title="Results for [% module.distname %]-[% module.version %]">
+        [% IF total == 0 %]
+          <img alt="No results" src="static/grey.png" height="16" width="200" />
+        [% ELSE %]
+          <img alt="PASS [% module.pass %]" src="static/green.png" height="16" width="[% module.pass * 200 / total %]" /><img alt="UNKNOWN [% module.unknown%]" src="static/yellow.png" height="16" width="[% module.unknown * 200 / total %]" /><img alt="FAIL [% module.fail %]" src="static/red.png" height="16" width="[% module.fail * 200 / total %]" /><img alt="NA [% module.na %]" src="static/blue.png" height="16" width="[% module.na * 200 / total %]" />
+        [% END %]
+      </span>
     [% END %]
   </td>
 

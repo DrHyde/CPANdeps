@@ -28,6 +28,7 @@
       <dependency>
         <module>[% module.name %]</module>
         <dist>[% module.distname %]</dist>
+        <distversion>[% module.version %]</distversion>
         <cpanfile>[% module.CPANfile %]</cpanfile>
         <depth>[% module.indent %]</depth>
         <warning>[% module.warning %]</warning>
