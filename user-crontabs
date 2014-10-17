@@ -4,8 +4,8 @@ MAILTO=david@cantrell.org.uk
 # first the main site ...
 
 # backups
-0 5 1 * * mysqldump -u root cpandeps>cpandeps-db.backup.sql
-0 6 1 * * mysqldump -u root cpantesters>cpantesters-db.backup.sql
+0 5 1 * * mysqldump -u root cpandeps>cpandeps-db.backup.sql;gzip -9 cpandeps-db.backup.sql
+0 6 1 * * mysqldump -u root cpantesters>cpantesters-db.backup.sql;gzip -9 cpantesters-db.backup.sql
 # clean up old files
 0 7 * * * PID=$$;touch -d "7 days ago" /tmp/$PID;find /web/cpandeps/db/r* -type f -not -newer /tmp/$PID -exec rm -f {} \;
 # refresh webshite at 09:00. Takes about 2.5 hours
@@ -15,7 +15,7 @@ MAILTO=david@cantrell.org.uk
 # and the ...-dev site. These only happen once a week
 
 # backup
-0 17 1 * * mysqldump -u root cpandepsdev>cpandepsdev-db.backup.sql
+0 17 1 * * mysqldump -u root cpandepsdev>cpandepsdev-db.backup.sql;gzip -9 cpandepsdev-db.backup.sql
 # clean up old files
 0 19 * * 3 PID=$$;touch -d "7 days ago" /tmp/$PID;find /web/cpandeps-dev/db/r* -type f -not -newer /tmp/$PID -exec rm -f {} \;
 # refresh dev webshite at 21:00. Takes about 2.5 hours
