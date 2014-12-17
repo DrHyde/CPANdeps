@@ -444,44 +444,43 @@ sub getpurity {
     my $MANIFESTurl = "http://search.cpan.org/src/$author/$distname/MANIFEST";
     local $/ = undef;
 
+    my $manifest = '';
     # if we have a cache file, read it
     if(-e $cachefile) {
         open(MANIFEST, $cachefile) || die("Can't read $cachefile\n");
-        my $manifest = <MANIFEST>;
+        $manifest = <MANIFEST>;
         close(MANIFEST);
-	return $manifest;
+        if($manifest eq '?') { return '?' }
     } else {
         # read from interwebnet
         my $res = $ua->request(HTTP::Request->new(GET => $MANIFESTurl));
         if(!$res->is_success()) {
-	    open(MANIFEST, ">$cachefile") || die("Can't write $cachefile\n");
-	    print MANIFEST '?';
-	    close(MANIFEST);
-	    return '?';
-        } else {
-            my @manifest = split(/[\r\n]+/, $res->content());
-            my $parsed_meta = read_meta (@_);
-	    my $ispureperl =
-	        (
-		    (
-                        (grep {
-			    /\.(              # .swg and .i suggested by
-			        swg        |  # Jonathan Leto
-				xs         |
-				[chi]
-		            )(\x20|$)/ix # comments, eg in HTML::Parser
-			                 # NB \x20 instead of space cos of /x
-			} @manifest) &&
-                        !(grep { /PurePerl/i } @manifest)
-		    ) ||
-	            (grep { /^Inline/ } keys %{{getreqs($parsed_meta)}})
-		) ? 'N' : 'Y';
             open(MANIFEST, ">$cachefile") || die("Can't write $cachefile\n");
-            print MANIFEST $ispureperl;
+            print MANIFEST '?';
             close(MANIFEST);
-	    return $ispureperl;
+            return '?';
+        } else {
+            $manifest = join("\n", split(/[\r\n]+/, $res->content()));
+            open(MANIFEST, ">$cachefile") || die("Can't write $cachefile\n");
+            print MANIFEST $manifest;
+            close(MANIFEST);
         }
     }
+    my $parsed_meta = read_meta (@_);
+    my $ispureperl = (
+        (
+            (grep {
+                /\.(              # .swg and .i suggested by
+                    swg        |  # Jonathan Leto
+                    xs         |
+                    [chi]
+                )(\s|$)/ix
+			} split(/\n/, $manifest)) &&
+            !(grep { /PurePerl/i } split(/\n/, $manifest))
+        ) ||
+        (grep { /^Inline/ } keys %{{getreqs($parsed_meta)}})
+    ) ? 'N' : 'Y';
+	return $ispureperl;
 }
 
 sub read_meta {
