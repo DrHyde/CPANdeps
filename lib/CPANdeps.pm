@@ -243,7 +243,7 @@ sub go {
         $dbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
         my $ua = LWP::UserAgent->new(
             agent => "cpandeps/$VERSION",
-            from => 'cpandeps@cantrell.org.uk'
+            from => 'david@cantrell.org.uk'
         );
 
         $ttvars->{query} = join(' AND ', grep { $_ } (

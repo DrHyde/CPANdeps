@@ -19,7 +19,7 @@ my $limit = CPANdeps::concurrency_limit("/tmp/$dbname/populate-cache/lock");
 my $VERSION = 1.0;
 my $ua = LWP::UserAgent->new(
     agent => "cpandeps-cache/$VERSION",
-    from => 'cpandeps@cantrell.org.uk'
+    from => 'david@cantrell.org.uk'
 ); 
 
 my $dbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
