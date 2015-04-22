@@ -1,0 +1,11 @@
+[% dist = dep.dist %]
+[% depended_on_by = dep.depended_on_by %]
+
+<li><a href="http://search.cpan.org/search?query=[% dist %]">[% dist %]</a></li>
+    [% IF depended_on_by.size %]
+      <ul class="depended_on">
+        [% FOR dep = depended_on_by %]
+          [% INCLUDE 'reverseresult.tt2' dep = dep %]
+	    [% END %]
+      </ul>
+    [% END %]

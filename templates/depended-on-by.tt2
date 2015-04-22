@@ -25,8 +25,8 @@
     [% IF depended_on_by.size %]
       <ul class="depended_on">
         [% FOR dep = depended_on_by %]
-	  <li><a href="http://search.cpan.org/search?query=[% dep.dist %]">[% dep.dist %]</a></li>
-	[% END %]
+          [% INCLUDE 'reverseresult.tt2' dep = dep %]
+	    [% END %]
       </ul>
     [% ELSE %]
       <p>Nothing (or maybe it's just not been calculated yet)</p>

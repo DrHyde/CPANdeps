@@ -1,0 +1,13 @@
+[% dist = dep.dist %]
+[% depended_on_by = dep.depended_on_by %]
+
+<dist>
+  <name>[% dist %]</name>
+  [% IF depended_on_by.size %]
+    <depended_on_by count="[% depended_on_by.size %]">
+      [% FOR dep = depended_on_by %]
+        [% INCLUDE 'reverseresult-xml.tt2' dep = dep %]
+   [% END %]
+    </depended_on_by>
+  [% END %]
+</dist>
