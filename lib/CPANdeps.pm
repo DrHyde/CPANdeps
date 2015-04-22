@@ -176,7 +176,7 @@ EOF
   my %seen = ();
 
   opendir(DIR, "$home/db/reverse") || die("Can't open dir $home/db/reverse: $!");
-  my @dir_contents = grep { -f $_ } map { "$home/db/reverse/$_" } readdir(DIR);
+  my @dir_contents = grep { -f $_ } map { "$home/db/reverse/$_" } reverse sort readdir(DIR);
   closedir(DIR);
 
   sub get_reverse_deps_from_dist {
