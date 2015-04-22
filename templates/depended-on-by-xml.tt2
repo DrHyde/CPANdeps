@@ -7,7 +7,7 @@
       <depended_on_by count="[% depended_on_by.size %]">
       [% IF depended_on_by.size %]
         [% FOR dep = depended_on_by %]
-          <dist><name>[% dep %]</name></dist>
+          <dist><name>[% dep.dist %]</name></dist>
         [% END %]
       [% ELSE %]
         <warning>None found (or maybe it's just not been calculated yet)</warning>

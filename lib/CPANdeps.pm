@@ -182,7 +182,10 @@ sub get_reverse_deps_from_dist {
     closedir(DIR);
   }
 
-  my $depended_on_by = [ @{ $datafile ? do $datafile : [] } ];
+  my $depended_on_by = [ map { {
+    dist           => $_,
+    depended_on_by => get_reverse_deps_from_dist($_)
+  } } @{ $datafile ? do $datafile : [] } ];
 }
 
 sub check_params {
