@@ -167,7 +167,6 @@ EOF
     dist => $dist,
     distversion => $distversion,
     depended_on_by => $depended_on_by,
-    # datafile => $datafile,
   };
   render($q, 'depended-on-by', $ttvars);
 }
@@ -175,15 +174,18 @@ EOF
 {
   # mmm, global. Will only work if this remains a CGI
   my %seen = ();
+
+  opendir(DIR, "$home/db/reverse") || die("Can't open dir $home/db/reverse: $!");
+  my @dir_contents = grep { -f $_ } map { "$home/db/reverse/$_" } readdir(DIR);
+  closedir(DIR);
+
   sub get_reverse_deps_from_dist {
     my $dist = shift;
+    my $depth = shift || 0;
+    return [] if($depth == 10);
     my $datafile = "$home/db/reverse/$dist.dd";
     if(!-e $datafile) {
-      opendir(DIR, "$home/db/reverse") || die("Can't open dir $home/db/reverse: $!");
-      $datafile = (
-        grep { -f $_ && m/\/$dist-v?\d[\d.]*\.dd$/ } map { "$home/db/reverse/$_" } readdir(DIR)
-      )[0];
-      closedir(DIR);
+      $datafile = (grep { m/\/$dist-v?\d[\d.]*\.dd$/ } @dir_contents)[0];
     }
   
     my $depended_on_by = [
@@ -191,7 +193,7 @@ EOF
         $seen{$_} = 1;
         {
           dist           => $_,
-          depended_on_by => get_reverse_deps_from_dist($_)
+          depended_on_by => get_reverse_deps_from_dist($_, $depth + 1)
         }
       } grep {
         !exists($seen{$_})
