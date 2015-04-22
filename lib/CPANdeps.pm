@@ -157,6 +157,22 @@ EOF
     return () unless $dist;
     $dist =~ s!(^.*/|(\.t(ar\.)?gz|\.zip)$)!!g;
   }
+
+  (my $distversion = $dist) =~ s{^.*-(v?[\d_\.]+)$}{$1};
+
+  my $depended_on_by = get_reverse_deps_from_dist($dist);
+
+  my $ttvars = {
+    dist => $dist,
+    distversion => $distversion,
+    depended_on_by => $depended_on_by,
+    # datafile => $datafile,
+  };
+  render($q, 'depended-on-by', $ttvars);
+}
+
+sub get_reverse_deps_from_dist {
+  my $dist = shift;
   my $datafile = "$home/db/reverse/$dist.dd";
   if(!-e $datafile) {
     opendir(DIR, "$home/db/reverse") || die("Can't open dir $home/db/reverse: $!");
@@ -166,15 +182,7 @@ EOF
     closedir(DIR);
   }
 
-  (my $distversion = $dist) =~ s{^.*-(v?[\d_\.]+)$}{$1};
-
-  my $ttvars = {
-    dist => $dist,
-    distversion => $distversion,
-    depended_on_by => [ @{ $datafile ? do $datafile : [] } ],
-    datafile => $datafile,
-  };
-  render($q, 'depended-on-by', $ttvars);
+  my $depended_on_by = [ @{ $datafile ? do $datafile : [] } ];
 }
 
 sub check_params {
