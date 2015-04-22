@@ -21,7 +21,8 @@
     (<a href="depended-on-by.pl?xml=1;dist=[% dist %]">Get results in XML</a>)
   </small>
   [% IF dist %]
-    <h2>[% dist %] is depended on by</h2>
+    <h2>[% dist %] is depended on by ...</h2>
+    <p><strong>NB</strong> the tree may be  truncated at 10 levels</p>
     [% IF depended_on_by.size %]
       <ul class="depended_on">
         [% FOR dep = depended_on_by %]
