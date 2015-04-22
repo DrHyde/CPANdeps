@@ -171,21 +171,32 @@ EOF
   render($q, 'depended-on-by', $ttvars);
 }
 
-sub get_reverse_deps_from_dist {
-  my $dist = shift;
-  my $datafile = "$home/db/reverse/$dist.dd";
-  if(!-e $datafile) {
-    opendir(DIR, "$home/db/reverse") || die("Can't open dir $home/db/reverse: $!");
-    $datafile = (
-      grep { -f $_ && m/\/$dist-v?\d[\d.]*\.dd$/ } map { "$home/db/reverse/$_" } readdir(DIR)
-    )[0];
-    closedir(DIR);
+{
+  # mmm, global. Will only work if this remains a CGI
+  my %seen = ();
+  sub get_reverse_deps_from_dist {
+    my $dist = shift;
+    my $datafile = "$home/db/reverse/$dist.dd";
+    if(!-e $datafile) {
+      opendir(DIR, "$home/db/reverse") || die("Can't open dir $home/db/reverse: $!");
+      $datafile = (
+        grep { -f $_ && m/\/$dist-v?\d[\d.]*\.dd$/ } map { "$home/db/reverse/$_" } readdir(DIR)
+      )[0];
+      closedir(DIR);
+    }
+  
+    my $depended_on_by = [
+      map {
+        $seen{$_} = 1;
+        {
+          dist           => $_,
+          depended_on_by => get_reverse_deps_from_dist($_)
+        }
+      } grep {
+        !exists($seen{$_})
+      } @{ $datafile ? do $datafile : [] }
+    ];
   }
-
-  my $depended_on_by = [ map { {
-    dist           => $_,
-    depended_on_by => get_reverse_deps_from_dist($_)
-  } } @{ $datafile ? do $datafile : [] } ];
 }
 
 sub check_params {
