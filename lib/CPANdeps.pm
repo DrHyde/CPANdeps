@@ -176,7 +176,14 @@ EOF
   my %seen = ();
 
   opendir(DIR, "$home/db/reverse") || die("Can't open dir $home/db/reverse: $!");
-  my @dir_contents = grep { -f $_ } map { "$home/db/reverse/$_" } reverse sort readdir(DIR);
+  my %most_recent = ();
+  foreach my $file (
+      grep { -f $_ } map { "$home/db/reverse/$_" } reverse sort readdir(DIR)
+  ) {
+      $file =~ /^$home\/db\/reverse\/(.*)-v?\d[\d.]*\.dd$/;
+      next if(!$1 || exists($most_recent{$1}));
+      $most_recent{$1} = $file;
+  }
   closedir(DIR);
 
   sub get_reverse_deps_from_dist {
@@ -185,7 +192,7 @@ EOF
     return [] if($depth == 10);
     my $datafile = "$home/db/reverse/$dist.dd";
     if(!-e $datafile) {
-      $datafile = (grep { m/\/$dist-v?\d[\d.]*\.dd$/ } @dir_contents)[0];
+      $datafile = $most_recent{$dist};
     }
   
     my $depended_on_by = [
