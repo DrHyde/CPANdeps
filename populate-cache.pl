@@ -24,6 +24,10 @@ my $ua = LWP::UserAgent->new(
 
 my $dbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
 
+if(!defined($dbh)) {
+    die("Failed to connect to database: $DBI::errstr\n");
+}
+
 print "Updating cache ...\n";
 
 mkdir 'db';
