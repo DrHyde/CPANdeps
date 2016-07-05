@@ -102,7 +102,7 @@ SELECTLOOP:
   $cpandepsdbh->{'AutoCommit'} = 0;
   while(my $record = $select->fetchrow_hashref()) {
     # NB the order of these two lines is important!
-    $record->{is_dev_perl} = ($record->{perl} =~ /(^5\.(7|9|11|13|15|17|19|21|23)|rc|patch)/i) ? 1 : 0;
+    $record->{is_dev_perl} = ($record->{perl} =~ /(^5\.(7|9|11|13|15|17|19|21|23|25|27|29)|rc|patch)/i) ? 1 : 0;
     $record->{perl} =~ s/\s+RC\d+//i;
     # NB this deliberately skips 5.18.3.
     # See http://www.nntp.perl.org/group/perl.perl5.porters/2014/10/msg220771.html
@@ -126,7 +126,10 @@ SELECTLOOP:
           5.19.10 5.19.11
         5.20.0 5.20.1 5.20.2
         5.21.0 5.21.1 5.21.2 5.21.3 5.21.4 5.21.5 5.21.6 5.21.7 5.21.8 5.21.9 5.21.10 5.21.11
-        5.22.0 5.22.1
+        5.22.0 5.22.1 5.22.2 5.22.3
+        5.23.0 5.23.1 5.23.2 5.23.3 5.23.4 5.23.5 5.23.6 5.23.7 5.23.8 5.23.9
+        5.24.0 5.24.1 5.24.2 5.24.3
+        5.25.0 5.25.1 5.25.2 5.25.3 5.25.4 5.25.5 5.25.6 5.25.7 5.25.8 5.25.9
     )) {
       $record->{perl} = $ver if($record->{perl} =~ /^v?$ver/);
     }
