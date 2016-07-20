@@ -29,6 +29,7 @@ my $dbname = ($home =~ /-dev/) ? 'cpandepsdev' : 'cpandeps';
 my $debug = ($home =~ /-dev/) ? 1 : 0;
 
 my $dbh;
+my $ttvars;
 
 $Template::Stash::SCALAR_OPS->{int} = sub {
     my $scalar = shift;
@@ -163,7 +164,7 @@ EOF
 
   my $depended_on_by = get_reverse_deps_from_dist($dist);
 
-  my $ttvars = {
+  $ttvars = {
     dist => $dist,
     distversion => $distversion,
     depended_on_by => $depended_on_by,
@@ -234,7 +235,7 @@ sub go {
 
     check_params($q);
 
-    my $ttvars = {
+    $ttvars = {
         perl => (
 	    ($q->param('perl') eq 'latest') ? LATESTPERL :
 	    $q->param('perl')               ? $q->param('perl') :
@@ -432,7 +433,10 @@ sub in_core {
         eval 'use Module::CoreList';
         die($@) if($@);
     }
-    my $incore = $Module::CoreList::version{0+$v}{$module};
+    my $incore = do {
+        no warnings 'once';
+        $Module::CoreList::version{0+$v}{$module};
+    };
     return $incore;
 }
 
@@ -457,7 +461,8 @@ sub gettestresults {
     if(-e $cachefile && (stat($cachefile))[9] + 2 * 86400 > time()) {
         return do($cachefile)
     } else {
-        $sth->execute($distname, ''.$distversion);
+        push @{$ttvars->{query_params}}, [$distname, ''.$distversion];
+        $sth->execute(@{(@{$ttvars->{query_params}})[-1]});
         my $r = $sth->fetchall_arrayref();
         if(ref($r)) { $r = { map { $_->[0] => $_->[1] } @{$r} }; }
          else { return 'Error getting test results'; }
