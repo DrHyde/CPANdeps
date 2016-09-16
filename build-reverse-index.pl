@@ -14,8 +14,8 @@ chdir $FindBin::Bin;
 my $dbname = ($FindBin::Bin =~ /dev/) ? 'cpandepsdev' : 'cpandeps';
 
 use lib "$FindBin::Bin/lib";
-use CPANdeps;
-my $limit = CPANdeps::concurrency_limit("/tmp/$dbname/rebuild-reverse-index/lock");
+use CPANdepsUtils;
+my $limit = CPANdepsUtils::concurrency_limit("/tmp/$dbname/rebuild-reverse-index/lock");
 
 my $dbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
 

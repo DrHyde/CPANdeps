@@ -6,6 +6,8 @@ use vars qw($VERSION);
 
 $VERSION = '2.0';
 
+use CPANdepsUtils;
+
 use Cwd;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
@@ -23,6 +25,8 @@ use constant ANYOS      => 'any OS';
 use constant LATESTPERL  => '5.24.0';
 use constant DEFAULTCORE => '5.005';
 use constant MAXINT => ~0;
+
+my $q = CGI->new();
 
 my $home = cwd();
 my $dbname = ($home =~ /-dev/) ? 'cpandepsdev' : 'cpandeps';
@@ -48,20 +52,6 @@ my $tt2 = Template->new(
     RECURSION    => 1,
 );
 
-sub concurrency_limit {
-    my $lockfile = shift;
-    my $limit = IPC::ConcurrencyLimit->new(
-        max_procs => 1,
-        path      => $lockfile,
-    );
-    my $limitid = $limit->get_lock;
-    if(not $limitid) {
-        warn "Another process appears to be still running. Exiting.";
-        exit(0);
-    }
-    return $limit;
-}
-
 sub render {
     my($q, $tt2file, $ttvars) = @_;
 
@@ -84,8 +74,14 @@ sub render {
 }
 
 sub depended_on_by {
-  my $q = CGI->new();
   print "Content-type: text/".($q->param('xml') ? 'xml' : 'html')."\n\n";
+
+  my $limit = CPANdepsUtils::concurrency_limit(
+      "/tmp/$dbname/web/lock",
+      15,
+      ($q->param('xml') ? 'xml' : 'html')
+  );
+  $dbh= DBI->connect("dbi:mysql:database=$dbname", "root", "");
 
   check_params($q);
 
@@ -148,7 +144,6 @@ EOF
       return ();
     }
 
-    $dbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
     # TODO : Shouldn't we prepare this statement, keep it persistent and
     # execute it on each module separately?
     my $results = $dbh->selectall_arrayref(
@@ -230,8 +225,14 @@ sub check_params {
 }
 
 sub go {
-    my $q = CGI->new();
     print "Content-type: text/".($q->param('xml') ? 'xml' : 'html')."\n\n";
+
+    my $limit = CPANdepsUtils::concurrency_limit(
+        "/tmp/$dbname/web/lock",
+        15,
+        ($q->param('xml') ? 'xml' : 'html')
+    );
+    $dbh= DBI->connect("dbi:mysql:database=$dbname", "root", "");
 
     check_params($q);
 
@@ -273,7 +274,6 @@ sub go {
 
     my $distschecked = {};
     if($module) {
-        $dbh = DBI->connect("dbi:mysql:database=$dbname", "root", "");
         my $ua = LWP::UserAgent->new(
             agent => "cpandeps/$VERSION",
             from => 'david@cantrell.org.uk'

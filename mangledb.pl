@@ -10,8 +10,8 @@ chdir($FindBin::Bin);
 my $dbname = ($FindBin::Bin =~ /dev/) ? 'cpandepsdev' : 'cpandeps';
 
 use lib "$FindBin::Bin/lib";
-use CPANdeps;
-my $limit = CPANdeps::concurrency_limit("/tmp/$dbname/refill-deps-db/lock");
+use CPANdepsUtils;
+my $limit = CPANdepsUtils::concurrency_limit("/tmp/$dbname/refill-deps-db/lock");
 
 $| = 1;
 

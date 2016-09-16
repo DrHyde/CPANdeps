@@ -88,7 +88,7 @@ refill-cpanstatsdb-minutes.pl
 
 use FindBin;
 use lib "$FindBin::Bin/lib";
-use CPANdeps;
+use CPANdepsUtils;
 
 use Dumpvalue;
 use File::Basename ();
@@ -117,7 +117,7 @@ $Opt{sleeplimit} ||= 500;
 $Opt{sleeptime} ||= 150;
 $Opt{maxtime} = 1770 unless defined $Opt{maxtime};
 
-my $limit = CPANdeps::concurrency_limit("/tmp/refill-testers-db/lock");
+my $limit = CPANdepsUtils::concurrency_limit("/tmp/refill-testers-db/lock");
 
 use DBI;
 use Time::HiRes qw(time);
