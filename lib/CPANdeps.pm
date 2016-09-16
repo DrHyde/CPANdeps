@@ -529,24 +529,30 @@ sub read_meta {
     my $meta;
     local $/ = undef;
 
+    # long list of if()s instead of elsifs because if the YAML::Load or JSON::decode_json
+    # fails we want to try the next method
     my $parsed_meta;
     if(-e $METAymlfile) {
         open(YAML, $METAymlfile) || die("Can't read $METAymlfile\n");
         $meta = <YAML>;
         close(YAML);
         $parsed_meta = eval { YAML::Load($meta); };
-    } elsif(-e $METAjsonfile) {
+    }
+    if(!$parsed_meta && -e $METAjsonfile) {
+        print "Reading $METAjsonfile<br>";
         open(JSON, $METAjsonfile) || die("Can't read $METAjsonfile\n");
         $meta = <JSON>;
         close(JSON);
         $parsed_meta = eval { JSON::decode_json($meta); };
-    } elsif((my $res = $ua->request(HTTP::Request->new(GET => $METAymlURL)))->is_success()) {
+    }
+    if(!$parsed_meta && (my $res = $ua->request(HTTP::Request->new(GET => $METAymlURL)))->is_success()) {
         $meta = $res->content();
         open(META, ">$METAymlfile") || die("Can't write $METAymlfile\n");
         print META $meta;
         close(META);
         $parsed_meta = eval { YAML::Load($meta); };
-    } elsif(($res = $ua->request(HTTP::Request->new(GET => $METAjsonURL)))->is_success()) {
+    }
+    if(!$parsed_meta && (my $res = $ua->request(HTTP::Request->new(GET => $METAjsonURL)))->is_success()) {
         $meta = $res->content();
         open(META, ">$METAjsonfile") || die("Can't write $METAjsonfile\n");
         print META $meta;
