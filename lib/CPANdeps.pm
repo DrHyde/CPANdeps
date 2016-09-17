@@ -15,7 +15,6 @@ use YAML ();
 use JSON ();
 use DBI;
 use LWP::UserAgent;
-use IPC::ConcurrencyLimit;
 
 use Data::Dumper;
 use Template;

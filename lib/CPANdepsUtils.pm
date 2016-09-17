@@ -3,6 +3,8 @@ package CPANdepsUtils;
 use strict;
 use warnings;
 
+use IPC::ConcurrencyLimit;
+
 sub concurrency_limit {
     my $lockfile = shift;
     my $max_procs = shift || 1;
