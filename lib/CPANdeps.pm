@@ -538,7 +538,6 @@ sub read_meta {
         $parsed_meta = eval { YAML::Load($meta); };
     }
     if(!$parsed_meta && -e $METAjsonfile) {
-        print "Reading $METAjsonfile<br>";
         open(JSON, $METAjsonfile) || die("Can't read $METAjsonfile\n");
         $meta = <JSON>;
         close(JSON);
