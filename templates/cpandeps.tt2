@@ -68,6 +68,10 @@ pageTracker._trackPageview();
   // -->
   </script>
 
+<h1><font color=red>Database ate itself, restoring from backup</font></h1>
+<h2>Results are unreliable until that's complete</h2>
+<hr>
+
 <h1> CPAN Dependencies </h1>
 
 	<div id="menu">
