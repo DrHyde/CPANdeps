@@ -21,7 +21,7 @@ use Template;
 
 use constant ANYVERSION => 'any version';
 use constant ANYOS      => 'any OS';
-use constant LATESTPERL  => '5.24.0';
+use constant LATESTPERL  => '5.24.1';
 use constant DEFAULTCORE => '5.005';
 use constant MAXINT => ~0;
 
@@ -254,7 +254,7 @@ sub go {
                 } ($a, $b);
                 $A <=> $B;
             }
-            (qw(5.6 5.8 5.10 5.12 5.14 5.16 5.18 5.20 5.22), @{ do "$home/db/perls" })
+            (qw(5.6 5.8 5.10 5.12 5.14 5.16 5.18 5.20 5.22 5.24), @{ do "$home/db/perls" })
         ],
         oses => [ANYOS, sort { $a cmp $b } @{ do "$home/db/oses" }]
     };
