@@ -130,7 +130,7 @@ SELECTLOOP:
         (map { "5.25.$_" } (0 .. 11)),
         (map { "5.26.$_" } (0 .. 10)),
         (map { "5.27.$_" } (0 .. 10)),
-    )) {
+    ) {
       $record->{perl} = $ver if($record->{perl} =~ /^v?$ver/);
     }
     $record->{os} = 'Unknown OS';
