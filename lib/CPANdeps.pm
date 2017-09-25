@@ -21,7 +21,7 @@ use Template;
 
 use constant ANYVERSION => 'any version';
 use constant ANYOS      => 'any OS';
-use constant LATESTPERL  => '5.26.0';
+use constant LATESTPERL  => '5.26.1';
 use constant DEFAULTCORE => '5.005';
 use constant MAXINT => ~0;
 
