@@ -11,6 +11,7 @@ use CPANdepsUtils;
 use Cwd;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
+use Digest::MD5 qw(md5_hex);
 use YAML ();
 use JSON ();
 use DBI;
@@ -256,7 +257,8 @@ sub go {
             }
             (qw(5.6 5.8 5.10 5.12 5.14 5.16 5.18 5.20 5.22 5.24 5.26), @{ do "$home/db/perls" })
         ],
-        oses => [ANYOS, sort { $a cmp $b } @{ do "$home/db/oses" }]
+        oses => [ANYOS, sort { $a cmp $b } @{ do "$home/db/oses" }],
+        query_count => 0,
     };
     # die(Dumper($ttvars));
     my $permitted_chars = join('', @{$ttvars->{perls}});
@@ -448,7 +450,8 @@ sub gettestresults {
     $perl ||= ANYVERSION;
     $os   ||= ANYOS;
     (my $os_without_slashes = $os) =~ s/\///g;
-    my @segments = split('/', "results/dist:$distname/distver:$distversion/perl:$perl/os:$os_without_slashes/devperls:$devperls");
+    md5_hex($distname) =~ /^(..)(..)/;
+    my @segments = split('/', "results/$1/$2/dist:$distname/distver:$distversion/perl:$perl/os:$os_without_slashes/devperls:$devperls");
     my $dir = "$home/db";
     while(@segments) {
       $dir .= "/".shift(@segments);
@@ -462,6 +465,7 @@ sub gettestresults {
     } else {
         push @{$ttvars->{query_params}}, [$distname, ''.$distversion];
         $sth->execute(@{(@{$ttvars->{query_params}})[-1]});
+        $ttvars->{query_count}++;
         my $r = $sth->fetchall_arrayref();
         if(ref($r)) { $r = { map { $_->[0] => $_->[1] } @{$r} }; }
          else { return 'Error getting test results'; }
@@ -529,7 +533,9 @@ sub read_meta {
     local $/ = undef;
 
     # long list of if()s instead of elsifs because if the YAML::Load or JSON::decode_json
-    # fails we want to try the next method
+    # fails we want to try the next method. We no longer try to fetch a frech META
+    # file from the CPAN if we can't read one from the cache, as the cache is
+    # populated by a batch job.
     my $parsed_meta;
     if(-e $METAymlfile) {
         open(YAML, $METAymlfile) || die("Can't read $METAymlfile\n");
@@ -541,20 +547,6 @@ sub read_meta {
         open(JSON, $METAjsonfile) || die("Can't read $METAjsonfile\n");
         $meta = <JSON>;
         close(JSON);
-        $parsed_meta = eval { JSON::decode_json($meta); };
-    }
-    if(!$parsed_meta && (my $res = $ua->request(HTTP::Request->new(GET => $METAymlURL)))->is_success()) {
-        $meta = $res->content();
-        open(META, ">$METAymlfile") || die("Can't write $METAymlfile\n");
-        print META $meta;
-        close(META);
-        $parsed_meta = eval { YAML::Load($meta); };
-    }
-    if(!$parsed_meta && (my $res = $ua->request(HTTP::Request->new(GET => $METAjsonURL)))->is_success()) {
-        $meta = $res->content();
-        open(META, ">$METAjsonfile") || die("Can't write $METAjsonfile\n");
-        print META $meta;
-        close(META);
         $parsed_meta = eval { JSON::decode_json($meta); };
     }
     return $parsed_meta;
