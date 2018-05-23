@@ -60,8 +60,8 @@ foreach my $file (@files) {
         (-e "db/META.yml/$dist.yml.404" && -e "db/META.yml/$dist.json.404")
     );
     foreach my $tuple (
-        { local => "db/META.yml/$dist.yml", remote => "http://search.cpan.org/src/$author/$dist/META.yml" },
-        { local => "db/META.yml/$dist.json", remote => "http://search.cpan.org/src/$author/$dist/META.json" },
+        { local => "db/META.yml/$dist.yml", remote => "http://fastapi.metacpan.org/source/$author/$dist/META.yml" },
+        { local => "db/META.yml/$dist.json", remote => "http://fastapi.metacpan.org/source/$author/$dist/META.json" },
     ) {
         my $local_file  = $tuple->{local};
         my $remote_file = $tuple->{remote};
@@ -70,6 +70,7 @@ foreach my $file (@files) {
 
         my $res = $ua->request(HTTP::Request->new(GET => $remote_file));
         if(!$res->is_success()) {
+            warn($res->as_string()."\n");
             open(FILE, '>', "$local_file.404") || die("Can't write $local_file.404\n");
             close(FILE);
         } else {
