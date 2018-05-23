@@ -481,7 +481,7 @@ sub gettestresults {
 sub getpurity {
     my($author, $distname, $ua) = @_;
     my $cachefile = "$home/db/MANIFEST/$distname.MANIFEST";
-    my $MANIFESTurl = "http://search.cpan.org/src/$author/$distname/MANIFEST";
+    my $MANIFESTurl = "http://fastapi.metacpan.org/source/$author/$distname/MANIFEST";
     local $/ = undef;
 
     my $manifest = '';
@@ -527,8 +527,6 @@ sub read_meta {
     my($author, $distname, $ua) = @_;
     my $METAymlfile  = "$home/db/META.yml/$distname.yml";
     my $METAjsonfile = "$home/db/META.yml/$distname.json";
-    my $METAymlURL   = "http://search.cpan.org/src/$author/$distname/META.yml";
-    my $METAjsonURL  = "http://search.cpan.org/src/$author/$distname/META.json";
     my $meta;
     local $/ = undef;
 
