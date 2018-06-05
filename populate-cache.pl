@@ -70,7 +70,6 @@ foreach my $file (@files) {
 
         my $res = $ua->request(HTTP::Request->new(GET => $remote_file));
         if(!$res->is_success()) {
-            warn($res->as_string()."\n");
             open(FILE, '>', "$local_file.404") || die("Can't write $local_file.404\n");
             close(FILE);
         } else {
