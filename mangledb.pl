@@ -142,9 +142,17 @@ SELECTLOOP:
       my($osname, $os) = (shift(@temp_os_by_osname), shift(@temp_os_by_osname));
       if($record->{osname} =~ /^$osname$/i) {
         $record->{os} = $os;
-	last;
+        last;
       }
     }
+    if($record->{os} eq 'Unknown OS') { # if we couldn't map it try looking at 'platform'
+        $record->{platform} =~ /linux/ ? $record->{os} = 'Linux'
+      : warn(sprintf(
+          "Couldn't map osname '%s', platform '%s'\n",
+          $record->{osname}, $record->{platform}
+      ))
+    }
+
     $insert->execute(
       map { $record->{$_} } qw(id state dist version perl is_dev_perl os platform osname)
     );
