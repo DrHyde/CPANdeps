@@ -26,6 +26,6 @@ echo Fetching CPAN-testers database ...
 
 echo
 echo
-echo Unknown OSes
+echo "List of Unknown OSes follows (may be empty)"
 echo
-echo select platform, origosname, count\(\*\) from cpanstats where os=\'Unknown OS\' group by platform, origosname\; |./dbish 2>/dev/null
+echo "select platform, origosname, count(*) from cpanstats where os='Unknown OS' and platform <> '' and origosname <> '' group by platform, origosname;" |./dbish 2>/dev/null
