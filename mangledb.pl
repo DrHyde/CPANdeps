@@ -140,7 +140,7 @@ SELECTLOOP:
     my @temp_os_by_osname = @os_by_osname;
     while(@temp_os_by_osname) {
       my($osname, $os) = (shift(@temp_os_by_osname), shift(@temp_os_by_osname));
-      if($record->{osname} =~ /^$osname$/i) {
+      if($record->{osname} && $record->{osname} =~ /^$osname$/i) {
         $record->{os} = $os;
         last;
       }
