@@ -42,8 +42,10 @@
         <totalresults>[% total %]</totalresults>
     [% END %]
 
-    [% FILTER repeat(1 + thisdepth) %]
-      </dependency>
+    [% IF thisdepth %]
+      [% FILTER repeat(1 + thisdepth) %]
+        </dependency><!-- baz -->
+      [% END %]
     [% END %]
   [% END %]
 
