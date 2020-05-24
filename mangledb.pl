@@ -135,7 +135,17 @@ SELECTLOOP:
         (map { "5.30.$_" } (0 .. 10)),
         (map { "5.31.$_" } (0 .. 20)),
         (map { "5.32.$_" } (0 .. 10)),
+        (map { "5.33.$_" } (0 .. 20)),
+        (map { "5.34.$_" } (0 .. 10)),
+        (map { "5.35.$_" } (0 .. 20)),
+        (map { "5.36.$_" } (0 .. 10)),
     ) {
+      # FIXME to do a full import this inner loop's body is executed of the
+      # order of 2e10 times (100-ish million test reports, times 200-ish
+      # perl versions). It needs optimising to:
+      #  a) look for perl versions in most-likely to least-likely order.
+      #     That can probably be obtained by counting what's in the db.
+      #  b) `last`ing out of the inner loop as soon as a match is found.
       $record->{perl} = $ver if($record->{perl} =~ /^v?\Q${ver}\E$/);
     }
     $record->{os} = 'Unknown OS';
