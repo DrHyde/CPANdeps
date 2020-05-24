@@ -136,7 +136,7 @@ SELECTLOOP:
         (map { "5.31.$_" } (0 .. 20)),
         (map { "5.32.$_" } (0 .. 10)),
     ) {
-      $record->{perl} = $ver if($record->{perl} =~ /^v?$ver/);
+      $record->{perl} = $ver if($record->{perl} =~ /^v?${ver}$/);
     }
     $record->{os} = 'Unknown OS';
     my @temp_os_by_osname = @os_by_osname;
