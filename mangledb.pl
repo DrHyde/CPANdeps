@@ -102,7 +102,7 @@ SELECTLOOP:
   $cpandepsdbh->{'AutoCommit'} = 0;
   while(my $record = $select->fetchrow_hashref()) {
     # NB the order of these two lines is important!
-    $record->{is_dev_perl} = ($record->{perl} =~ /(^5\.(7|9|[1-9][13579]))|rc|patch/i) ? 1 : 0;
+    $record->{is_dev_perl} = ($record->{perl} =~ /(^v?5\.(7|9|[1-9][13579]))|rc|patch/i) ? 1 : 0;
     $record->{perl} =~ s/\s+(RC|patch).*//i;
     # NB this deliberately skips 5.18.3.
     # See http://www.nntp.perl.org/group/perl.perl5.porters/2014/10/msg220771.html
@@ -110,6 +110,7 @@ SELECTLOOP:
         qw(
             5.3 5.4 5.5 5.7.2 5.7.3
         ),
+        (map { "5.6.$_" } (0 .. 2)),
         (map { "5.8.$_" } (0 .. 9)),
         (map { "5.9.$_" } (0 .. 6)),
         (map { "5.10.$_" } (0 .. 1)),
@@ -122,14 +123,14 @@ SELECTLOOP:
         (map { "5.17.$_" } (0 .. 11)),
         (map { "5.18.$_" } (0 .. 2, 4)),
         (map { "5.19.$_" } (0 .. 11)),
-        (map { "5.20.$_" } (0 .. 2)),
+        (map { "5.20.$_" } (0 .. 3)),
         (map { "5.21.$_" } (0 .. 11)),
         (map { "5.22.$_" } (0 .. 5)),
         (map { "5.23.$_" } (0 .. 9)),
         (map { "5.24.$_" } (0 .. 3)),
-        (map { "5.25.$_" } (0 .. 11)),
+        (map { "5.25.$_" } (0 .. 20)),
         (map { "5.26.$_" } (0 .. 10)),
-        (map { "5.27.$_" } (0 .. 11)),
+        (map { "5.27.$_" } (0 .. 20)),
         (map { "5.28.$_" } (0 .. 10)),
         (map { "5.29.$_" } (0 .. 20)),
         (map { "5.30.$_" } (0 .. 10)),
