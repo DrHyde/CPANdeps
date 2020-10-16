@@ -45,6 +45,7 @@ $Template::Stash::SCALAR_OPS->{sprintf} = sub {
 };
 
 $Data::Dumper::Sortkeys = 1;
+$Data::Dumper::Indent = 1;
 my $tt2 = Template->new(
     INCLUDE_PATH => "$home/templates",
     PRE_CHOMP    => 1,
@@ -200,7 +201,7 @@ EOF
         }
       } grep {
         !exists($seen{$_})
-      } @{ $datafile ? do $datafile : [] }
+      } @{ -e $datafile ? do $datafile : [] }
     ];
   }
 }
