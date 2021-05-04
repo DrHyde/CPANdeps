@@ -70,6 +70,8 @@ pageTracker._trackPageview();
 
 <h1> CPAN Dependencies </h1>
 
+<h3><font color=red>This site will close down soon, use metacpan's dependency tools instead</font></h3>
+
 	<div id="menu">
 		<a href="https://github.com/DrHyde/CPANdeps" class="first">Source code</a>
 		<a href="https://github.com/DrHyde/CPANdeps/issues/new">Report a bug in this site</a>
