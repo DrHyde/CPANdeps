@@ -233,37 +233,6 @@ pageTracker._trackPageview();
   </p>
 
 <div id="footer">
-	<table class="donation">
-			<tr>
-				<td>
-				  <a class="FlattrButton" style="display:none;" href="http://deps.cpantesters.org/"></a>
-				  <noscript><a href="http://flattr.com/thing/423225/CPANdeps" target="_blank">
-				  <img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
-				</td>
-                                <td>
-                                  <script data-gittip-username="DrHyde" data-gittip-widget="button" src="//gttp.co/v1.js"></script>
-                                </td>
-				<td width="100" align="center">
-					<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-		          		<input type="hidden" name="cmd" value="_xclick" />
-				        <input type="hidden" name="business" value="david@cantrell.org.uk" />
-				        <input type="hidden" name="item_name" value="CPANdeps" />
-				        <input type="hidden" name="no_note" value="1" />
-				        <input type="hidden" name="currency_code" value="EUR" />
-				        <input type="hidden" name="tax" value="0" />
-                                        <!-- width and height are necessary. don't care if they break the standard, they *work*. standards-compliant patches *that work* welcome -->
-		          	  	<input type="image" src="/static/paypal_donate_button.png" name="submit" border="0" width="100" height="48" alt="Make a donation with PayPal" />
-					</form>
-				</td>
-			</tr>
-		</table>
-	    If you think this service rocks
-	    incredibly hard, then I like
-	    <a href="http://www.cantrell.org.uk/david/wishlist/">shiny beads</a>,
-	    but wouldn't say no to a little something to help defray costs either.
-
-    <br/><br/>Hosted on <a href="http://www.uk2.net/dedicated-servers/">dedicated servers</a> from UK2.net
-
 	    <br clear="all"/>
 		[% debug.replace("\n","<br/>").replace(" ","&nbsp;"); %]
 </div>
